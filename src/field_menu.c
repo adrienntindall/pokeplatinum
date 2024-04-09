@@ -105,6 +105,7 @@
 #include "overlay005/ov5_021D0D80.h"
 #include "overlay005/ov5_021D2F14.h"
 #include "overlay005/ov5_021E1D20.h"
+#include "overlay007/communication_club.h"
 
 #include "gmm/pl_msg_0367.h"
 
@@ -116,6 +117,7 @@ typedef enum FieldMenuPos {
     MENU_POS_SAVE,
     MENU_POS_OPTIONS,
     MENU_POS_EXIT,
+    MENU_POS_CONNECT,
     MENU_POS_CHAT,
     MENU_POS_RETIRE
 } FieldMenuPos;
@@ -196,6 +198,9 @@ static void sub_0203C7B8(UnkStruct_020508D4 * param0);
 static void sub_0203C8CC(UnkStruct_020508D4 * param0);
 static BOOL FieldMenu_SelectRetire(UnkStruct_020508D4 * param0);
 
+static BOOL FieldMenu_Connect (UnkStruct_020508D4 * param0);
+static BOOL FieldMenu_SelectConnect (UnkStruct_020508D4 * param0);
+
 static const u32 Unk_020EA05C[][2] = {
     {pl_msg_00000367_00000, (u32)FieldMenu_SelectPokedex},
     {pl_msg_00000367_00001, (u32)FieldMenu_SelectPokemon},
@@ -204,6 +209,7 @@ static const u32 Unk_020EA05C[][2] = {
     {pl_msg_00000367_00004, (u32)FieldMenu_SelectSave},
     {pl_msg_00000367_00005, (u32)FieldMenu_SelectOptions},
     {pl_msg_00000367_00006, (u32)0xfffffffe}, //Exit
+    {pl_msg_00000367_00012, (u32)FieldMenu_SelectConnect},
     {pl_msg_00000367_00007, (u32)FieldMenu_SelectChat},
     {pl_msg_00000367_00008, (u32)FieldMenu_SelectRetire}
 };
@@ -630,7 +636,7 @@ static u32 FieldMenu_MakeList (FieldMenu * param0, u8 * param1)
         param1[v0] = MENU_POS_SAVE;
         v0++;
     }
-
+    
     if ((param0->unk_224 & 0x20) == 0) {
         param1[v0] = MENU_POS_OPTIONS;
         v0++;
@@ -638,6 +644,11 @@ static u32 FieldMenu_MakeList (FieldMenu * param0, u8 * param1)
 
     if ((param0->unk_224 & 0x40) == 0) {
         param1[v0] = MENU_POS_EXIT;
+        v0++;
+    }
+    
+    if (TRUE) {
+        param1[v0] = MENU_POS_CONNECT;
         v0++;
     }
 
@@ -1501,6 +1512,25 @@ static void sub_0203BFC0 (UnkStruct_020508D4 * param0)
 
         Heap_FreeToHeap(v2);
     }
+}
+
+static BOOL FieldMenu_SelectConnect (UnkStruct_020508D4 * param0) {
+    FieldMenu * menu;
+
+    menu = sub_02050A64(param0);
+    
+    menu->unk_22C = FieldMenu_Connect;
+    menu->unk_2A = 2;
+    
+    return TRUE;
+}
+
+static BOOL FieldMenu_Connect (UnkStruct_020508D4 * param0) {
+    FieldSystem *fieldSystem = sub_02050A60(param0);
+    
+    ov7_0224B414(fieldSystem, 0, 0, 0);
+    
+    return FALSE;
 }
 
 static BOOL FieldMenu_SelectOptions (UnkStruct_020508D4 * param0)

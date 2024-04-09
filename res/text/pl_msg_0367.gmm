@@ -49,4 +49,8 @@
 		<attribute name="window_context_name">used</attribute>
 		<language name="English">Stock: {STRVAR_1 51, 0, 0}</language>
 	</row>
+    <row id="pl_msg_00000367_00012" index="12">
+		<attribute name="window_context_name">used</attribute>
+		<language name="English">CONNECT</language>
+	</row>
 </body>
