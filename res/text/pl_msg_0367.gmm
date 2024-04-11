@@ -51,6 +51,10 @@
 	</row>
     <row id="pl_msg_00000367_00012" index="12">
 		<attribute name="window_context_name">used</attribute>
-		<language name="English">CONNECT</language>
+		<language name="English">HOST</language>
+	</row>
+    <row id="pl_msg_00000367_00013" index="13">
+		<attribute name="window_context_name">used</attribute>
+		<language name="English">JOIN</language>
 	</row>
 </body>
