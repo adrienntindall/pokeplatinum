@@ -6,7 +6,6 @@
 #include "struct_decls/struct_0200112C_decl.h"
 #include "struct_decls/struct_02001AF4_decl.h"
 #include "message.h"
-#include "struct_decls/struct_0200B358_decl.h"
 #include "struct_decls/struct_02013A04_decl.h"
 #include "struct_decls/struct_02018340_decl.h"
 #include "struct_decls/sys_task.h"
@@ -37,7 +36,7 @@
 #include "unk_02002B7C.h"
 #include "unk_02005474.h"
 #include "message.h"
-#include "unk_0200B358.h"
+#include "string_template.h"
 #include "unk_0200D9E8.h"
 #include "unk_0200DA60.h"
 #include "unk_0200F174.h"
@@ -79,7 +78,7 @@ typedef struct {
 } UnkStruct_020F0524;
 
 typedef struct {
-    StringFormatter * unk_00;
+    StringTemplate * unk_00;
     Strbuf* unk_04;
     Strbuf* unk_08;
     Strbuf* unk_0C;
@@ -132,7 +131,7 @@ typedef struct {
     int unk_04;
 } UnkStruct_020736D8;
 
-void sub_020736D8(UnkStruct_020508D4 * param0);
+void sub_020736D8(TaskManager * param0);
 void sub_020722AC(void * param0, int * param1);
 static void sub_02072334(UnkStruct_02072334 * param0);
 static void sub_02072364(SysTask * param0, void * param1);
@@ -1034,7 +1033,7 @@ static void sub_02073130 (UnkStruct_02072334 * param0)
     Strbuf* v2;
 
     param0->unk_10C = MessageLoader_Init(1, 26, 408, param0->unk_00);
-    param0->unk_110.unk_00 = sub_0200B368(1, 128, param0->unk_00);
+    param0->unk_110.unk_00 = StringTemplate_New(1, 128, param0->unk_00);
     param0->unk_110.unk_04 = Strbuf_Init(128, param0->unk_00);
     param0->unk_110.unk_08 = MessageLoader_GetNewStrbuf(param0->unk_10C, 4);
     param0->unk_110.unk_0C = MessageLoader_GetNewStrbuf(param0->unk_10C, 0);
@@ -1055,7 +1054,7 @@ static void sub_020731A4 (UnkStruct_02072334 * param0)
     Strbuf_Free(param0->unk_110.unk_0C);
     Strbuf_Free(param0->unk_110.unk_08);
     Strbuf_Free(param0->unk_110.unk_04);
-    sub_0200B3F0(param0->unk_110.unk_00);
+    StringTemplate_Free(param0->unk_110.unk_00);
     MessageLoader_Free(param0->unk_10C);
 }
 
@@ -1096,8 +1095,8 @@ static void sub_020732C4 (UnkStruct_02072334 * param0, int param1, u8 param2, u8
 
     if (param1 == 0) {
         Strbuf_Clear(param0->unk_110.unk_04);
-        sub_0200B48C(param0->unk_110.unk_00, 0, param0->unk_1C[param0->unk_18].unk_08, 2, 1, GAME_LANGUAGE);
-        StringFormatter_Format(param0->unk_110.unk_00, param0->unk_110.unk_04, param0->unk_110.unk_10[param1]);
+        StringTemplate_SetStrbuf(param0->unk_110.unk_00, 0, param0->unk_1C[param0->unk_18].unk_08, 2, 1, GAME_LANGUAGE);
+        StringTemplate_Format(param0->unk_110.unk_00, param0->unk_110.unk_04, param0->unk_110.unk_10[param1]);
 
         v0 = param0->unk_110.unk_04;
     } else {
@@ -1228,7 +1227,7 @@ static int sub_02073524 (UnkStruct_02072334 * param0, int param1)
         v0->unk_00 = Party_GetFromSavedata(FieldSystem_SaveData(param0->unk_16C));
         v0->unk_04 = sub_0207D990(FieldSystem_SaveData(param0->unk_16C));
         v0->unk_0C = sub_02025E44(FieldSystem_SaveData(param0->unk_16C));
-        v0->unk_08 = sub_02028430(param0->unk_16C->unk_0C);
+        v0->unk_08 = sub_02028430(param0->unk_16C->saveData);
         v0->unk_21 = 0;
         v0->unk_20 = param1;
         v0->unk_24 = param0->unk_1C[param0->unk_18].unk_06;
@@ -1289,10 +1288,10 @@ static int sub_020735E8 (UnkStruct_02072334 * param0)
     return 0;
 }
 
-static BOOL sub_02073694 (UnkStruct_020508D4 * param0)
+static BOOL sub_02073694 (TaskManager * param0)
 {
-    FieldSystem * v0 = sub_02050A60(param0);
-    UnkStruct_020736D8 * v1 = sub_02050A64(param0);
+    FieldSystem * v0 = TaskMan_FieldSystem(param0);
+    UnkStruct_020736D8 * v1 = TaskManager_Environment(param0);
 
     switch (v1->unk_04) {
     case 0:
@@ -1311,9 +1310,9 @@ static BOOL sub_02073694 (UnkStruct_020508D4 * param0)
     return 0;
 }
 
-void sub_020736D8 (UnkStruct_020508D4 * param0)
+void sub_020736D8 (TaskManager * param0)
 {
-    FieldSystem * v0 = sub_02050A60(param0);
+    FieldSystem * v0 = TaskMan_FieldSystem(param0);
     UnkStruct_020736D8 * v1 = Heap_AllocFromHeapAtEnd(11, sizeof(UnkStruct_020736D8));
 
     v1->unk_00 = 0;

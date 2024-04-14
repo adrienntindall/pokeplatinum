@@ -3,7 +3,6 @@
 
 #include "inlines.h"
 
-#include "struct_decls/struct_0200B358_decl.h"
 #include "strbuf.h"
 #include "struct_decls/struct_0202440C_decl.h"
 #include "struct_decls/struct_0202A750_decl.h"
@@ -24,7 +23,7 @@
 #include "struct_defs/struct_0203E724_t.h"
 
 #include "message.h"
-#include "unk_0200B358.h"
+#include "string_template.h"
 #include "strbuf.h"
 #include "savedata/save_table.h"
 #include "unk_020298BC.h"
@@ -40,10 +39,10 @@
 #include "party.h"
 #include "overlay006/ov6_022465FC.h"
 #include "overlay006/ov6_02246A30.h"
-#include "overlay025/ov25_02253CE0.h"
+#include "overlay025/poketch_system.h"
 
 typedef void (* UnkFuncPtr_020EBB48)(FieldSystem *, u16);
-typedef void (* UnkFuncPtr_020EBB48_1)(FieldSystem *, StringFormatter *);
+typedef void (* UnkFuncPtr_020EBB48_1)(FieldSystem *, StringTemplate *);
 typedef BOOL (* UnkFuncPtr_020EBB48_2)(FieldSystem *);
 
 typedef struct {
@@ -53,7 +52,7 @@ typedef struct {
     u32 unk_0C;
 } UnkStruct_020EBB48;
 
-static int sub_020491D0(int param0, FieldSystem * param1, StringFormatter * param2);
+static int sub_020491D0(int param0, FieldSystem * param1, StringTemplate * param2);
 static void sub_020491B8(FieldSystem * param0, int param1, u16 param2, u16 param3);
 static BOOL sub_020491F4(FieldSystem * param0, int param1);
 BOOL sub_020493C8(UnkStruct_0203E724 * param0);
@@ -81,7 +80,7 @@ BOOL sub_02048DD8 (UnkStruct_0203E724 * param0)
     break;
     case 3:
     {
-        StringFormatter ** v4 = sub_0203F098(param0->unk_34, 15);
+        StringTemplate ** v4 = sub_0203F098(param0->unk_34, 15);
         u16 v5 = inline_02049538(param0);
         u16 * v6 = inline_0204FCAC(param0);
         u16 * v7 = inline_0204FCAC(param0);
@@ -129,7 +128,7 @@ BOOL sub_02048F74 (UnkStruct_0203E724 * param0)
 
 BOOL sub_02048F98 (UnkStruct_0203E724 * param0)
 {
-    Party * v0 = Party_GetFromSavedata(param0->unk_34->unk_0C);
+    Party * v0 = Party_GetFromSavedata(param0->unk_34->saveData);
     Pokemon * v1 = Party_GetPokemonBySlotIndex(v0, inline_02049538(param0));
 
     sub_0206D60C(param0->unk_34, v1);
@@ -160,7 +159,7 @@ static const UnkStruct_020EBB48 Unk_020EBB48[19];
 
 BOOL sub_02049018 (UnkStruct_0203E724 * param0)
 {
-    StringFormatter ** v0;
+    StringTemplate ** v0;
 
     v0 = sub_0203F098(param0->unk_34, 15);
 
@@ -182,7 +181,7 @@ BOOL sub_02049018 (UnkStruct_0203E724 * param0)
     {
         u16 v4;
         u16 v5, v6;
-        UnkStruct_0202CD88 * v7 = sub_0202CD88(param0->unk_34->unk_0C);
+        UnkStruct_0202CD88 * v7 = sub_0202CD88(param0->unk_34->saveData);
 
         v4 = inline_02049538(param0);
         v5 = inline_02049538(param0);
@@ -211,12 +210,12 @@ BOOL sub_020490F0 (UnkStruct_0203E724 * param0)
 
 BOOL sub_0204912C (UnkStruct_0203E724 * param0)
 {
-    TVBroadcast * v0 = SaveData_TVBroadcast(param0->unk_34->unk_0C);
+    TVBroadcast * v0 = SaveData_TVBroadcast(param0->unk_34->saveData);
 
     switch (sub_0203E838(param0)) {
     case 0:
     {
-        Party * v1 = Party_GetFromSavedata(param0->unk_34->unk_0C);
+        Party * v1 = Party_GetFromSavedata(param0->unk_34->saveData);
         Pokemon * v2 = Party_GetPokemonBySlotIndex(v1, inline_02049538(param0));
 
         sub_0206CF48(v0, v2, 4);
@@ -244,7 +243,7 @@ static void sub_020491B8 (FieldSystem * param0, int param1, u16 param2, u16 para
     }
 }
 
-static int sub_020491D0 (int param0, FieldSystem * param1, StringFormatter * param2)
+static int sub_020491D0 (int param0, FieldSystem * param1, StringTemplate * param2)
 {
     UnkFuncPtr_020EBB48_1 v0;
 
@@ -260,7 +259,7 @@ static int sub_020491D0 (int param0, FieldSystem * param1, StringFormatter * par
 static BOOL sub_020491F4 (FieldSystem * param0, int param1)
 {
     UnkFuncPtr_020EBB48_2 v0;
-    TVBroadcast * v1 = SaveData_TVBroadcast(param0->unk_0C);
+    TVBroadcast * v1 = SaveData_TVBroadcast(param0->saveData);
 
     if (sub_0202E6B0(v1, 1, param1) == 0) {
         return 0;
@@ -275,109 +274,109 @@ static BOOL sub_020491F4 (FieldSystem * param0, int param1)
     return v0(param0);
 }
 
-static void sub_0204922C (StringFormatter * param0, int param1, const u16 * param2, int param3, int param4, int param5)
+static void sub_0204922C (StringTemplate * param0, int param1, const u16 * param2, int param3, int param4, int param5)
 {
     Strbuf* v0 = Strbuf_Init(64, 4);
 
     Strbuf_CopyChars(v0, param2);
-    sub_0200B48C(param0, param1, v0, param3, param5, param4);
+    StringTemplate_SetStrbuf(param0, param1, v0, param3, param5, param4);
     Strbuf_Free(v0);
 }
 
-static void sub_02049268 (FieldSystem * param0, StringFormatter * param1)
+static void sub_02049268 (FieldSystem * param0, StringTemplate * param1)
 {
-    Party * v0 = Party_GetFromSavedata(param0->unk_0C);
+    Party * v0 = Party_GetFromSavedata(param0->saveData);
     Pokemon * v1 = sub_02054A74(v0);
 
-    sub_0200B538(param1, 0, Pokemon_GetBoxPokemon(v1));
+    StringTemplate_SetSpeciesName(param1, 0, Pokemon_GetBoxPokemon(v1));
 }
 
-static void sub_02049288 (FieldSystem * param0, StringFormatter * param1)
+static void sub_02049288 (FieldSystem * param0, StringTemplate * param1)
 {
     int v0;
 
-    v0 = ov25_02253DD8(param0->unk_04->unk_14);
-    sub_0200B928(param1, 0, v0);
+    v0 = PoketchSystem_CurrentAppID(param0->unk_04->unk_14);
+    StringTemplate_SetPoketchAppName(param1, 0, v0);
 }
 
-static void sub_020492A0 (FieldSystem * param0, StringFormatter * param1)
+static void sub_020492A0 (FieldSystem * param0, StringTemplate * param1)
 {
     u16 v0[10 + 1];
-    TVBroadcast * v1 = SaveData_TVBroadcast(param0->unk_0C);
+    TVBroadcast * v1 = SaveData_TVBroadcast(param0->saveData);
     UnkStruct_0202E7E4 * v2 = sub_0202E7E4(v1);
 
     MessageLoader_GetSpeciesName(v2->unk_02, 4, v0);
     sub_0204922C(param1, 0, v0, 0, GAME_LANGUAGE, 1);
 }
 
-static void sub_020492D4 (FieldSystem * param0, StringFormatter * param1)
+static void sub_020492D4 (FieldSystem * param0, StringTemplate * param1)
 {
     u16 v0[10 + 1];
-    TVBroadcast * v1 = SaveData_TVBroadcast(param0->unk_0C);
+    TVBroadcast * v1 = SaveData_TVBroadcast(param0->saveData);
     UnkStruct_0202E810 * v2 = sub_0202E810(v1);
 
     MessageLoader_GetSpeciesName(v2->unk_02, 4, v0);
     sub_0204922C(param1, 0, v0, 0, GAME_LANGUAGE, 1);
 }
 
-static void sub_02049308 (FieldSystem * param0, StringFormatter * param1)
+static void sub_02049308 (FieldSystem * param0, StringTemplate * param1)
 {
     Strbuf* v0;
-    TVBroadcast * v1 = SaveData_TVBroadcast(param0->unk_0C);
+    TVBroadcast * v1 = SaveData_TVBroadcast(param0->saveData);
     UnkStruct_0202E81C * v2 = sub_0202E81C(v1);
 
     v0 = Strbuf_Init(64, 4);
 
     Strbuf_CopyChars(v0, v2->unk_06);
-    sub_0200B48C(param1, 0, v0, v2->unk_02, 1, GAME_LANGUAGE);
+    StringTemplate_SetStrbuf(param1, 0, v0, v2->unk_02, 1, GAME_LANGUAGE);
     Strbuf_Free(v0);
 }
 
 static BOOL sub_02049348 (FieldSystem * param0)
 {
-    UnkStruct_0202E7FC * v0 = sub_0202E7FC(SaveData_TVBroadcast(param0->unk_0C));
+    UnkStruct_0202E7FC * v0 = sub_0202E7FC(SaveData_TVBroadcast(param0->saveData));
     return v0->unk_00;
 }
 
 static BOOL sub_02049358 (FieldSystem * param0)
 {
-    PoketchData * v0 = SaveData_PoketchData(param0->unk_0C);
+    PoketchData * v0 = SaveData_PoketchData(param0->saveData);
     return PoketchData_IsEnabled(v0);
 }
 
 static BOOL sub_02049368 (FieldSystem * param0)
 {
-    UnkStruct_0202E7D8 * v0 = sub_0202E7D8(SaveData_TVBroadcast(param0->unk_0C));
+    UnkStruct_0202E7D8 * v0 = sub_0202E7D8(SaveData_TVBroadcast(param0->saveData));
     return v0->unk_00;
 }
 
 static BOOL sub_02049378 (FieldSystem * param0)
 {
-    UnkStruct_0202A750 * v0 = sub_0202A750(param0->unk_0C);
+    UnkStruct_0202A750 * v0 = sub_0202A750(param0->saveData);
     return sub_02029D10(v0, 0);
 }
 
 static BOOL sub_02049388 (FieldSystem * param0)
 {
-    UnkStruct_0202E7F0 * v0 = sub_0202E7F0(SaveData_TVBroadcast(param0->unk_0C));
+    UnkStruct_0202E7F0 * v0 = sub_0202E7F0(SaveData_TVBroadcast(param0->saveData));
     return v0->unk_00;
 }
 
 static BOOL sub_02049398 (FieldSystem * param0)
 {
-    UnkStruct_0202E7E4 * v0 = sub_0202E7E4(SaveData_TVBroadcast(param0->unk_0C));
+    UnkStruct_0202E7E4 * v0 = sub_0202E7E4(SaveData_TVBroadcast(param0->saveData));
     return v0->unk_00;
 }
 
 static BOOL sub_020493A8 (FieldSystem * param0)
 {
-    UnkStruct_0202E810 * v0 = sub_0202E810(SaveData_TVBroadcast(param0->unk_0C));
+    UnkStruct_0202E810 * v0 = sub_0202E810(SaveData_TVBroadcast(param0->saveData));
     return v0->unk_00;
 }
 
 static BOOL sub_020493B8 (FieldSystem * param0)
 {
-    UnkStruct_0202E81C * v0 = sub_0202E81C(SaveData_TVBroadcast(param0->unk_0C));
+    UnkStruct_0202E81C * v0 = sub_0202E81C(SaveData_TVBroadcast(param0->saveData));
     return v0->unk_00;
 }
 
@@ -409,7 +408,7 @@ BOOL sub_020493C8 (UnkStruct_0203E724 * param0)
     UnkStruct_0202E808 * v1;
     u16 * v2 = inline_0204FCAC(param0);
 
-    v0 = SaveData_TVBroadcast(param0->unk_34->unk_0C);
+    v0 = SaveData_TVBroadcast(param0->unk_34->saveData);
     v1 = sub_0202E808(v0);
     *v2 = v1->unk_07;
 
@@ -425,7 +424,7 @@ BOOL sub_020493F4 (UnkStruct_0203E724 * param0)
     u16 * v4 = inline_0204FCAC(param0);
     u16 * v5 = inline_0204FCAC(param0);
 
-    v0 = SaveData_TVBroadcast(param0->unk_34->unk_0C);
+    v0 = SaveData_TVBroadcast(param0->unk_34->saveData);
     v1 = sub_0202E81C(v0);
 
     switch (v1->unk_01) {

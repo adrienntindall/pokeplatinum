@@ -3,7 +3,6 @@
 
 #include "assert.h"
 
-#include "struct_decls/struct_0200B358_decl.h"
 #include "struct_decls/sys_task.h"
 #include "struct_decls/struct_0202440C_decl.h"
 #include "trainer_info.h"
@@ -32,7 +31,7 @@
 
 #include "unk_02005474.h"
 #include "unk_0200A9DC.h"
-#include "unk_0200B358.h"
+#include "string_template.h"
 #include "unk_0200D9E8.h"
 #include "rtc.h"
 #include "heap.h"
@@ -85,11 +84,11 @@ BOOL sub_020944D4(UnkStruct_02095C48 * param0);
 static void sub_02093C6C(SysTask * param0, void * param1);
 UnkStruct_02095C48 * sub_02093800(const UnkStruct_02093800 * param0);
 void sub_02093AD4(UnkStruct_02095C48 * param0);
-void sub_02094630(UnkStruct_02095C48 * param0, int param1, StringFormatter * param2, u32 param3);
-void sub_02094648(UnkStruct_02095C48 * param0, int param1, StringFormatter * param2, u32 param3);
-void sub_02094680(UnkStruct_02095C48 * param0, int param1, StringFormatter * param2, u32 param3);
-static BOOL sub_02093448(UnkStruct_020508D4 * param0);
-static BOOL sub_020935EC(UnkStruct_020508D4 * param0);
+void sub_02094630(UnkStruct_02095C48 * param0, int param1, StringTemplate * param2, u32 param3);
+void sub_02094648(UnkStruct_02095C48 * param0, int param1, StringTemplate * param2, u32 param3);
+void sub_02094680(UnkStruct_02095C48 * param0, int param1, StringTemplate * param2, u32 param3);
+static BOOL sub_02093448(TaskManager * param0);
+static BOOL sub_020935EC(TaskManager * param0);
 void sub_02093BBC(UnkStruct_02095C48 * param0);
 void sub_02093C54(UnkStruct_02095C48 * param0);
 static void sub_020944E8(UnkStruct_02095C48 * param0);
@@ -155,7 +154,7 @@ __attribute__((aligned(4))) static const u8 Unk_020F55D0[][6] = {
     {0xF, 0xF, 0x8, 0x8, 0x14, 0xFF}
 };
 
-void sub_020933F8 (UnkStruct_020508D4 * param0, UnkStruct_02095C48 * param1)
+void sub_020933F8 (TaskManager * param0, UnkStruct_02095C48 * param1)
 {
     UnkStruct_020933F8 * v0 = Heap_AllocFromHeapAtEnd(11, sizeof(UnkStruct_020933F8));
 
@@ -174,10 +173,10 @@ void sub_020933F8 (UnkStruct_020508D4 * param0, UnkStruct_02095C48 * param1)
     }
 }
 
-static BOOL sub_02093448 (UnkStruct_020508D4 * param0)
+static BOOL sub_02093448 (TaskManager * param0)
 {
-    FieldSystem * v0 = sub_02050A60(param0);
-    UnkStruct_020933F8 * v1 = sub_02050A64(param0);
+    FieldSystem * v0 = TaskMan_FieldSystem(param0);
+    UnkStruct_020933F8 * v1 = TaskManager_Environment(param0);
 
     switch (v1->unk_04) {
     case 0:
@@ -264,10 +263,10 @@ static BOOL sub_02093448 (UnkStruct_020508D4 * param0)
     return 0;
 }
 
-static BOOL sub_020935EC (UnkStruct_020508D4 * param0)
+static BOOL sub_020935EC (TaskManager * param0)
 {
-    FieldSystem * v0 = sub_02050A60(param0);
-    UnkStruct_020933F8 * v1 = sub_02050A64(param0);
+    FieldSystem * v0 = TaskMan_FieldSystem(param0);
+    UnkStruct_020933F8 * v1 = TaskManager_Environment(param0);
 
     switch (v1->unk_04) {
     case 0:
@@ -1128,20 +1127,20 @@ static void sub_0209451C (SysTask * param0, void * param1)
     }
 }
 
-void sub_02094630 (UnkStruct_02095C48 * param0, int param1, StringFormatter * param2, u32 param3)
+void sub_02094630 (UnkStruct_02095C48 * param0, int param1, StringTemplate * param2, u32 param3)
 {
-    sub_0200BB74(param2, param3, param0->unk_00.unk_C0[param1].unk_00);
+    StringTemplate_SetContestJudgeName(param2, param3, param0->unk_00.unk_C0[param1].unk_00);
 }
 
-void sub_02094648 (UnkStruct_02095C48 * param0, int param1, StringFormatter * param2, u32 param3)
+void sub_02094648 (UnkStruct_02095C48 * param0, int param1, StringTemplate * param2, u32 param3)
 {
     int v0, v1;
 
     v1 = sub_02095904(param1);
-    sub_0200B48C(param2, param3, param0->unk_00.unk_D8[v1], param0->unk_00.unk_F8[v1], 1, GAME_LANGUAGE);
+    StringTemplate_SetStrbuf(param2, param3, param0->unk_00.unk_D8[v1], param0->unk_00.unk_F8[v1], 1, GAME_LANGUAGE);
 }
 
-void sub_02094680 (UnkStruct_02095C48 * param0, int param1, StringFormatter * param2, u32 param3)
+void sub_02094680 (UnkStruct_02095C48 * param0, int param1, StringTemplate * param2, u32 param3)
 {
     BoxPokemon * v0;
     int v1;
@@ -1149,26 +1148,26 @@ void sub_02094680 (UnkStruct_02095C48 * param0, int param1, StringFormatter * pa
     v1 = sub_02095904(param1);
     v0 = Pokemon_GetBoxPokemon(param0->unk_00.unk_00[v1]);
 
-    StringFormatter_BufferNickname(param2, param3, v0);
+    StringTemplate_SetNickname(param2, param3, v0);
 }
 
-void sub_020946A4 (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 param2)
+void sub_020946A4 (UnkStruct_02095C48 * param0, StringTemplate * param1, u32 param2)
 {
     u32 v0;
 
     v0 = sub_02095848(param0->unk_00.unk_110, param0->unk_00.unk_111, param0->unk_155);
-    sub_0200BBA8(param1, param2, v0);
+    StringTemplate_SetContestRankName(param1, param2, v0);
 }
 
-void sub_020946CC (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 param2)
+void sub_020946CC (UnkStruct_02095C48 * param0, StringTemplate * param1, u32 param2)
 {
     u32 v0;
 
     v0 = sub_020958C4(param0->unk_00.unk_10F, param0->unk_00.unk_111);
-    sub_0200BBDC(param1, param2, v0);
+    StringTemplate_SetContestTypeName(param1, param2, v0);
 }
 
-void sub_020946F0 (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 param2)
+void sub_020946F0 (UnkStruct_02095C48 * param0, StringTemplate * param1, u32 param2)
 {
     int v0, v1;
     int v2;
@@ -1185,7 +1184,7 @@ void sub_020946F0 (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 pa
     sub_02094648(param0, v1, param1, param2);
 }
 
-void sub_02094720 (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 param2)
+void sub_02094720 (UnkStruct_02095C48 * param0, StringTemplate * param1, u32 param2)
 {
     int v0, v1;
     int v2;
@@ -1324,7 +1323,7 @@ BOOL sub_02094868 (UnkStruct_02095C48 * param0)
     return 1;
 }
 
-void sub_02094898 (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 param2, int param3)
+void sub_02094898 (UnkStruct_02095C48 * param0, StringTemplate * param1, u32 param2, int param3)
 {
     u32 v0, v1;
 
@@ -1350,7 +1349,7 @@ void sub_02094898 (UnkStruct_02095C48 * param0, StringFormatter * param1, u32 pa
     }
 
     v1 = sub_020923C0(v0, 3);
-    sub_0200B668(param1, param2, v1);
+    StringTemplate_SetRibbonName(param1, param2, v1);
 }
 
 u32 sub_02094904 (UnkStruct_02095C48 * param0)
@@ -1651,7 +1650,7 @@ void sub_02094C44 (UnkStruct_02095C48 * param0, SaveData * param1, u32 param2, U
             int v6;
             PokedexData * v7;
 
-            v7 = sub_02027560(param0->unk_1970);
+            v7 = SaveData_Pokedex(param0->unk_1970);
 
             for (v6 = param0->unk_00.unk_117; v6 < 4; v6++) {
                 sub_020272A4(v7, param0->unk_00.unk_00[v6]);

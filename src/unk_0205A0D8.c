@@ -4,7 +4,6 @@
 #include "core_sys.h"
 
 #include "message.h"
-#include "struct_decls/struct_0200B358_decl.h"
 #include "struct_decls/struct_020149F0_decl.h"
 #include "strbuf.h"
 #include "trainer_info.h"
@@ -25,7 +24,7 @@
 
 #include "unk_02005474.h"
 #include "message.h"
-#include "unk_0200B358.h"
+#include "string_template.h"
 #include "unk_0200DA60.h"
 #include "unk_0200F174.h"
 #include "unk_020149F0.h"
@@ -65,7 +64,7 @@ typedef struct {
     Strbuf* unk_10;
     Window unk_14;
     FieldSystem * unk_24;
-    StringFormatter * unk_28;
+    StringTemplate * unk_28;
     MessageLoader * unk_2C;
     int unk_30;
     int unk_34;
@@ -101,7 +100,7 @@ typedef struct {
     Strbuf* unk_00;
     Strbuf* unk_04;
     Window unk_08;
-    StringFormatter * unk_18;
+    StringTemplate * unk_18;
     MessageLoader * unk_1C;
     int unk_20;
     int unk_24;
@@ -132,11 +131,11 @@ static void sub_0205A0D8 (UnkStruct_0205A0D8 * param0, FieldSystem * param1, Par
         0, 1, 2, 4, 3, 5, 6, 7, 8
     };
 
-    v1 = param1->unk_0C;
+    v1 = param1->saveData;
     v0 = Heap_AllocFromHeapAtEnd(param5, sizeof(PokemonSummary));
 
     MI_CpuClear8(v0, sizeof(PokemonSummary));
-    PokemonSummary_SetPlayerProfile(v0, SaveData_GetTrainerInfo(param1->unk_0C));
+    PokemonSummary_SetPlayerProfile(v0, SaveData_GetTrainerInfo(param1->saveData));
 
     v0->dexMode = sub_0207A274(v1);
     v0->contest = PokemonSummary_ShowContestData(v1);
@@ -162,10 +161,10 @@ static void sub_0205A164 (UnkStruct_0205A0D8 * param0, int param1)
 
     MI_CpuClear8(v1, sizeof(PartyManagementData));
 
-    v1->unk_0C = sub_02025E44(param0->unk_24->unk_0C);
+    v1->unk_0C = sub_02025E44(param0->unk_24->saveData);
     v1->unk_14 = (void *)param0->unk_24->unk_B0;
-    v1->unk_00 = Party_GetFromSavedata(param0->unk_24->unk_0C);
-    v1->unk_04 = sub_0207D990(param0->unk_24->unk_0C);
+    v1->unk_00 = Party_GetFromSavedata(param0->unk_24->saveData);
+    v1->unk_04 = sub_0207D990(param0->unk_24->saveData);
     v1->unk_21 = 0;
     v1->unk_20 = 2;
 
@@ -258,10 +257,10 @@ static BOOL sub_0205A2FC (void)
     return 0;
 }
 
-static BOOL sub_0205A324 (UnkStruct_020508D4 * param0)
+static BOOL sub_0205A324 (TaskManager * param0)
 {
-    UnkStruct_0205A0D8 * v0 = sub_02050A64(param0);
-    FieldSystem * v1 = sub_02050A60(param0);
+    UnkStruct_0205A0D8 * v0 = TaskManager_Environment(param0);
+    FieldSystem * v1 = TaskMan_FieldSystem(param0);
 
     switch (v0->unk_34) {
     case 0:
@@ -383,7 +382,7 @@ static BOOL sub_0205A324 (UnkStruct_020508D4 * param0)
         }
         break;
     case 17:
-        sub_0205A0D8(v0, v0->unk_24, Party_GetFromSavedata(v0->unk_24->unk_0C), v0->unk_3C, 0, 11);
+        sub_0205A0D8(v0, v0->unk_24, Party_GetFromSavedata(v0->unk_24->saveData), v0->unk_3C, 0, 11);
         v0->unk_34 = 18;
         break;
     case 18:
@@ -449,9 +448,9 @@ static BOOL sub_0205A324 (UnkStruct_020508D4 * param0)
                 v0->unk_82 = (v0->unk_38 != 0);
                 sub_0205AC80(v0, v0->unk_82);
                 sub_020364F0(0);
-                StringFormatter_FormatPlayerName(v0->unk_28, 0, v0->unk_74);
+                StringTemplate_SetPlayerName(v0->unk_28, 0, v0->unk_74);
                 MessageLoader_GetStrbuf(v0->unk_2C, 14, v0->unk_0C);
-                StringFormatter_Format(v0->unk_28, v0->unk_10, v0->unk_0C);
+                StringTemplate_Format(v0->unk_28, v0->unk_10, v0->unk_0C);
                 v0->unk_30 = sub_0205AA50(v0, v0->unk_10);
                 v0->unk_34 = 27;
             }
@@ -520,9 +519,9 @@ static BOOL sub_0205A324 (UnkStruct_020508D4 * param0)
         }
         break;
     case 36:
-        sub_0200B538(v0->unk_28, 1, Pokemon_GetBoxPokemon(Party_GetPokemonBySlotIndex(v0->unk_50, v0->unk_84)));
+        StringTemplate_SetSpeciesName(v0->unk_28, 1, Pokemon_GetBoxPokemon(Party_GetPokemonBySlotIndex(v0->unk_50, v0->unk_84)));
         MessageLoader_GetStrbuf(v0->unk_2C, 18, v0->unk_0C);
-        StringFormatter_Format(v0->unk_28, v0->unk_10, v0->unk_0C);
+        StringTemplate_Format(v0->unk_28, v0->unk_10, v0->unk_0C);
         v0->unk_30 = sub_0205AA50(v0, v0->unk_10);
         v0->unk_34 = 37;
         break;
@@ -544,7 +543,7 @@ static BOOL sub_0205A324 (UnkStruct_020508D4 * param0)
             if (v0->unk_81 == 1) {
                 sub_0205B0B4(v0);
                 MessageLoader_GetStrbuf(v0->unk_2C, 14, v0->unk_0C);
-                StringFormatter_Format(v0->unk_28, v0->unk_10, v0->unk_0C);
+                StringTemplate_Format(v0->unk_28, v0->unk_10, v0->unk_0C);
                 v0->unk_30 = sub_0205AA50(v0, v0->unk_10);
                 sub_020364F0(2);
                 v0->unk_34 = 39;
@@ -627,12 +626,12 @@ static int sub_0205AA50 (UnkStruct_0205A0D8 * param0, const Strbuf *param1)
 
     if (sub_0201A7CC(v0) == 0) {
         sub_0205D8F4(param0->unk_24->unk_08, v0, 3);
-        sub_0205D944(v0, sub_02025E44(param0->unk_24->unk_0C));
+        sub_0205D944(v0, sub_02025E44(param0->unk_24->saveData));
     } else {
         sub_0205D988(v0);
     }
 
-    return sub_0205D994(v0, (Strbuf *)param1, sub_02025E44(param0->unk_24->unk_0C), 1);
+    return sub_0205D994(v0, (Strbuf *)param1, sub_02025E44(param0->unk_24->saveData), 1);
 }
 
 static void sub_0205AAA0 (UnkStruct_0205A0D8 * param0, BOOL param1)
@@ -661,7 +660,7 @@ static void sub_0205AAA0 (UnkStruct_0205A0D8 * param0, BOOL param1)
 void sub_0205AB10 (FieldSystem * param0, UnkFuncPtr_0205AB10 * param1)
 {
     UnkStruct_0205A0D8 * v0;
-    UnkStruct_020508D4 * v1 = param0->unk_10;
+    TaskManager * v1 = param0->unk_10;
 
     if (v1) {
         return;
@@ -673,7 +672,7 @@ void sub_0205AB10 (FieldSystem * param0, UnkFuncPtr_0205AB10 * param1)
     v0->unk_43 = 5;
     v0->unk_24 = param0;
     v0->unk_08 = param1;
-    v0->unk_28 = StringFormatter_New(11);
+    v0->unk_28 = StringTemplate_Default(11);
     v0->unk_2C = MessageLoader_Init(0, 26, 11, 11);
     v0->unk_0C = Strbuf_Init((100 * 2), 11);
     v0->unk_10 = Strbuf_Init((100 * 2), 11);
@@ -736,7 +735,7 @@ static void sub_0205AC28 (UnkStruct_0205A0D8 * param0)
     }
 
     MessageLoader_Free(param0->unk_2C);
-    sub_0200B3F0(param0->unk_28);
+    StringTemplate_Free(param0->unk_28);
     Strbuf_Free(param0->unk_0C);
     Strbuf_Free(param0->unk_10);
     sub_02014A20(param0->unk_78);
@@ -746,7 +745,7 @@ static void sub_0205AC28 (UnkStruct_0205A0D8 * param0)
 
 static UnkStruct_0205A0D8 * sub_0205AC74 (FieldSystem * param0)
 {
-    return sub_02050A64(param0->unk_10);
+    return TaskManager_Environment(param0->unk_10);
 }
 
 static void sub_0205AC80 (UnkStruct_0205A0D8 * param0, BOOL param1)
@@ -756,7 +755,7 @@ static void sub_0205AC80 (UnkStruct_0205A0D8 * param0, BOOL param1)
     u8 * v2;
     int v3, v4;
 
-    v0 = Party_GetFromSavedata(param0->unk_24->unk_0C);
+    v0 = Party_GetFromSavedata(param0->unk_24->saveData);
     v2 = param0->unk_4C;
     v4 = Pokemon_GetStructSize();
     v1 = (UnkStruct_0205AD20 *)(v2 + v4 * 3);
@@ -1012,33 +1011,33 @@ void sub_0205B110 (int param0, int param1, void * param2, void * param3)
     }
 }
 
-static BOOL sub_0205B140 (UnkStruct_020508D4 * param0)
+static BOOL sub_0205B140 (TaskManager * param0)
 {
-    FieldSystem * v0 = sub_02050A60(param0);
-    UnkStruct_0205B2D4 * v1 = sub_02050A64(param0);
+    FieldSystem * v0 = TaskMan_FieldSystem(param0);
+    UnkStruct_0205B2D4 * v1 = TaskManager_Environment(param0);
     TrainerCard * v2 = (TrainerCard *)sub_02059EBC(v1->unk_24, NULL, 0);
 
     switch (v1->unk_28) {
     case 0:
-        v1->unk_18 = StringFormatter_New(4);
+        v1->unk_18 = StringTemplate_Default(4);
         v1->unk_1C = MessageLoader_Init(0, 26, 11, 4);
         v1->unk_00 = Strbuf_Init((100 * 2), 4);
         v1->unk_04 = Strbuf_Init((100 * 2), 4);
 
         MessageLoader_GetStrbuf(v1->unk_1C, 2 + v2->unk_03, v1->unk_00);
-        StringFormatter_FormatPlayerName(v1->unk_18, 0, CommInfo_TrainerInfo(v1->unk_24));
-        StringFormatter_Format(v1->unk_18, v1->unk_04, v1->unk_00);
+        StringTemplate_SetPlayerName(v1->unk_18, 0, CommInfo_TrainerInfo(v1->unk_24));
+        StringTemplate_Format(v1->unk_18, v1->unk_04, v1->unk_00);
         sub_0205D8F4(v0->unk_08, &v1->unk_08, 3);
-        sub_0205D944(&v1->unk_08, sub_02025E44(v0->unk_0C));
+        sub_0205D944(&v1->unk_08, sub_02025E44(v0->saveData));
 
-        v1->unk_20 = sub_0205D994(&v1->unk_08, v1->unk_04, sub_02025E44(v0->unk_0C), 1);
+        v1->unk_20 = sub_0205D994(&v1->unk_08, v1->unk_04, sub_02025E44(v0->saveData), 1);
         v1->unk_28++;
         break;
     case 1:
         if (sub_0205DA04(v1->unk_20)) {
             if (gCoreSys.pressedKeys & PAD_BUTTON_A) {
                 MessageLoader_Free(v1->unk_1C);
-                sub_0200B3F0(v1->unk_18);
+                StringTemplate_Free(v1->unk_18);
                 Strbuf_Free(v1->unk_00);
                 Strbuf_Free(v1->unk_04);
                 sub_0200E084(&v1->unk_08, 0);

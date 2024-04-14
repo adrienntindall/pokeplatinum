@@ -3,7 +3,6 @@
 
 #include "overlay062/ov62_const_funcptr_tables.h"
 
-#include "struct_decls/struct_0200B358_decl.h"
 #include "strbuf.h"
 #include "struct_decls/struct_02023FCC_decl.h"
 #include "struct_decls/pokedexdata_decl.h"
@@ -31,7 +30,7 @@
 #include "game_overlay.h"
 #include "unk_02006E3C.h"
 #include "message.h"
-#include "unk_0200B358.h"
+#include "string_template.h"
 #include "unk_0200C6E4.h"
 #include "unk_02012744.h"
 #include "unk_02017728.h"
@@ -1431,15 +1430,15 @@ asm static void ov62_02239724 (UnkStruct_0208C06C * param0)
     ldr r0, [sp, #0x18]
     add r2, r4, #0
     add r3, r1, #0
-    bl sub_0200B48C
+    bl StringTemplate_SetStrbuf
     ldr r0, [sp, #0x18]
     mov r1, #1
     add r2, r5, #0
-    bl sub_0200BE48
+    bl StringTemplate_SetCustomMessageWord
     ldr r0, [sp, #0x18]
     ldr r2, [sp, #0x1c]
     add r1, r7, #0
-    bl StringFormatter_Format
+    bl StringTemplate_Format
     add r0, r7, #0
     bl Strbuf_NumLines
     mov r5, #0
@@ -1485,7 +1484,7 @@ asm static void ov62_02239724 (UnkStruct_0208C06C * param0)
     add r0, r7, #0
     bl Strbuf_Free
     ldr r0, [sp, #0x18]
-    bl sub_0200B3F0
+    bl StringTemplate_Free
  _0223984A:
     add sp, #0x24
     pop {r4, r5, r6, r7, pc}
@@ -1566,15 +1565,15 @@ asm static void ov62_02239854 (UnkStruct_0208C06C * param0, int param1)
     ldr r0, [sp, #0x18]
     add r2, r4, #0
     add r3, r1, #0
-    bl sub_0200B48C
+    bl StringTemplate_SetStrbuf
     ldr r0, [sp, #0x18]
     mov r1, #1
     add r2, r5, #0
-    bl sub_0200BE48
+    bl StringTemplate_SetCustomMessageWord
     ldr r0, [sp, #0x18]
     ldr r2, [sp, #0x1c]
     add r1, r7, #0
-    bl StringFormatter_Format
+    bl StringTemplate_Format
     add r0, r7, #0
     bl Strbuf_NumLines
     mov r5, #0
@@ -1620,7 +1619,7 @@ asm static void ov62_02239854 (UnkStruct_0208C06C * param0, int param1)
     add r0, r7, #0
     bl Strbuf_Free
     ldr r0, [sp, #0x18]
-    bl sub_0200B3F0
+    bl StringTemplate_Free
  _0223997A:
     add sp, #0x24
     pop {r4, r5, r6, r7, pc}
@@ -1646,7 +1645,7 @@ static BOOL ov62_02239984 (UnkStruct_0208C06C * param0, int param1)
         int v7;
         int v8 = 0;
         BOOL v9;
-        PokedexData * v10 = sub_02027560(param0->unk_830);
+        PokedexData * v10 = SaveData_Pokedex(param0->unk_830);
 
         for (v7 = v3; v7 < v4; v7++) {
             v9 = sub_02026FE8(v10, v1[v7]);
@@ -1690,7 +1689,7 @@ static void ov62_02239A0C (UnkStruct_0208C06C * param0, int param1)
         int v5;
         int v6 = 0;
         BOOL v7;
-        PokedexData * v8 = sub_02027560(param0->unk_830);
+        PokedexData * v8 = SaveData_Pokedex(param0->unk_830);
 
         v4->unk_1D4.unk_00 = 0;
 

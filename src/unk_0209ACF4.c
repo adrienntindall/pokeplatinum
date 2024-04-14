@@ -4,7 +4,6 @@
 #include "core_sys.h"
 
 #include "message.h"
-#include "struct_decls/struct_0200B358_decl.h"
 #include "struct_decls/struct_020149F0_decl.h"
 #include "strbuf.h"
 #include "struct_decls/struct_020508D4_decl.h"
@@ -16,7 +15,7 @@
 
 #include "unk_02005474.h"
 #include "message.h"
-#include "unk_0200B358.h"
+#include "string_template.h"
 #include "unk_0200DA60.h"
 #include "unk_0200F174.h"
 #include "unk_020149F0.h"
@@ -38,7 +37,7 @@ typedef struct {
     FieldSystem * unk_00;
     Strbuf* unk_04;
     Strbuf* unk_08;
-    StringFormatter * unk_0C;
+    StringTemplate * unk_0C;
     MessageLoader * unk_10;
     UnkStruct_020149F0 * unk_14;
     Window unk_18;
@@ -56,7 +55,7 @@ typedef struct {
 
 static void sub_0209AD84(UnkStruct_0209AD84 * param0);
 static void sub_0209ADBC(UnkStruct_0209AD84 * param0);
-static BOOL sub_0209AE14(UnkStruct_020508D4 * param0);
+static BOOL sub_0209AE14(TaskManager * param0);
 static void sub_0209B084(UnkStruct_0209AD84 * param0, int param1, BOOL param2);
 static BOOL sub_0209B100(UnkStruct_0209AD84 * param0);
 static void sub_0209B110(UnkStruct_0209AD84 * param0);
@@ -66,18 +65,18 @@ static void sub_0209B1D8(UnkStruct_0209AD84 * param0);
 static void sub_0209B27C(UnkStruct_0209AD84 * param0);
 static int sub_0209B288(UnkStruct_0209AD84 * param0);
 
-void sub_0209ACF4 (UnkStruct_020508D4 * param0)
+void sub_0209ACF4 (TaskManager * param0)
 {
-    FieldSystem * v0 = sub_02050A60(param0);
+    FieldSystem * v0 = TaskMan_FieldSystem(param0);
     UnkStruct_0209AD84 * v1 = Heap_AllocFromHeap(32, sizeof(UnkStruct_0209AD84));
 
     v1->unk_00 = v0;
     v1->unk_04 = Strbuf_Init(400, 32);
     v1->unk_08 = Strbuf_Init(400, 32);
-    v1->unk_0C = StringFormatter_New(32);
+    v1->unk_0C = StringTemplate_Default(32);
     v1->unk_10 = MessageLoader_Init(1, 26, 420, 32);
     v1->unk_14 = sub_020149F0(32);
-    v1->unk_50 = sub_0209747C(2, 0, v1->unk_00->unk_0C, 32);
+    v1->unk_50 = sub_0209747C(2, 0, v1->unk_00->saveData, 32);
 
     sub_02097520(v1->unk_50);
     Window_Init(&(v1->unk_18));
@@ -95,7 +94,7 @@ static void sub_0209AD84 (UnkStruct_0209AD84 * param0)
     sub_02014A20(param0->unk_14);
     Strbuf_Free(param0->unk_04);
     Strbuf_Free(param0->unk_08);
-    sub_0200B3F0(param0->unk_0C);
+    StringTemplate_Free(param0->unk_0C);
     MessageLoader_Free(param0->unk_10);
     sub_0209ADBC(param0);
     Heap_FreeToHeap(param0);
@@ -119,9 +118,9 @@ static void sub_0209ADBC (UnkStruct_0209AD84 * param0)
     }
 }
 
-static BOOL sub_0209AE14 (UnkStruct_020508D4 * param0)
+static BOOL sub_0209AE14 (TaskManager * param0)
 {
-    UnkStruct_0209AD84 * v0 = sub_02050A64(param0);
+    UnkStruct_0209AD84 * v0 = TaskManager_Environment(param0);
 
     switch (v0->unk_54) {
     case 0:
@@ -142,19 +141,19 @@ static BOOL sub_0209AE14 (UnkStruct_020508D4 * param0)
 
             switch (v0->unk_64) {
             case 0:
-                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->unk_0C, 0));
+                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->saveData, 0));
                 v0->unk_54 = 3;
                 break;
             case 1:
-                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->unk_0C, 1));
+                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->saveData, 1));
                 v0->unk_54 = 3;
                 break;
             case 2:
-                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->unk_0C, 2));
+                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->saveData, 2));
                 v0->unk_54 = 3;
                 break;
             case 3:
-                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->unk_0C, 3));
+                sub_02014CC0(&(v0->unk_48), sub_0202D498(v0->unk_00->saveData, 3));
                 v0->unk_54 = 3;
                 break;
             case 4:
@@ -200,7 +199,7 @@ static BOOL sub_0209AE14 (UnkStruct_020508D4 * param0)
                 v0->unk_54 = 11;
             } else {
                 sub_02097540(v0->unk_50, &(v0->unk_48));
-                sub_0202D478(v0->unk_00->unk_0C, v0->unk_64, &(v0->unk_48));
+                sub_0202D478(v0->unk_00->saveData, v0->unk_64, &(v0->unk_48));
                 sub_0209B084(v0, 6, 0);
                 v0->unk_54 = 9;
             }
@@ -229,7 +228,7 @@ static BOOL sub_0209AE14 (UnkStruct_020508D4 * param0)
                 sub_0209B27C(v0);
 
                 if (v1 != 0xffff) {
-                    sub_0200BE48(v0->unk_0C, 0, v1);
+                    StringTemplate_SetCustomMessageWord(v0->unk_0C, 0, v1);
                     sub_0209B084(v0, 8, 1);
                 } else {
                     sub_0209B084(v0, 7, 0);
@@ -266,20 +265,20 @@ static void sub_0209B084 (UnkStruct_0209AD84 * param0, int param1, BOOL param2)
 
     if (param2) {
         MessageLoader_GetStrbuf(param0->unk_10, param1, param0->unk_04);
-        StringFormatter_Format(param0->unk_0C, param0->unk_08, param0->unk_04);
+        StringTemplate_Format(param0->unk_0C, param0->unk_08, param0->unk_04);
     } else {
         MessageLoader_GetStrbuf(param0->unk_10, param1, param0->unk_08);
     }
 
     if (sub_0201A7CC(v0) == 0) {
         sub_0205D8F4(param0->unk_00->unk_08, v0, 3);
-        sub_0205D944(v0, sub_02025E44(param0->unk_00->unk_0C));
+        sub_0205D944(v0, sub_02025E44(param0->unk_00->saveData));
     } else {
         sub_0205D988(v0);
         sub_0200E060(v0, 0, 1024 - (18 + 12), 10);
     }
 
-    param0->unk_58 = sub_0205D994(v0, param0->unk_08, sub_02025E44(param0->unk_00->unk_0C), 1);
+    param0->unk_58 = sub_0205D994(v0, param0->unk_08, sub_02025E44(param0->unk_00->saveData), 1);
 }
 
 static BOOL sub_0209B100 (UnkStruct_0209AD84 * param0)
