@@ -1492,6 +1492,8 @@ static void ov7_0224B0E8 (SysTask * task, void * param1)
 {
     CommClubManager * commClubMan = (CommClubManager *)param1;
 
+    FieldCommMan_EnterBattleRoom(commClubMan->fieldSystem);
+
     if ((CommSys_CurNetId() == 0) && (CommSys_ConnectedCount() != commClubMan->unk_90)) {
         CommClubMan_SetTask(ov7_0224B274);
     } else if (ov7_0224B4E4() || CommSys_CheckError()) {

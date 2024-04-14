@@ -199,10 +199,11 @@ static void FieldMenu_EvolveInit(TaskManager * taskMan);
 static void FieldMenu_Evolve(TaskManager * taskMan);
 static BOOL FieldMenu_SelectRetire(TaskManager * taskMan);
 
-static BOOL FieldMenu_Join (UnkStruct_020508D4 * param0);
-static BOOL FieldMenu_SelectHost (UnkStruct_020508D4 * param0);
-static BOOL FieldMenu_Host (UnkStruct_020508D4 * param0);
-static BOOL FieldMenu_SelectJoin (UnkStruct_020508D4 * param0);
+static BOOL FieldMenu_Join (TaskManager * param0);
+static BOOL FieldMenu_SelectHost (TaskManager * param0);
+static BOOL FieldMenu_Host (TaskManager * param0);
+static BOOL FieldMenu_SelectJoin (TaskManager * param0);
+static void FieldMenu_Connect(TaskManager *taskMan);
 
 static const u32 Unk_020EA05C[][2] = {
     {pl_msg_00000367_00000, (u32)FieldMenu_SelectPokedex},
@@ -522,6 +523,9 @@ static BOOL sub_0203AC44 (TaskManager * taskMan)
             menu->state = FIELD_MENU_STATE_SELECT;
         }
         break;
+    case FIELD_MENU_CONNECT:
+        FieldMenu_Connect(taskMan);
+        break;
     }
 
     if (menu->unk_20 != NULL) {
@@ -653,12 +657,12 @@ static u32 FieldMenu_MakeList (FieldMenu * menu, u8 * ret)
     }
     
     if (TRUE) {
-        param1[v0] = MENU_POS_HOST;
+        ret[v0] = MENU_POS_HOST;
         v0++;
     }
     
     if (TRUE) {
-        param1[v0] = MENU_POS_JOIN;
+        ret[v0] = MENU_POS_JOIN;
         v0++;
     }
 
@@ -1525,24 +1529,43 @@ static void FieldMenu_SaveWait (TaskManager * taskMan)
     }
 }
 
-static BOOL FieldMenu_ConnectExit (UnkStruct_020508D4 * param0) {
-    return TRUE;
-}
-
-static BOOL FieldMenu_SelectHost (UnkStruct_020508D4 * param0) {
+static BOOL FieldMenu_ConnectExit (TaskManager * param0) {
     FieldMenu * menu;
 
-    menu = sub_02050A64(param0);
+    menu = TaskManager_Environment(param0);
+    
+    //menu->state = FIELD_MENU_STATE_15;
+    return TRUE;
+}
+
+static void FieldMenu_Connect(TaskManager *taskMan) {
+    FieldMenu * menu;
+
+    menu = TaskManager_Environment(taskMan);
+    
+    FieldMenu_Close(menu);
+    Window_Clear(&menu->unk_00, 1);
+    sub_0201C3C0(menu->unk_00.unk_00, menu->unk_00.unk_04);
+    BGL_DeleteWindow(&menu->unk_00);
+    
+    menu->unk_22C(taskMan);
+    menu->state = FIELD_MENU_STATE_15;
+}
+
+static BOOL FieldMenu_SelectHost (TaskManager * param0) {
+    FieldMenu * menu;
+
+    menu = TaskManager_Environment(param0);
     
     menu->unk_22C = FieldMenu_Host;
-    menu->unk_2A = 2;
+    menu->state = FIELD_MENU_CONNECT;
     
     return TRUE;
 }
 
-static BOOL FieldMenu_Host (UnkStruct_020508D4 * param0) {
-    FieldSystem *fieldSystem = sub_02050A60(param0);
-    FieldMenu *menu = sub_02050A64(param0);
+static BOOL FieldMenu_Host (TaskManager * param0) {
+    FieldSystem *fieldSystem = TaskMan_FieldSystem(param0);
+    FieldMenu *menu = TaskManager_Environment(param0);
     
     ov7_0224B47C(fieldSystem, COMM_TYPE_SINGLE_BATTLE, 0, 0);
     menu->unk_22C = FieldMenu_ConnectExit;
@@ -1550,20 +1573,20 @@ static BOOL FieldMenu_Host (UnkStruct_020508D4 * param0) {
     return FALSE;
 }
 
-static BOOL FieldMenu_SelectJoin (UnkStruct_020508D4 * param0) {
+static BOOL FieldMenu_SelectJoin (TaskManager * param0) {
     FieldMenu * menu;
 
-    menu = sub_02050A64(param0);
+    menu = TaskManager_Environment(param0);
     
     menu->unk_22C = FieldMenu_Join;
-    menu->unk_2A = 2;
+    menu->state = FIELD_MENU_CONNECT;
     
     return TRUE;
 }
 
-static BOOL FieldMenu_Join (UnkStruct_020508D4 * param0) {
-    FieldSystem *fieldSystem = sub_02050A60(param0);
-    FieldMenu *menu = sub_02050A64(param0);
+static BOOL FieldMenu_Join (TaskManager * param0) {
+    FieldSystem *fieldSystem = TaskMan_FieldSystem(param0);
+    FieldMenu *menu = TaskManager_Environment(param0);
     
     ov7_0224B414(fieldSystem, COMM_TYPE_SINGLE_BATTLE, 0, 0);
     menu->unk_22C = FieldMenu_ConnectExit;

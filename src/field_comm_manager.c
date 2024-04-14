@@ -152,8 +152,8 @@ void FieldCommMan_ReconnectBattleClient (void)
 
 void FieldCommMan_EnterBattleRoom (FieldSystem * fieldSys)
 {
-    sub_0200F3B0(0, 0x0);
-    sub_0200F3B0(1, 0x0);
+    //sub_0200F3B0(0, 0x0);
+    //sub_0200F3B0(1, 0x0);
     CommMan_SetErrorHandling(1, 1);
 
     if (!CommMan_IsInitialized()) {
