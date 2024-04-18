@@ -47,7 +47,7 @@
 #include "unk_0201D670.h"
 #include "strbuf.h"
 #include "unk_02025E08.h"
-#include "unk_020279FC.h"
+#include "game_options.h"
 #include "unk_02028124.h"
 #include "unk_0203CC84.h"
 #include "unk_0203D1B8.h"
@@ -223,8 +223,8 @@ void sub_020722AC (void * param0, int * param1)
     v0->unk_00 = 43;
     v0->unk_19 = 0;
     v0->unk_1A = 0xFF;
-    v0->unk_16 = sub_02027AC0(sub_02025E44(v1));
-    v0->unk_14 = sub_02027B50(sub_02025E44(v1));
+    v0->unk_16 = Options_TextFrameDelay(sub_02025E44(v1));
+    v0->unk_14 = Options_Frame(sub_02025E44(v1));
 
     sub_02072ED0(v0->unk_1C, 20, v0->unk_00);
     sub_02072F30(v0, v1, v0->unk_00);
@@ -1290,7 +1290,7 @@ static int sub_020735E8 (UnkStruct_02072334 * param0)
 
 static BOOL sub_02073694 (TaskManager * param0)
 {
-    FieldSystem * v0 = TaskMan_FieldSystem(param0);
+    FieldSystem * v0 = TaskManager_FieldSystem(param0);
     UnkStruct_020736D8 * v1 = TaskManager_Environment(param0);
 
     switch (v1->unk_04) {
@@ -1312,7 +1312,7 @@ static BOOL sub_02073694 (TaskManager * param0)
 
 void sub_020736D8 (TaskManager * param0)
 {
-    FieldSystem * v0 = TaskMan_FieldSystem(param0);
+    FieldSystem * v0 = TaskManager_FieldSystem(param0);
     UnkStruct_020736D8 * v1 = Heap_AllocFromHeapAtEnd(11, sizeof(UnkStruct_020736D8));
 
     v1->unk_00 = 0;

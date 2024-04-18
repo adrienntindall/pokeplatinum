@@ -24,7 +24,7 @@
 #include "constdata/const_020F410C.h"
 
 #include "struct_defs/archived_sprite.h"
-#include "struct_defs/union_02022594_020225E0.h"
+#include "touch_screen.h"
 #include "struct_defs/struct_02027F8C.h"
 #include "struct_defs/struct_0205AA50.h"
 #include "struct_defs/struct_02081CF4.h"
@@ -70,10 +70,9 @@
 #include "unk_0201F834.h"
 #include "gx_layers.h"
 #include "unk_020218BC.h"
-#include "unk_02022594.h"
 #include "strbuf.h"
 #include "trainer_info.h"
-#include "unk_020279FC.h"
+#include "game_options.h"
 #include "unk_0202ACE0.h"
 #include "unk_0202B604.h"
 #include "unk_0202CC64.h"
@@ -389,7 +388,7 @@ static void ov88_0223B3C0 (UnkStruct_02095E80 * param0)
     ov88_0223B4F0(param0);
     ov88_0223B320(param0);
 
-    sub_0200DD0C(param0->unk_174, 0, (512 - (9 + (18 + 12))), 10, sub_02027B50(param0->unk_08->unk_18), 26);
+    sub_0200DD0C(param0->unk_174, 0, (512 - (9 + (18 + 12))), 10, Options_Frame(param0->unk_08->unk_18), 26);
     sub_0200DAA4(param0->unk_174, 0, (512 - 9), 11, 0, 26);
 
     ov88_0223ECBC(&param0->unk_49C[21], 15, 1, param0->unk_184, param0->unk_178);
@@ -575,7 +574,7 @@ static int ov88_0223B914 (UnkStruct_02095E80 * param0)
 
     switch (param0->unk_4C) {
     case 0:
-        sub_020364F0(80);
+        CommTiming_StartSync(80);
         ResetLock(2);
         ov88_0223E894(param0);
 
@@ -601,7 +600,7 @@ static int ov88_0223B914 (UnkStruct_02095E80 * param0)
         param0->unk_4C++;
         break;
     case 1:
-        if (sub_02036540(80)) {
+        if (CommTiming_IsSyncState(80)) {
             if (param0->unk_08->unk_34 == 0) {
                 param0->unk_4C = 6;
             } else {
@@ -639,11 +638,11 @@ static int ov88_0223B914 (UnkStruct_02095E80 * param0)
         break;
     case 6:
         sub_0203632C(1);
-        sub_020364F0(81);
+        CommTiming_StartSync(81);
         param0->unk_4C++;
         break;
     case 7:
-        if (sub_02036540(81)) {
+        if (CommTiming_IsSyncState(81)) {
             param0->unk_4C++;
         }
         break;
@@ -1513,7 +1512,7 @@ static void ov88_0223CE34 (u32 * param0)
     }
 }
 
-static const UnkUnion_02022594 Unk_ov88_0223EE28[] = {
+static const TouchScreenRect Unk_ov88_0223EE28[] = {
     {0x38, 0x88, 0x18, 0x68},
     {0xFF, 0x0, 0x0, 0x0}
 };
@@ -2000,7 +1999,7 @@ static int ov88_0223D7AC (UnkStruct_02095E80 * param0)
 
 static int ov88_0223D840 (UnkStruct_02095E80 * param0)
 {
-    if (sub_02036540(19)) {
+    if (CommTiming_IsSyncState(19)) {
         return 2;
     }
 
@@ -2025,7 +2024,7 @@ static int ov88_0223D854 (UnkStruct_02095E80 * param0)
     if (param0->unk_36C4 == -1) {
         MessageLoader_Free(param0->unk_36D0);
         StringTemplate_Free(param0->unk_36CC);
-        sub_020364F0(19);
+        CommTiming_StartSync(19);
         ov88_0223ECBC(&param0->unk_49C[23], 28, 1, param0->unk_184, param0->unk_178);
         param0->unk_226C = ov88_0223D840;
         return 0;
@@ -2057,7 +2056,7 @@ static int ov88_0223D854 (UnkStruct_02095E80 * param0)
 static int ov88_0223D96C (UnkStruct_02095E80 * param0)
 {
     if (0 == sub_020391DC(param0->unk_04, param0->unk_3644, 26)) {
-        sub_020364F0(19);
+        CommTiming_StartSync(19);
         ov88_0223ECBC(&param0->unk_49C[23], 28, 1, param0->unk_184, param0->unk_178);
         param0->unk_226C = ov88_0223D840;
         return 0;

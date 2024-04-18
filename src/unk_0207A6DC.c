@@ -109,7 +109,7 @@ void sub_0207A6DC (void * param0)
     v2 = (UnkStruct_0207ACB4 *)Heap_AllocFromHeap(5, sizeof(UnkStruct_0207ACB4));
     v3 = (UnkStruct_0207AD40 *)Heap_AllocFromHeap(5, sizeof(UnkStruct_0207AD40));
 
-    sub_02032798(Unk_020F099C, v0, param0);
+    CommCmd_Init(Unk_020F099C, v0, param0);
 
     v2->unk_00 = v1;
     v2->unk_04 = 0;
@@ -126,7 +126,7 @@ void sub_0207A6DC (void * param0)
 void sub_0207A744 (void * param0)
 {
     int v0 = sizeof(Unk_020F099C) / sizeof(UnkStruct_02039A58);
-    sub_02032798(Unk_020F099C, v0, param0);
+    CommCmd_Init(Unk_020F099C, v0, param0);
 }
 
 static int sub_0207A758 (void)
@@ -296,7 +296,7 @@ BOOL sub_0207A8F4 (UnkStruct_0207A778 * param0, u32 param1)
         return 0;
     }
 
-    if (sub_02036540(51) == 0) {
+    if (CommTiming_IsSyncState(51) == 0) {
         return 0;
     }
 
@@ -332,7 +332,7 @@ BOOL sub_0207A988 (UnkStruct_0207A778 * param0)
         return 0;
     }
 
-    if (sub_02036540(52) == 0) {
+    if (CommTiming_IsSyncState(52) == 0) {
         return 0;
     }
 
@@ -365,7 +365,7 @@ BOOL sub_0207A9F8 (UnkStruct_0207A778 * param0)
         return 0;
     }
 
-    if (sub_02036540(53) == 0) {
+    if (CommTiming_IsSyncState(53) == 0) {
         return 0;
     }
 
@@ -398,7 +398,7 @@ BOOL sub_0207AA5C (UnkStruct_0207A778 * param0)
         return 0;
     }
 
-    if (sub_02036540(54) == 0) {
+    if (CommTiming_IsSyncState(54) == 0) {
         return 0;
     }
 
@@ -432,7 +432,7 @@ BOOL sub_0207AAC8 (UnkStruct_0207A778 * param0)
         return 0;
     }
 
-    if (sub_02036540(55) == 0) {
+    if (CommTiming_IsSyncState(55) == 0) {
         return 0;
     }
 
@@ -475,7 +475,7 @@ BOOL sub_0207AB58 (UnkStruct_0207A778 * param0)
         return 0;
     }
 
-    if (sub_02036540(56) == 0) {
+    if (CommTiming_IsSyncState(56) == 0) {
         return 0;
     }
 
@@ -508,7 +508,7 @@ BOOL sub_0207ABD0 (UnkStruct_0207A778 * param0, int param1, int param2)
         return 0;
     }
 
-    if (sub_02036540(param2) == 0) {
+    if (CommTiming_IsSyncState(param2) == 0) {
         return 0;
     }
 
@@ -545,7 +545,7 @@ BOOL sub_0207AC54 (UnkStruct_0207A778 * param0, int param1, int param2)
         return 0;
     }
 
-    if (sub_02036540(param2) == 0) {
+    if (CommTiming_IsSyncState(param2) == 0) {
         return 0;
     }
 

@@ -60,7 +60,7 @@
 #include "unk_0202419C.h"
 #include "unk_02024220.h"
 #include "trainer_info.h"
-#include "unk_020279FC.h"
+#include "game_options.h"
 #include "unk_0202B604.h"
 #include "unk_0202F1D4.h"
 #include "communication_information.h"
@@ -1082,7 +1082,7 @@ static u8 ov10_022208B0 (UnkStruct_ov10_0221FB28 * param0)
         ov10_022229D4(param0);
         MessageLoader_GetStrbuf(param0->unk_BA0, 9, param0->unk_BA8);
         param0->unk_BAC = PrintStringSimple(&param0->unk_B7C, 1, param0->unk_BA8, 0, 0, 0, NULL);
-        sub_020364F0(62);
+        CommTiming_StartSync(62);
 
         if (param0->unk_BBC == 0) {
             GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG0, 1);
@@ -1091,7 +1091,7 @@ static u8 ov10_022208B0 (UnkStruct_ov10_0221FB28 * param0)
         param0->unk_B76++;
         break;
     case 1:
-        if (sub_02036540(62)) {
+        if (CommTiming_IsSyncState(62)) {
             param0->unk_B76 = 0;
             return 1;
         }
@@ -1452,7 +1452,7 @@ static void ov10_02220F1C (UnkStruct_ov10_0221FB28 * param0)
     int v0;
 
     GF_ASSERT(param0->unk_B9C == GX_BG0_AS_2D && param0->unk_00 != NULL && param0->unk_00->unk_00 != NULL && param0->unk_00->unk_00->unk_108 != NULL);
-    v0 = sub_02027B50(param0->unk_00->unk_00->unk_108);
+    v0 = Options_Frame(param0->unk_00->unk_00->unk_108);
 
     sub_0200DD0C(param0->unk_0C, 0, 1, 15, v0, param0->unk_00->unk_24);
     sub_02003070(param0->unk_08, 0, 15 * 16, 0x20 * 1);

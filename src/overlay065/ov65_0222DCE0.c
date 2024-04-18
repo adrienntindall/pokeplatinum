@@ -24,7 +24,7 @@
 #include "overlay065/struct_ov65_0222EBE0_decl.h"
 
 #include "struct_defs/struct_020127E8.h"
-#include "struct_defs/union_02022594_020225E0.h"
+#include "touch_screen.h"
 #include "struct_defs/struct_0205AA50.h"
 #include "struct_defs/struct_0207DFAC.h"
 #include "struct_defs/struct_0207E060.h"
@@ -82,7 +82,7 @@
 #include "unk_02025E08.h"
 #include "trainer_info.h"
 #include "unk_0202631C.h"
-#include "unk_020279FC.h"
+#include "game_options.h"
 #include "poffin.h"
 #include "unk_0202ACE0.h"
 #include "unk_0202B604.h"
@@ -302,7 +302,7 @@ static const u8 Unk_ov65_02238930[3] = {
     0x5
 };
 
-static const UnkUnion_020225E0 Unk_ov65_0223895C[3] = {
+static const TouchScreenHitTable Unk_ov65_0223895C[3] = {
     {0xA0, 0xC0, 0x8, 0x40},
     {0xA0, 0xC0, 0x50, 0xB0},
     {0xA0, 0xC0, 0xC0, 0xF8}
@@ -1478,7 +1478,7 @@ static void ov65_0222ECA8 (UnkStruct_ov65_0222EBE0 * param0, NARC * param1)
     sub_0200710C(param1, 11, v0, 4, 0, 0, 0, 54);
 
     {
-        int v1 = sub_02027B50(sub_02025E44(param0->unk_160));
+        int v1 = Options_Frame(sub_02025E44(param0->unk_160));
 
         sub_0200DD0C(v0, 2, (512 - (18 + 12)), 10, v1, 54);
         sub_0200DAA4(v0, 2, ((512 - (18 + 12)) - 9), 11, 0, 54);
@@ -1631,7 +1631,7 @@ static int ov65_0222F010 (UnkStruct_ov65_0222EBE0 * param0, int param1)
         } else {
             ov65_02232B58(param0, 77, 0);
             CommMan_SetErrorHandling(1, 1);
-            sub_020364F0(16);
+            CommTiming_StartSync(16);
             param0->unk_3A8 = 61;
         }
     } else {
@@ -4242,9 +4242,9 @@ static int ov65_022321F4 (UnkStruct_ov65_0222EBE0 * param0, int param1)
         (void)0;
     } else {
         if (param0->unk_3BC == 0) {
-            if (sub_02036540(13)) {
+            if (CommTiming_IsSyncState(13)) {
                 sub_020365F4();
-                sub_020364F0(14);
+                CommTiming_StartSync(14);
 
                 param0->unk_3E4 = 0;
                 param0->unk_3A8 = 50;
@@ -4253,7 +4253,7 @@ static int ov65_022321F4 (UnkStruct_ov65_0222EBE0 * param0, int param1)
             param0->unk_3BC--;
 
             if (param0->unk_3BC == 0) {
-                sub_020364F0(13);
+                CommTiming_StartSync(13);
             }
         }
     }
@@ -4265,7 +4265,7 @@ static int ov65_0223229C (UnkStruct_ov65_0222EBE0 * param0, int param1)
 {
     if (ov65_022321A8(param0)) {
         (void)0;
-    } else if (sub_02036540(14)) {
+    } else if (CommTiming_IsSyncState(14)) {
         u16 v0 = ov65_0222DD20(param0, &param0->unk_04->unk_00);
         BOOL v1;
 
@@ -4299,7 +4299,7 @@ static int ov65_022322DC (UnkStruct_ov65_0222EBE0 * param0, int param1)
         u16 v3 = ov65_0222DED4(v2);
 
         if ((v0[0] == v3) || (v0[0] == v2)) {
-            sub_020364F0(15);
+            CommTiming_StartSync(15);
             param0->unk_3A8 = 52;
         } else {
             ov65_02232DC0(param0, ov4_021D2388());
@@ -4317,10 +4317,10 @@ static int ov65_02232358 (UnkStruct_ov65_0222EBE0 * param0, int param1)
 
     if (ov65_022321A8(param0)) {
         (void)0;
-    } else if (sub_02036540(15)) {
+    } else if (CommTiming_IsSyncState(15)) {
         CommInfo_SendBattleRegulation();
         CommMan_SetErrorHandling(1, 1);
-        sub_020364F0(18);
+        CommTiming_StartSync(18);
 
         param0->unk_3A8 = 53;
     }
@@ -4349,7 +4349,7 @@ static int ov65_022323C0 (UnkStruct_ov65_0222EBE0 * param0, int param1)
 
     if (ov65_022321A8(param0)) {
         (void)0;
-    } else if (sub_02036540(18) && (ov65_02232390(param0) == 1)) {
+    } else if (CommTiming_IsSyncState(18) && (ov65_02232390(param0) == 1)) {
         sub_020391DC(param0->unk_160, v1, 54);
         ov65_02232DFC(param0);
 
@@ -4536,7 +4536,7 @@ static int ov65_022326F0 (UnkStruct_ov65_0222EBE0 * param0, int param1)
 
 static int ov65_02232734 (UnkStruct_ov65_0222EBE0 * param0, int param1)
 {
-    if (sub_02036540(16) == 0) {
+    if (CommTiming_IsSyncState(16) == 0) {
         return param1;
     }
 
@@ -4737,7 +4737,7 @@ static int ov65_02232B28 (UnkStruct_ov65_0222EBE0 * param0, int param1)
 
 static void ov65_02232B58 (UnkStruct_ov65_0222EBE0 * param0, int param1, BOOL param2)
 {
-    u8 v0 = sub_02027AC0(sub_02025E44(param0->unk_160));
+    u8 v0 = Options_TextFrameDelay(sub_02025E44(param0->unk_160));
 
     ov65_02232F50(param0);
 
@@ -4940,7 +4940,7 @@ static BOOL ov65_02232FCC (const UnkStruct_ov65_0222EBE0 * param0)
 
 static void ov65_02232FE0 (UnkStruct_ov65_0222EBE0 * param0, NARC * param1, u32 param2)
 {
-    static const UnkUnion_020225E0 v0[8] = {
+    static const TouchScreenHitTable v0[8] = {
         {0, 47, 0, 119},
         {48, 95, 0, 119},
         {96, 143, 0, 119},
@@ -6916,7 +6916,7 @@ static u8 ov65_02234FC4 (int param0)
 
 static BOOL ov65_02234FCC (UnkStruct_ov65_0222EBE0 * param0, int param1, int param2)
 {
-    sub_020363E8(15);
+    CommTool_Init(15);
     ov4_021D2584(param0->unk_04->unk_00.unk_21);
 
     if (ov65_0222DD64(param2) == 1) {

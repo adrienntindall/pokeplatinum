@@ -28,7 +28,7 @@
 #include "gx_layers.h"
 #include "unk_02024220.h"
 #include "unk_02025E08.h"
-#include "unk_020279FC.h"
+#include "game_options.h"
 #include "unk_0202CD50.h"
 #include "unk_0202F180.h"
 #include "map_header.h"
@@ -72,8 +72,8 @@ static int sub_02098218 (OverlayManager * param0, int * param1)
     v0 = OverlayManager_Args(param0);
 
     v1->unk_00 = v0;
-    v1->unk_04.unk_0C = sub_02027AC0(v1->unk_00->unk_0C.unk_04);
-    v1->unk_04.unk_10 = sub_02027B50(v1->unk_00->unk_0C.unk_04);
+    v1->unk_04.unk_0C = Options_TextFrameDelay(v1->unk_00->unk_0C.unk_04);
+    v1->unk_04.unk_10 = Options_Frame(v1->unk_00->unk_0C.unk_04);
     v1->unk_04.unk_34 = ov119_021D0DD4();
     v1->unk_04.unk_38 = sub_0200762C(71);
     v1->unk_04.unk_3C = NARC_ctor(NARC_INDEX_POKETOOL__POKE_EDIT__PL_POKE_DATA, 71);
@@ -212,7 +212,7 @@ static BOOL sub_0209843C (TaskManager * param0)
         break;
     case 2:
     {
-        FieldSystem * v1 = TaskMan_FieldSystem(param0);
+        FieldSystem * v1 = TaskManager_FieldSystem(param0);
 
         {
             Pokemon * v2 = v0->unk_0C.unk_00;
@@ -240,7 +240,7 @@ static BOOL sub_0209843C (TaskManager * param0)
     break;
     case 3:
     {
-        FieldSystem * v8 = TaskMan_FieldSystem(param0);
+        FieldSystem * v8 = TaskManager_FieldSystem(param0);
         int v9;
 
         v9 = Pokemon_GetValue(v0->unk_0C.unk_00, MON_DATA_SPECIES, 0);
@@ -257,7 +257,7 @@ static BOOL sub_0209843C (TaskManager * param0)
             Pokemon_SetValue(v0->unk_0C.unk_00, 120, v0->unk_08->unk_18);
 
             {
-                FieldSystem * v10 = TaskMan_FieldSystem(param0);
+                FieldSystem * v10 = TaskManager_FieldSystem(param0);
                 UnkStruct_0202CD88 * v11 = sub_0202CD88(FieldSystem_SaveData(v10));
 
                 sub_0202CF28(v11, (1 + 48));

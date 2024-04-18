@@ -21,8 +21,8 @@
 #include "overlay108/struct_ov108_02243594_decl.h"
 
 #include "struct_defs/struct_02013A04_t.h"
-#include "struct_defs/union_02022594_020225E0.h"
-#include "struct_defs/options.h"
+#include "touch_screen.h"
+#include "game_options.h"
 #include "struct_defs/struct_0205AA50.h"
 #include "struct_defs/struct_02081CF4.h"
 #include "struct_defs/struct_02099F80.h"
@@ -50,7 +50,6 @@
 #include "unk_0201DBEC.h"
 #include "gx_layers.h"
 #include "unk_020218BC.h"
-#include "unk_02022594.h"
 #include "strbuf.h"
 #include "unk_02025E08.h"
 #include "unk_02030494.h"
@@ -282,7 +281,7 @@ static u16 ov108_02242B1C(UnkStruct_ov108_02241DB0 * param0);
 static u8 Unk_ov108_022437A0;
 static u8 Unk_ov108_022437A1;
 
-static const UnkUnion_020225E0 Unk_ov108_02243687[] = {
+static const TouchScreenHitTable Unk_ov108_02243687[] = {
     {0xfe, 0x80, 0x60, 0x20},
     {0xff, 0x0, 0x0, 0x0}
 };
@@ -438,7 +437,7 @@ static BOOL ov108_02241DB0 (UnkStruct_ov108_02241DB0 * param0)
     case 0:
         if (ov104_0223C000(param0->unk_09) == 1) {
             sub_020365F4();
-            sub_020364F0(199);
+            CommTiming_StartSync(199);
             param0->unk_08++;
         } else {
             param0->unk_08++;
@@ -446,7 +445,7 @@ static BOOL ov108_02241DB0 (UnkStruct_ov108_02241DB0 * param0)
         break;
     case 1:
         if (ov104_0223C000(param0->unk_09) == 1) {
-            if (sub_02036540(199) == 1) {
+            if (CommTiming_IsSyncState(199) == 1) {
                 sub_020365F4();
                 param0->unk_08++;
             }
@@ -469,7 +468,7 @@ static BOOL ov108_02241DB0 (UnkStruct_ov108_02241DB0 * param0)
     case 5:
         if (ov104_0223C000(param0->unk_09) == 1) {
             sub_020365F4();
-            sub_020364F0(201);
+            CommTiming_StartSync(201);
             param0->unk_08++;
         } else {
             param0->unk_08++;
@@ -477,7 +476,7 @@ static BOOL ov108_02241DB0 (UnkStruct_ov108_02241DB0 * param0)
         break;
     case 6:
         if (ov104_0223C000(param0->unk_09) == 1) {
-            if (sub_02036540(201) == 1) {
+            if (CommTiming_IsSyncState(201) == 1) {
                 sub_020365F4();
                 param0->unk_08++;
             }
@@ -671,13 +670,13 @@ static BOOL ov108_02242104 (UnkStruct_ov108_02241DB0 * param0)
         break;
     case 3:
         sub_020365F4();
-        sub_020364F0(151);
+        CommTiming_StartSync(151);
         param0->unk_08++;
         break;
     case 4:
-        if (sub_02036540(151) == 1) {
+        if (CommTiming_IsSyncState(151) == 1) {
             sub_020365F4();
-            sub_020363E8(103);
+            CommTool_Init(103);
             param0->unk_0E = 0xff;
             return 1;
         }
@@ -701,12 +700,12 @@ static BOOL ov108_02242198 (UnkStruct_ov108_02241DB0 * param0)
 
         if (param0->unk_0B == 0) {
             sub_020365F4();
-            sub_020364F0(152);
+            CommTiming_StartSync(152);
             param0->unk_08++;
         }
         break;
     case 2:
-        if (sub_02036540(152) == 1) {
+        if (CommTiming_IsSyncState(152) == 1) {
             sub_020365F4();
             return 1;
         }

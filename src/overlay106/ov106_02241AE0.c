@@ -17,7 +17,6 @@
 #include "constdata/const_020F410C.h"
 
 #include "struct_defs/struct_02013A04_t.h"
-#include "struct_defs/options.h"
 #include "struct_defs/struct_0205AA50.h"
 #include "struct_defs/struct_02081CF4.h"
 #include "struct_defs/pokemon_summary.h"
@@ -52,7 +51,7 @@
 #include "strbuf.h"
 #include "unk_02025E08.h"
 #include "trainer_info.h"
-#include "unk_020279FC.h"
+#include "game_options.h"
 #include "unk_02030108.h"
 #include "communication_system.h"
 #include "unk_020363E8.h"
@@ -339,14 +338,14 @@ static BOOL ov106_02241D28 (UnkStruct_ov106_02243118 * param0)
     case 0:
         if ((param0->unk_12 == 0) && (ov104_0223B5B0(param0->unk_09) == 1)) {
             sub_020365F4();
-            sub_020364F0(112);
+            CommTiming_StartSync(112);
         }
 
         param0->unk_08++;
         break;
     case 1:
         if ((param0->unk_12 == 0) && (ov104_0223B5B0(param0->unk_09) == 1)) {
-            if (sub_02036540(112) == 1) {
+            if (CommTiming_IsSyncState(112) == 1) {
                 sub_020365F4();
                 param0->unk_12 = 1;
                 param0->unk_08++;
@@ -465,7 +464,7 @@ static BOOL ov106_02241E5C (UnkStruct_ov106_02243118 * param0)
                 param0->unk_08 = 3;
                 break;
             } else {
-                ov106_02243758(&param0->unk_4C[0], sub_02027B50(param0->unk_B4));
+                ov106_02243758(&param0->unk_4C[0], Options_Frame(param0->unk_B4));
                 param0->unk_0A = ov106_02242978(param0, 0, 1);
                 param0->unk_1A = param0->unk_0D;
                 param0->unk_17 = 1;
@@ -505,8 +504,8 @@ static BOOL ov106_02241E5C (UnkStruct_ov106_02243118 * param0)
         }
         break;
     case 4:
-        ov106_02243758(&param0->unk_4C[0], sub_02027B50(param0->unk_B4));
-        param0->unk_0A = ov106_02242918(param0, &param0->unk_4C[0], 32, 1, 1, sub_02027AC0(sub_02025E44(param0->unk_B8)), 1, 2, 15, 1);
+        ov106_02243758(&param0->unk_4C[0], Options_Frame(param0->unk_B4));
+        param0->unk_0A = ov106_02242918(param0, &param0->unk_4C[0], 32, 1, 1, Options_TextFrameDelay(sub_02025E44(param0->unk_B8)), 1, 2, 15, 1);
         sub_0201A954(&param0->unk_4C[0]);
         param0->unk_08 = 5;
         break;
@@ -580,7 +579,7 @@ static BOOL ov106_02242108 (UnkStruct_ov106_02243118 * param0)
         break;
     case 3:
         ov106_02243664(param0->unk_284, 0);
-        ov106_02243758(&param0->unk_4C[0], sub_02027B50(param0->unk_B4));
+        ov106_02243758(&param0->unk_4C[0], Options_Frame(param0->unk_B4));
         ov104_0222E5D0(param0->unk_24, 0);
 
         param0->unk_0A = ov106_02242978(param0, 11, 1);
@@ -654,13 +653,13 @@ static BOOL ov106_02242108 (UnkStruct_ov106_02243118 * param0)
         break;
     case 8:
         sub_020365F4();
-        sub_020364F0(104);
+        CommTiming_StartSync(104);
         param0->unk_08 = 9;
         break;
     case 9:
-        if (sub_02036540(104) == 1) {
+        if (CommTiming_IsSyncState(104) == 1) {
             sub_020365F4();
-            sub_020363E8(98);
+            CommTool_Init(98);
             param0->unk_18 = 0xff;
             return 1;
         }
@@ -677,11 +676,11 @@ static BOOL ov106_0224230C (UnkStruct_ov106_02243118 * param0)
     switch (param0->unk_08) {
     case 0:
         sub_020365F4();
-        sub_020364F0(104);
+        CommTiming_StartSync(104);
         param0->unk_08++;
         break;
     case 1:
-        if (sub_02036540(104) == 1) {
+        if (CommTiming_IsSyncState(104) == 1) {
             sub_020365F4();
             return 1;
         }
@@ -1639,7 +1638,7 @@ static void ov106_02243224 (UnkStruct_ov106_02243118 * param0)
     int v1;
 
     ov106_02243664(param0->unk_284, 0);
-    ov106_02243758(&param0->unk_4C[0], sub_02027B50(param0->unk_B4));
+    ov106_02243758(&param0->unk_4C[0], Options_Frame(param0->unk_B4));
     StringTemplate_SetPokemonTypeName(param0->unk_24, 0, ov104_0223B5A4(param0->unk_0D));
 
     v0 = sub_020301E0(ov106_02243090(param0->unk_0D), param0->unk_294);
