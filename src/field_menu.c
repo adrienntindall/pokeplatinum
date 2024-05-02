@@ -1564,7 +1564,7 @@ static BOOL FieldMenu_SelectHost (TaskManager * param0) {
 }
 
 static BOOL FieldMenu_Host (TaskManager * param0) {
-    FieldSystem *fieldSystem = TaskMan_FieldSystem(param0);
+    FieldSystem *fieldSystem = TaskManager_FieldSystem(param0);
     FieldMenu *menu = TaskManager_Environment(param0);
     
     ov7_0224B47C(fieldSystem, COMM_TYPE_SINGLE_BATTLE, 0, 0);
@@ -1585,7 +1585,7 @@ static BOOL FieldMenu_SelectJoin (TaskManager * param0) {
 }
 
 static BOOL FieldMenu_Join (TaskManager * param0) {
-    FieldSystem *fieldSystem = TaskMan_FieldSystem(param0);
+    FieldSystem *fieldSystem = TaskManager_FieldSystem(param0);
     FieldMenu *menu = TaskManager_Environment(param0);
     
     ov7_0224B414(fieldSystem, COMM_TYPE_SINGLE_BATTLE, 0, 0);
