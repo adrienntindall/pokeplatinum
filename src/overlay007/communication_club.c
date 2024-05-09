@@ -1491,7 +1491,7 @@ static void ov7_0224B08C (CommClubManager * commClubMan)
     SysTask_Start(CommClubMan_Run, commClubMan, 0);
     CommClubMan_SetTask(ov7_0224B0E8);
 
-    sCommClubMan->msgDelay = (30 * 3);
+    sCommClubMan->msgDelay = 255;
 }
 
 static void ov7_0224B0E8 (SysTask * task, void * param1)
@@ -1505,7 +1505,7 @@ static void ov7_0224B0E8 (SysTask * task, void * param1)
     } else if (ov7_0224B4E4() || CommSys_CheckError()) {
         CommClubMan_SetTask(CommClubTask_ExitGuestRoom);
     } else if (FieldMessage_FinishedPrinting(sCommClubMan->printMsgIndex)) {
-        CommTiming_StartSync(10);
+        //CommTiming_StartSync(10);
         CommClubMan_SetTask(CommClubTask_WaitForGroup);
     }
 }
@@ -1533,6 +1533,7 @@ static void CommClubTask_WaitForGroup (SysTask * task, void * param1)
 
             commClubMan->connectedCnt = CommSys_ConnectedCount();
             ov7_0224B3A8(commClubMan);
+            CommTiming_StartSync(92);
             SysTask_Done(task);
             return;
         }
@@ -1543,8 +1544,8 @@ static void CommClubTask_WaitForGroup (SysTask * task, void * param1)
 
         if (sCommClubMan->msgDelay == 0) {
             int sWaitingForGroupMsg[] = {
-                pl_msg_00000353_00000,
-                pl_msg_00000353_00000,
+                pl_msg_00000353_00121,
+                pl_msg_00000353_00067,
                 pl_msg_00000353_00000,
                 pl_msg_00000353_00058, //Multi Battle! Waiting for the rest of the group.
                 pl_msg_00000353_00058,
@@ -1582,7 +1583,8 @@ static void CommClubTask_WaitForGroup (SysTask * task, void * param1)
                 //{contest type} Contest! Awaiting other members!
                 CommClubMan_PrintMessage(pl_msg_00000353_00113 + sCommClubMan->unk_92, 0);
             } else {
-                CommClubMan_PrintMessage(sWaitingForGroupMsg[commClubMan->commType], 0);
+                StringTemplate_SetNumber(sCommClubMan->strTempMsg, 0, CommTiming_SyncNoPersonal(), 2, 5, 1);
+                CommClubMan_PrintMessage(sWaitingForGroupMsg[commClubMan->commType], 1);
             }
         }
     }
@@ -1593,7 +1595,7 @@ static void CommClubTask_ExitGuestRoom (SysTask * task, void * param1)
     CommClubManager * commClubMan = (CommClubManager *)param1;
 
     if (FieldMessage_FinishedPrinting(sCommClubMan->printMsgIndex)) {
-        CommClubMan_PrintMessage(pl_msg_00000353_00000, 0);
+        CommClubMan_PrintMessage(pl_msg_00000353_00122, 0);
         CommClubMan_SetTask(CommClubTask_ExitGuestRoomEnd);
     }
 }

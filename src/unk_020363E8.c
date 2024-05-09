@@ -101,6 +101,15 @@ void CommTiming_StartSync (u8 syncNo)
     sCommTool->sendTiming = TRUE;
 }
 
+u8 CommTiming_SyncNoPersonal() 
+{
+    if (!sCommTool) 
+    {
+        return 0;
+    }
+    return sCommTool->syncNoPersonal;
+}
+
 void sub_0203650C (void)
 {
     if (sCommTool) {

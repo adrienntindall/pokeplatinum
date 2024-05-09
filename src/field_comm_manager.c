@@ -289,7 +289,8 @@ static void sub_02059984 (void)
         CommPlayerMan_Init(v0, sFieldCommMan->fieldSys, 0);
         sub_02059524();
         sub_02035EC8();
-        CommTiming_StartSync(92);
+        //CommTiming_StartSync(92);
+        CommTiming_StartSync(10); 
         FieldCommMan_SetTask(sub_020599E4, 0);
         return;
     }
@@ -359,7 +360,8 @@ static void sub_02059AB4 (void)
         v0 = Heap_AllocFromHeap(HEAP_ID_COMMUNICATION, CommPlayer_Size());
         CommPlayerMan_Init(v0, sFieldCommMan->fieldSys, 0);
         sub_02059524();
-        CommTiming_StartSync(92);
+        //CommTiming_StartSync(92);
+        CommTiming_StartSync(10);
         FieldCommMan_SetTask(sub_02059B10, 0);
         return;
     }

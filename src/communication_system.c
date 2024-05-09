@@ -48,7 +48,7 @@ typedef struct {
     int unk_00;
     u8 * unk_04;
     u16 unk_08;
-    u8 unk_0A;
+    u8 cmd;
 } CommRecvPackage;
 
 typedef struct {
@@ -255,7 +255,7 @@ static void sub_02034378 (void)
         sCommunicationSystem->unk_68F[v0] = 0;
         sCommunicationSystem->unk_697[v0] = 1;
         sCommunicationSystem->unk_63C[v0] = 0;
-        sCommunicationSystem->unk_5C0[v0].unk_0A = 0xee;
+        sCommunicationSystem->unk_5C0[v0].cmd = 0xee;
         sCommunicationSystem->unk_5C0[v0].unk_08 = 0xffff;
         sCommunicationSystem->unk_5C0[v0].unk_04 = NULL;
         sCommunicationSystem->unk_5C0[v0].unk_00 = 0;
@@ -263,7 +263,7 @@ static void sub_02034378 (void)
     }
 
     sCommunicationSystem->unk_660 = 0;
-    sCommunicationSystem->unk_618.unk_0A = 0xee;
+    sCommunicationSystem->unk_618.cmd = 0xee;
     sCommunicationSystem->unk_618.unk_08 = 0xffff;
     sCommunicationSystem->unk_618.unk_04 = NULL;
     sCommunicationSystem->unk_618.unk_00 = 0;
@@ -308,7 +308,7 @@ static void sub_02034678 (int param0)
         sub_02032188(&sCommunicationSystem->unk_51C[param0], &sCommunicationSystem->unk_48C[param0 * v1], v1);
     }
 
-    sCommunicationSystem->unk_5C0[param0].unk_0A = 0xee;
+    sCommunicationSystem->unk_5C0[param0].cmd = 0xee;
     sCommunicationSystem->unk_5C0[param0].unk_08 = 0xffff;
     sCommunicationSystem->unk_5C0[param0].unk_04 = NULL;
     sCommunicationSystem->unk_5C0[param0].unk_00 = 0;
@@ -1434,7 +1434,7 @@ int sub_02035B54 (void)
 static void CommSys_EndCallback (int netId, int command, int param2, void * param3, CommRecvPackage * param4)
 {
     CommCmd_Callback(netId, command, param2, param3);
-    param4->unk_0A = 0xee;
+    param4->cmd = 0xee;
     param4->unk_08 = 0xffff;
     param4->unk_04 = NULL;
     param4->unk_00 = 0;
@@ -1450,8 +1450,8 @@ static void CommSys_RecvDataSingle (CommRing * ring, int netId, u8 * param2, Com
     while (CommRing_DataSize(ring) != 0) {
         v2 = ring->startIndex;
 
-        if (param3->unk_0A != 0xee) {
-            cmd = param3->unk_0A;
+        if (param3->cmd != 0xee) {
+            cmd = param3->cmd;
         } else {
             cmd = CommRing_ReadByte(ring);
 
@@ -1461,7 +1461,7 @@ static void CommSys_RecvDataSingle (CommRing * ring, int netId, u8 * param2, Com
         }
 
         v2 = ring->startIndex;
-        param3->unk_0A = cmd;
+        param3->cmd = cmd;
 
         if (param3->unk_08 != 0xffff) {
             size = param3->unk_08;

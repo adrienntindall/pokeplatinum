@@ -22,4 +22,6 @@ const void * sub_0203664C(int param0);
 void sub_02036670(int param0, int param1, void * param2, void * param3);
 int CommTool_TempDataSize(void);
 
+u8 CommTiming_SyncNoPersonal();
+
 #endif // POKEPLATINUM_UNK_020363E8_H
