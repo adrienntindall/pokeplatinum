@@ -2731,7 +2731,7 @@ static void ov8_0224B2C4 (FieldSystem * param0, UnkStruct_ov8_0224B28C * param1)
 
     ov5_021E931C(v0, param0->unk_28);
     sub_02020690(v0, param0->unk_24);
-    sub_02061AF4(param1->unk_20);
+    LocalMapObj_Delete(param1->unk_20);
 }
 
 static BOOL ov8_0224B2E8 (UnkStruct_ov8_0224B28C * param0)
@@ -2939,11 +2939,11 @@ static BOOL ov8_0224B3D4 (TaskManager * param0)
 
             sub_020057A4(1593, 0);
             MessageLoader_GetStrbuf(v2->unk_48, 12, v2->unk_4C);
-            sub_0205D8F4(v1->unk_08, v2->unk_44, 3);
+            FieldMessage_AddWindow(v1->unk_08, v2->unk_44, 3);
             sub_0200E084(v2->unk_44, 0);
-            sub_0205D944(v2->unk_44, sub_02025E44(v1->saveData));
+            FieldMessage_DrawWindow(v2->unk_44, SaveData_Options(v1->saveData));
 
-            v2->unk_40 = sub_0205D994(v2->unk_44, v2->unk_4C, sub_02025E44(v1->saveData), 1);
+            v2->unk_40 = FieldMessage_Print(v2->unk_44, v2->unk_4C, SaveData_Options(v1->saveData), 1);
         }
         break;
     case 11:
@@ -3142,7 +3142,7 @@ static LocalMapObject * ov8_0224B7D8 (FieldSystem * param0, int param1, int para
 
     v0 = sub_020619DC(param0->unk_38, param1, param2, 0, 0x2000, 0x0, param0->unk_1C->unk_00);
 
-    sub_0206290C(v0, 0xfd);
+    LocalMapObj_SetId(v0, 0xfd);
     sub_020629B4(v0, param3, 0);
 
     return v0;
@@ -3204,7 +3204,7 @@ static void ov8_0224B8A0 (UnkStruct_ov8_0224B8A0 * param0)
     GF_ASSERT(param0->unk_08.unk_08);
 
     sub_0207136C(param0->unk_08.unk_0C);
-    sub_02061AF4(param0->unk_08.unk_08);
+    LocalMapObj_Delete(param0->unk_08.unk_08);
 
     param0->unk_00 = 0;
 }
@@ -3729,7 +3729,7 @@ static void ov8_0224C098 (UnkStruct_ov8_0224C098 * param0)
 
     ov5_021E931C(v1, v0->unk_34->unk_28);
     sub_02020690(v1, v0->unk_34->unk_24);
-    sub_02061AF4(v0->unk_30);
+    LocalMapObj_Delete(v0->unk_30);
 }
 
 static BOOL ov8_0224C0C4 (UnkStruct_ov8_0224C098 * param0)

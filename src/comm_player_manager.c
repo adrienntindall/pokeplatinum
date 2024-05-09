@@ -137,7 +137,7 @@ void CommPlayerMan_Restart (void)
         return;
     }
 
-    sCommPlayerManager->unk_2BB = TRUE;
+    sCommPlayerManager->sendAllPos = TRUE;
     sCommPlayerManager->isResetting = FALSE;
 
     CommPlayer_InitPersonal();
@@ -286,8 +286,8 @@ void CommPlayer_SendXZPos (BOOL param0, int x, int z)
         data[4] = data[4] | 0x80;
     }
 
-    sub_020360D0(22, data);
-    sCommPlayerManager->unk_2BB = TRUE;
+    CommSys_SendDataFixedSize(22, data);
+    sCommPlayerManager->sendAllPos = TRUE;
 }
 
 void CommPlayer_SendPos (BOOL param0)
@@ -361,14 +361,14 @@ static void sub_02057C2C (void * param0)
         if (sCommPlayerManager->isActive[netId]) {
             CommPlayerLocation * location = &sCommPlayerManager->playerLocationServer[netId];
 
-            if (sCommPlayerManager->unk_132[netId] || sCommPlayerManager->unk_2BB) {
+            if (sCommPlayerManager->unk_132[netId] || sCommPlayerManager->sendAllPos) {
                 sCommPlayerManager->unk_132[netId] = 0;
                 sub_02057B48(netId, location);
             }
         }
     }
 
-    sCommPlayerManager->unk_2BB = FALSE;
+    sCommPlayerManager->sendAllPos = FALSE;
 }
 
 u32 CommPlayer_Size (void)
@@ -394,10 +394,10 @@ static void CommPlayer_Add (u8 netId)
         if (trainerInfo) {
             if (!sCommPlayerManager->isUnderground) {
                 if (netId != CommSys_CurNetId()) {
-                    LocalMapObject * obj = sub_0206251C(sCommPlayerManager->fieldSys->unk_38, 0xff + netId + 1);
+                    LocalMapObject * obj = MapObjMan_LocalMapObjByIndex(sCommPlayerManager->fieldSys->unk_38, 0xff + netId + 1);
 
                     if (obj != 0) {
-                        sub_02061AF4(obj);
+                        LocalMapObj_Delete(obj);
                     }
                 }
             }
@@ -415,10 +415,10 @@ static void CommPlayer_Add (u8 netId)
             GF_ASSERT(playerAvatar != NULL);
             sCommPlayerManager->playerAvatar[netId] = playerAvatar;
 
-            sub_0206290C(Player_LocalMapObject(playerAvatar), 0xff + netId + 1);
+            LocalMapObj_SetId(Player_LocalMapObject(playerAvatar), 0xff + netId + 1);
 
             if (sCommPlayerManager->isUnderground) {
-                ov23_02243038(netId);
+                UndergroundMan_SetReturnLog(netId);
             }
 
             if (sCommPlayerManager->isUnderground && !sCommPlayerManager->isActive[netId]) {
@@ -426,9 +426,9 @@ static void CommPlayer_Add (u8 netId)
                     ov5_021F5634(sCommPlayerManager->fieldSys, sCommPlayerManager->playerLocation[netId].x, 0, sCommPlayerManager->playerLocation[netId].z);
                 }
 
-                sCommPlayerManager->isActive[netId] = 1;
+                sCommPlayerManager->isActive[netId] = TRUE;
             } else if (!sCommPlayerManager->isUnderground) {
-                sCommPlayerManager->isActive[netId] = 1;
+                sCommPlayerManager->isActive[netId] = TRUE;
             }
         }
     }
@@ -440,7 +440,7 @@ void CommPlayer_Destroy (u8 param0, BOOL param1, BOOL param2)
         return;
     }
 
-    MI_CpuClear8(sCommPlayerManager->unk_5A, (7 + 1));
+    MI_CpuClear8(sCommPlayerManager->unk_5A, MAX_CONNECTED_PLAYERS);
 
     if (sCommPlayerManager->isUnderground) {
         ov23_0224AF4C(param0);
@@ -469,10 +469,6 @@ void CommPlayer_Destroy (u8 param0, BOOL param1, BOOL param2)
 
         if (sCommPlayerManager->isUnderground) {
             ov23_0224AE60(param0);
-
-            if (param0 != 0) {
-                (void)0;
-            }
         }
     }
 }
@@ -485,7 +481,7 @@ static void CommPlayer_SendMoveSpeed ()
         moveSpeed = 1;
     }
 
-    sub_02035E5C(moveSpeed);
+    CommSys_SetSendSpeed(moveSpeed);
 }
 
 static void Task_CommPlayerManagerRun (SysTask * task, void * data)
@@ -522,14 +518,14 @@ static void sub_02057EF8 (void * param0)
 {
     for (int netId = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
         if (!CommSys_IsPlayerConnected(netId)) {
-            if (!(sub_02036180() && (netId == 0))) {
+            if (!(CommSys_IsAlone() && (netId == 0))) {
                 if ((CommSys_CurNetId() == 0) && (sCommPlayerManager->isUnderground)) {
                     ov23_0224D898(netId);
                 }
             }
         }
 
-        if (CommSys_IsPlayerConnected(netId) || (sub_02036180() && (netId == 0))) {
+        if (CommSys_IsPlayerConnected(netId) || (CommSys_IsAlone() && (netId == 0))) {
             CommPlayer_MoveClient(netId);
 
             if (sCommPlayerManager->isUnderground) {
@@ -567,7 +563,7 @@ void sub_02057FC4 (BOOL param0)
             sCommPlayerManager->unk_2BC = param0;
         }
 
-        sub_020360D0(62, &sCommPlayerManager->unk_2BC);
+        CommSys_SendDataFixedSize(62, &sCommPlayerManager->unk_2BC);
     }
 }
 
@@ -576,7 +572,7 @@ static void sub_02057FF0 (BOOL param0)
     if (sCommPlayerManager != NULL) {
         if (sCommPlayerManager->unk_2BC != param0) {
             sCommPlayerManager->unk_2BC = param0;
-            sub_020360D0(62, &sCommPlayerManager->unk_2BC);
+            CommSys_SendDataFixedSize(62, &sCommPlayerManager->unk_2BC);
         }
     }
 }
@@ -755,7 +751,7 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
                 keys = 0;
             }
 
-            playerLocation->moveSpeed = sub_02035E70(netId);
+            playerLocation->moveSpeed = CommSys_RecvSpeed(netId);
 
             if (sCommPlayerManager->unk_13A[netId] != 0) {
                 continue;
@@ -839,7 +835,7 @@ void CommPlayer_RecvLocation (int netId, int param1, void * src, void * param3)
     playerLocation = &sCommPlayerManager->playerLocationServer[netId];
 
     if (buffer[4] & 0x80) {
-        sCommPlayerManager->unk_2BB = TRUE;
+        sCommPlayerManager->sendAllPos = TRUE;
         return;
     }
 
@@ -1258,7 +1254,7 @@ int sub_02058C3C (void)
 
 BOOL sub_02058C40 (void)
 {
-    if (sub_02036180()) {
+    if (CommSys_IsAlone()) {
         return 1;
     }
 
@@ -1713,7 +1709,7 @@ void sub_0205948C (int param0)
 
     if (sCommPlayerManager->unk_00 == 0x10) {
         u8 data = 1;
-        sub_020360D0(62, &data);
+        CommSys_SendDataFixedSize(62, &data);
     }
 
     if (sCommPlayerManager->unk_00 == 0) {

@@ -2402,8 +2402,8 @@ static BOOL ScrCmd_033 (ScriptContext * param0)
     FieldSystem * v0 = param0->fieldSys;
     u8 * v1 = sub_0203F098(v0, 6);
 
-    sub_0205D8F4(v0->unk_08, sub_0203F098(v0, 1), 3);
-    sub_0205D944(sub_0203F098(v0, 1), sub_02025E44(param0->fieldSys->saveData));
+    FieldMessage_AddWindow(v0->unk_08, sub_0203F098(v0, 1), 3);
+    FieldMessage_DrawWindow(sub_0203F098(v0, 1), SaveData_Options(param0->fieldSys->saveData));
 
     *v1 = 1;
     return 0;
@@ -2599,7 +2599,7 @@ static BOOL ScrCmd_03A (ScriptContext * param0)
     MessageLoader_GetStrbuf(param0->loader, v5, *v2);
     StringTemplate_Format(*v4, *v3, *v2);
 
-    *v1 = sub_0205D994(ov5_021E1B50(v0->unk_64), *v3, sub_02025E44(param0->fieldSys->saveData), 1);
+    *v1 = FieldMessage_Print(ov5_021E1B50(v0->unk_64), *v3, SaveData_Options(param0->fieldSys->saveData), 1);
 
     param0->data[0] = v6;
     ScriptContext_Pause(param0, sub_02040670);
@@ -2631,14 +2631,14 @@ static BOOL sub_02040670 (ScriptContext * param0)
     }
 
     if (v4 != 0xffff) {
-        sub_0201D730(*v1);
+        PrintString_ForceStop(*v1);
         Player_SetDir(param0->fieldSys->playerAvatar, v4);
         *v2 = 0;
         return 1;
     }
 
     if (gCoreSys.pressedKeys & PAD_BUTTON_X) {
-        sub_0201D730(*v1);
+        PrintString_ForceStop(*v1);
         *v2 = 1;
         return 1;
     }
@@ -3079,7 +3079,7 @@ static LocalMapObject * sub_02040ED4 (FieldSystem * param0, int param1)
         v0 = sub_0203F098(param0, 11);
         v1 = *v0;
     } else {
-        v1 = sub_0206251C(param0->unk_38, param1);
+        v1 = MapObjMan_LocalMapObjByIndex(param0->unk_38, param1);
     }
 
     return v1;
@@ -3313,7 +3313,7 @@ static BOOL ScrCmd_062 (ScriptContext * param0)
     LocalMapObject * v0;
     FieldSystem * v1 = param0->fieldSys;
 
-    v0 = sub_0206251C(v1->unk_38, ScriptContext_ReadHalfWord(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(v1->unk_38, ScriptContext_ReadHalfWord(param0));
     sub_02062DD0(v0);
 
     return 0;
@@ -3324,7 +3324,7 @@ static BOOL ScrCmd_063 (ScriptContext * param0)
     LocalMapObject * v0;
     FieldSystem * v1 = param0->fieldSys;
 
-    v0 = sub_0206251C(v1->unk_38, ScriptContext_ReadHalfWord(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(v1->unk_38, ScriptContext_ReadHalfWord(param0));
     sub_02062DDC(v0);
 
     return 0;
@@ -3350,7 +3350,7 @@ static BOOL ScrCmd_065 (ScriptContext * param0)
     LocalMapObject * v0;
     FieldSystem * v1 = param0->fieldSys;
 
-    v0 = sub_0206251C(v1->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(v1->unk_38, ScriptContext_GetVar(param0));
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -3388,13 +3388,13 @@ static BOOL ScrCmd_067 (ScriptContext * param0)
 {
     LocalMapObject ** v0 = sub_0203F098(param0->fieldSys, 11);
 
-    sub_02061AF4(*v0);
+    LocalMapObj_Delete(*v0);
 
     {
         LocalMapObject * v1;
         const VecFx32 * v2;
 
-        v1 = sub_0206251C(param0->fieldSys->unk_38, 0xff);
+        v1 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, 0xff);
         v2 = sub_02063070(v1);
 
         ov5_021E931C(v2, param0->fieldSys->unk_28);
@@ -3423,7 +3423,7 @@ static BOOL ScrCmd_309 (ScriptContext * param0)
 {
     LocalMapObject ** v0 = sub_0203F098(param0->fieldSys, 11);
 
-    sub_02061AF4(*v0);
+    LocalMapObj_Delete(*v0);
     return 0;
 }
 
@@ -3473,7 +3473,7 @@ static BOOL ScrCmd_06A (ScriptContext * param0)
     u16 * v1, * v2;
     FieldSystem * v3 = param0->fieldSys;
 
-    v0 = sub_0206251C(v3->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(v3->unk_38, ScriptContext_GetVar(param0));
     v1 = ScriptContext_GetVarPointer(param0);
     v2 = ScriptContext_GetVarPointer(param0);
     *v1 = sub_02063020(v0);
@@ -3517,7 +3517,7 @@ static BOOL ScrCmd_06C (ScriptContext * param0)
     LocalMapObject * v0;
     u8 v1;
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, ScriptContext_GetVar(param0));
     v1 = ScriptContext_ReadByte(param0);
 
     sub_02062E5C(v0, v1);
@@ -3529,7 +3529,7 @@ static BOOL ScrCmd_06D (ScriptContext * param0)
     LocalMapObject * v0;
     u16 v1;
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, ScriptContext_GetVar(param0));
     v1 = ScriptContext_ReadHalfWord(param0);
 
     sub_020633A8(v0, v1);
@@ -3542,7 +3542,7 @@ static BOOL ScrCmd_2AD (ScriptContext * param0)
     u16 * v1 = ScriptContext_GetVarPointer(param0);
 
     *v1 = 0;
-    v0 = sub_0206251C(param0->fieldSys->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, ScriptContext_GetVar(param0));
 
     if (v0 != NULL) {
         *v1 = sub_02062948(v0);
@@ -4492,7 +4492,7 @@ static BOOL ScrCmd_0B4 (ScriptContext * param0)
 
     *v1 = Heap_AllocFromHeap(11, sizeof(UnkStruct_020425E0));
     v0 = *v1;
-    v0->unk_04 = sub_02025E44(param0->fieldSys->saveData);
+    v0->unk_04 = SaveData_Options(param0->fieldSys->saveData);
 
     sub_0203E0C0(param0->fieldSys, *v1);
     ScriptContext_Pause(param0, sub_02041D60);
@@ -4921,7 +4921,7 @@ static BOOL ScrCmd_0E6 (ScriptContext * param0)
     TrainerData_LoadMessage(v5, v6, *v2, 11);
     BGL_FillWindow(sub_0203F098(v0, 1), 15);
 
-    *v4 = sub_0205D994(sub_0203F098(v0, 1), *v2, sub_02025E44(param0->fieldSys->saveData), 1);
+    *v4 = FieldMessage_Print(sub_0203F098(v0, 1), *v2, SaveData_Options(param0->fieldSys->saveData), 1);
     ScriptContext_Pause(param0, sub_02040014);
 
     return 1;
@@ -5669,7 +5669,7 @@ static BOOL ScrCmd_150 (ScriptContext * param0)
 static BOOL sub_02043C70 (ScriptContext * param0)
 {
     if (CommMan_IsInitialized() != 1) {
-        if (sub_02033E1C() != 1) {
+        if (CommServerClient_IsInitialized() != 1) {
             return 1;
         }
     }
@@ -5724,7 +5724,7 @@ static BOOL ScrCmd_187 (ScriptContext * param0)
     u16 v4 = ScriptContext_GetVar(param0);
     u16 v5 = ScriptContext_GetVar(param0);
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, v1);
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, v1);
 
     LocalMapObj_SetPosDir(v0, v2, v3, v4, v5);
     sub_020642F8(v0);
@@ -5776,7 +5776,7 @@ static BOOL ScrCmd_18C (ScriptContext * param0)
     u16 v1 = ScriptContext_GetVar(param0);
     u16 v2 = ScriptContext_GetVar(param0);
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, v1);
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, v1);
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -6062,7 +6062,7 @@ static BOOL ScrCmd_1B1 (ScriptContext * param0)
     LocalMapObject * v0;
     FieldSystem * v1 = param0->fieldSys;
 
-    v0 = sub_0206251C(v1->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(v1->unk_38, ScriptContext_GetVar(param0));
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -6077,7 +6077,7 @@ static BOOL ScrCmd_1B2 (ScriptContext * param0)
     LocalMapObject * v0;
     FieldSystem * v1 = param0->fieldSys;
 
-    v0 = sub_0206251C(v1->unk_38, ScriptContext_GetVar(param0));
+    v0 = MapObjMan_LocalMapObjByIndex(v1->unk_38, ScriptContext_GetVar(param0));
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -7083,7 +7083,7 @@ static BOOL ScrCmd_269 (ScriptContext * param0)
     u16 v4 = ScriptContext_GetVar(param0);
     u16 v5 = ScriptContext_GetVar(param0);
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, v1);
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, v1);
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -7100,7 +7100,7 @@ static BOOL ScrCmd_26A (ScriptContext * param0)
     u16 v2 = ScriptContext_GetVar(param0);
     u16 v3 = ScriptContext_GetVar(param0);
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, v1);
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, v1);
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -7812,7 +7812,7 @@ static BOOL ScrCmd_2B6 (ScriptContext * param0)
     u16 v1 = ScriptContext_GetVar(param0);
     u16 v2 = ScriptContext_ReadByte(param0);
 
-    v0 = sub_0206251C(param0->fieldSys->unk_38, v1);
+    v0 = MapObjMan_LocalMapObjByIndex(param0->fieldSys->unk_38, v1);
 
     if (v0 == NULL) {
         GF_ASSERT(FALSE);
@@ -7879,7 +7879,7 @@ static BOOL ScrCmd_2C4 (ScriptContext * param0)
         v2->unk_00 = NULL;
     }
 
-    v2->unk_04 = sub_02025E44(param0->fieldSys->saveData);
+    v2->unk_04 = SaveData_Options(param0->fieldSys->saveData);
     v2->unk_24 = v1;
     v2->unk_08 = param0->fieldSys->saveData;
     v2->unk_1C = param0->fieldSys->unk_1C->unk_00;

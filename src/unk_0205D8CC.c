@@ -24,7 +24,7 @@ void sub_0205D8CC (u32 param0, u32 param1)
     sub_02002E98(param0, 12 * 32, 4);
 }
 
-void sub_0205D8F4 (BGL * param0, Window * param1, u32 param2)
+void FieldMessage_AddWindow (BGL * param0, Window * param1, u32 param2)
 {
     if (param2 == 3) {
         BGL_AddWindow(param0, param1, 3, 2, 19, 27, 4, 12, (((1024 - (18 + 12) - 9 - (32 * 8)) - (18 + 12 + 24)) - (27 * 4)));
@@ -33,7 +33,7 @@ void sub_0205D8F4 (BGL * param0, Window * param1, u32 param2)
     }
 }
 
-void sub_0205D944 (Window * param0, const Options * param1)
+void FieldMessage_DrawWindow (Window * param0, const Options * param1)
 {
     sub_0200DD0C(param0->unk_00, sub_0201C290(param0), 1024 - (18 + 12), 10, Options_Frame(param1), 4);
     sub_0205D988(param0);
@@ -45,7 +45,7 @@ void sub_0205D988 (Window * param0)
     BGL_FillWindow(param0, 15);
 }
 
-u8 sub_0205D994 (Window * param0, Strbuf *param1, const Options * param2, u8 param3)
+u8 FieldMessage_Print (Window * param0, Strbuf *param1, const Options * param2, u8 param3)
 {
     u8 v0;
 

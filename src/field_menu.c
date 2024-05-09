@@ -797,7 +797,7 @@ static BOOL FieldMenu_Select (TaskManager * taskMan)
 
 static void sub_0203B2EC (FieldMenu * menu, FieldSystem * fieldSystem)
 {
-    if (sub_02033E1C()) {
+    if (CommServerClient_IsInitialized()) {
         if (menu->unk_228) {
             sub_0205C2B0(fieldSystem->unk_80);
 
@@ -1069,7 +1069,7 @@ BOOL sub_0203B7C0 (TaskManager * taskMan)
         PokemonSummary * v3 = Heap_AllocFromHeap(11, sizeof(PokemonSummary));
 
         v3->monData = Party_GetFromSavedata(fieldSystem->saveData);
-        v3->options = sub_02025E44(fieldSystem->saveData);
+        v3->options = SaveData_Options(fieldSystem->saveData);
         v3->dataType = 1;
         v3->pos = v2->unk_22;
         v3->max = (u8)Party_GetCurrentCount(v3->monData);
@@ -1093,7 +1093,7 @@ BOOL sub_0203B7C0 (TaskManager * taskMan)
         PokemonSummary * v4 = Heap_AllocFromHeap(11, sizeof(PokemonSummary));
 
         v4->monData = Party_GetFromSavedata(fieldSystem->saveData);
-        v4->options = sub_02025E44(fieldSystem->saveData);
+        v4->options = SaveData_Options(fieldSystem->saveData);
         v4->dataType = 1;
         v4->pos = v2->unk_22;
         v4->max = 1;
@@ -1124,7 +1124,7 @@ BOOL sub_0203B7C0 (TaskManager * taskMan)
         PokemonSummary * v6 = Heap_AllocFromHeap(11, sizeof(PokemonSummary));
 
         v6->monData = Party_GetFromSavedata(fieldSystem->saveData);
-        v6->options = sub_02025E44(fieldSystem->saveData);
+        v6->options = SaveData_Options(fieldSystem->saveData);
         v6->dataType = 1;
         v6->pos = v2->unk_22;
         v6->max = 1;
@@ -1355,7 +1355,7 @@ static BOOL sub_0203BC5C (TaskManager * taskMan)
         v6->unk_00 = Party_GetFromSavedata(fieldSystem->saveData);
         v6->unk_04 = sub_0207D990(fieldSystem->saveData);
         v6->unk_08 = sub_02028430(fieldSystem->saveData);
-        v6->unk_0C = sub_02025E44(fieldSystem->saveData);
+        v6->unk_0C = SaveData_Options(fieldSystem->saveData);
         v6->unk_18 = &menu->unk_24C;
         v6->unk_21 = 0;
         v6->unk_20 = 9;
@@ -1398,7 +1398,7 @@ static BOOL sub_0203BC5C (TaskManager * taskMan)
             v13->unk_00 = v7;
             v13->unk_04 = sub_0207D990(fieldSystem->saveData);
             v13->unk_08 = sub_02028430(fieldSystem->saveData);
-            v13->unk_0C = sub_02025E44(fieldSystem->saveData);
+            v13->unk_0C = SaveData_Options(fieldSystem->saveData);
             v13->unk_18 = &menu->unk_24C;
             v13->unk_21 = 0;
             v13->unk_24 = sub_0207CB94(v2);
@@ -1676,25 +1676,25 @@ static BOOL sub_0203C0F8 (TaskManager * taskMan)
 {
     Sentence sentence;
     FieldSystem * fieldSystem;
-    FieldMenu * v2;
+    FieldMenu * menu;
 
     fieldSystem = TaskManager_FieldSystem(taskMan);
-    v2 = TaskManager_Environment(taskMan);
+    menu = TaskManager_Environment(taskMan);
 
-    if (sub_02097528(v2->unk_25C) == 0) {
-        sub_02097540(v2->unk_25C, &sentence);
+    if (sub_02097528(menu->unk_25C) == 0) {
+        sub_02097540(menu->unk_25C, &sentence);
 
-        if (sub_02033E1C()) {
+        if (CommServerClient_IsInitialized()) {
             sub_0205C12C(&sentence);
             sub_0205C010(fieldSystem->unk_7C, &sentence);
         }
 
-        v2->state = FIELD_MENU_STATE_8;
+        menu->state = FIELD_MENU_STATE_8;
     } else {
-        v2->state = FIELD_MENU_STATE_12;
+        menu->state = FIELD_MENU_STATE_12;
     }
 
-    sub_020974EC((UnkStruct_0209747C *)v2->unk_25C);
+    sub_020974EC((UnkStruct_0209747C *)menu->unk_25C);
     sub_020509D4(fieldSystem);
     sub_0205C2B0(fieldSystem->unk_80);
 
@@ -1752,7 +1752,7 @@ static BOOL sub_0203C1C8 (TaskManager * taskMan)
         v3->unk_00 = Party_GetFromSavedata(fieldSystem->saveData);
         v3->unk_04 = sub_0207D990(fieldSystem->saveData);
         v3->unk_08 = sub_02028430(fieldSystem->saveData);
-        v3->unk_0C = sub_02025E44(fieldSystem->saveData);
+        v3->unk_0C = SaveData_Options(fieldSystem->saveData);
         v3->unk_18 = &menu->unk_24C;
         v3->unk_21 = 0;
         v3->unk_1C = fieldSystem;
@@ -1976,7 +1976,7 @@ static void sub_0203C668 (FieldSystem * fieldSystem, FieldMenu * param1, u8 para
     partyMan->unk_00 = Party_GetFromSavedata(fieldSystem->saveData);
     partyMan->unk_04 = sub_0207D990(fieldSystem->saveData);
     partyMan->unk_08 = sub_02028430(fieldSystem->saveData);
-    partyMan->unk_0C = sub_02025E44(fieldSystem->saveData);
+    partyMan->unk_0C = SaveData_Options(fieldSystem->saveData);
     partyMan->unk_18 = &param1->unk_24C;
     partyMan->unk_21 = 0;
     partyMan->unk_24 = v0->unk_00;
@@ -2056,9 +2056,9 @@ static void FieldMenu_EvolveInit (TaskManager * taskMan)
     v4 = Party_GetPokemonBySlotIndex(v3, v2->unk_00);
 
     if (v2->unk_01 == 0) {
-        v5 = sub_0207AE68(v3, v4, v2->unk_04, sub_02025E44(fieldSystem->saveData), PokemonSummary_ShowContestData(fieldSystem->saveData), SaveData_Pokedex(fieldSystem->saveData), sub_0207D990(fieldSystem->saveData), sub_0202CD88(fieldSystem->saveData), SaveData_PoketchData(fieldSystem->saveData), v2->unk_08, 0x1, 73);
+        v5 = sub_0207AE68(v3, v4, v2->unk_04, SaveData_Options(fieldSystem->saveData), PokemonSummary_ShowContestData(fieldSystem->saveData), SaveData_Pokedex(fieldSystem->saveData), sub_0207D990(fieldSystem->saveData), sub_0202CD88(fieldSystem->saveData), SaveData_PoketchData(fieldSystem->saveData), v2->unk_08, 0x1, 73);
     } else {
-        v5 = sub_0207AE68(v3, v4, v2->unk_04, sub_02025E44(fieldSystem->saveData), PokemonSummary_ShowContestData(fieldSystem->saveData), SaveData_Pokedex(fieldSystem->saveData), sub_0207D990(fieldSystem->saveData), sub_0202CD88(fieldSystem->saveData), SaveData_PoketchData(fieldSystem->saveData), v2->unk_08, NULL, 73);
+        v5 = sub_0207AE68(v3, v4, v2->unk_04, SaveData_Options(fieldSystem->saveData), PokemonSummary_ShowContestData(fieldSystem->saveData), SaveData_Pokedex(fieldSystem->saveData), sub_0207D990(fieldSystem->saveData), sub_0202CD88(fieldSystem->saveData), SaveData_PoketchData(fieldSystem->saveData), v2->unk_08, NULL, 73);
     }
 
     {
