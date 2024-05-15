@@ -254,7 +254,7 @@ static void CommSys_ClearData (void)
         sCommunicationSystem->unk_68F[netId] = 0;
         sCommunicationSystem->unk_697[netId] = 1;
         sCommunicationSystem->unk_63C[netId] = 0;
-        sCommunicationSystem->commRecvServer[netId].unk_0A = 0xee;
+        sCommunicationSystem->commRecvServer[netId].cmd = 0xee;
         sCommunicationSystem->commRecvServer[netId].unk_08 = 0xffff;
         sCommunicationSystem->commRecvServer[netId].unk_04 = NULL;
         sCommunicationSystem->commRecvServer[netId].unk_00 = 0;
@@ -262,7 +262,7 @@ static void CommSys_ClearData (void)
     }
 
     sCommunicationSystem->unk_660 = 0;
-    sCommunicationSystem->commRecvClient.unk_0A = 0xee;
+    sCommunicationSystem->commRecvClient.cmd = 0xee;
     sCommunicationSystem->commRecvClient.unk_08 = 0xffff;
     sCommunicationSystem->commRecvClient.unk_04 = NULL;
     sCommunicationSystem->commRecvClient.unk_00 = 0;
