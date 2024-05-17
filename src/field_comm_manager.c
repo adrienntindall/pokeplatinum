@@ -1,6 +1,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "struct_decls/sys_task.h"
 #include "trainer_info.h"
 #include "struct_decls/struct_02029894_decl.h"
@@ -215,6 +217,7 @@ void FieldCommMan_RunTask (SysTask * task, void * param1)
             FieldCommTask task = sFieldCommMan->task;
 
             if (!sFieldCommMan->unk_40) {
+                //gDebug.reachedFlag = 5;
                 task();
             }
         }
@@ -308,8 +311,9 @@ static void sub_020599E4 (void)
     if (CommSys_CurNetId() == 0) {
         CommInfo_ServerSendArray();
     }
-
+    gDebug.reachedFlag = 3;
     if (CommTiming_IsSyncState(92)) {
+        gDebug.reachedFlag = 1;
         sub_0200F174(0, 1, 1, 0x0, 6, 1, 4);
         sub_0200F32C(0);
         sub_0200F32C(1);
@@ -380,10 +384,12 @@ static void sub_02059B10 (void)
         CommInfo_ServerSendArray();
     }
 
+    //gDebug.reachedFlag = 3;
+
     if (CommTiming_IsSyncState(92)) {
         CommPlayerMan_Restart();
         CommPlayer_SendPos(0);
-
+        //gDebug.reachedFlag = 4;
         {
             u8 v0 = 1;
             CommSys_SendDataFixedSize(94, &v0);

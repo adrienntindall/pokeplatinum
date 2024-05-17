@@ -4,6 +4,7 @@
 #include <nnsys/g3d/glbstate.h>
 
 #include "core_sys.h"
+#include "debug.h"
 
 #include "struct_decls/sys_task.h"
 #include "trainer_info.h"
@@ -347,6 +348,7 @@ void sub_02057BC4 (void * param0)
         if (!sCommPlayerManager->unk_2BA) {
             CommPlayer_SendPos(1);
             sCommPlayerManager->unk_2BA = 1;
+            //gDebug.incFlag++;
         }
     }
 
@@ -357,12 +359,14 @@ void sub_02057BC4 (void * param0)
 
 static void sub_02057C2C (void * param0)
 {
+    gDebug.reachedFlag = 35;
     for (int netId = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
         if (sCommPlayerManager->isActive[netId]) {
             CommPlayerLocation * location = &sCommPlayerManager->playerLocationServer[netId];
 
             if (sCommPlayerManager->movementChanged[netId] || sCommPlayerManager->sendAllPos) {
                 sCommPlayerManager->movementChanged[netId] = 0;
+                //gDebug.incFlag++;
                 sub_02057B48(netId, location);
             }
         }
@@ -388,10 +392,13 @@ static void CommPlayer_Add (u8 netId)
         return;
     }
 
+    gDebug.reachedFlag = 20 + netId;
+
     {
         TrainerInfo * trainerInfo = CommInfo_TrainerInfo(netId);
 
         if (trainerInfo) {
+            gDebug.reachedFlag = 30 + netId;
             if (!sCommPlayerManager->isUnderground) {
                 if (netId != CommSys_CurNetId()) {
                     LocalMapObject * obj = MapObjMan_LocalMapObjByIndex(sCommPlayerManager->fieldSys->unk_38, 0xff + netId + 1);
@@ -430,8 +437,12 @@ static void CommPlayer_Add (u8 netId)
             } else if (!sCommPlayerManager->isUnderground) {
                 sCommPlayerManager->isActive[netId] = TRUE;
             }
+            
+            gDebug.reachedFlag = 40 + netId;
+
         }
     }
+    
 }
 
 void CommPlayer_Destroy (u8 param0, BOOL param1, BOOL param2)
@@ -488,7 +499,7 @@ static void Task_CommPlayerManagerRun (SysTask * task, void * data)
 {
     if (CommSys_IsInitialized()) {
         CommPlayer_SendMoveSpeed();
-
+        
         if (CommSys_CurNetId() == 0) {
             sub_02057C2C(data);
             sub_02057BC4(data);
@@ -831,7 +842,7 @@ void CommPlayer_RecvLocation (int netId, int param1, void * src, void * param3)
     if (sCommPlayerManager == NULL) {
         return;
     }
-
+   
     playerLocation = &sCommPlayerManager->playerLocationServer[netId];
 
     if (buffer[4] & 0x80) {
@@ -1275,6 +1286,7 @@ BOOL sub_02058C40 (void)
 
 BOOL CommPlayer_IsActive (int netId)
 {
+    if (sCommPlayerManager == NULL) return 0;
     return sCommPlayerManager->isActive[netId];
 }
 

@@ -1,6 +1,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "struct_decls/struct_02006C24_decl.h"
 #include "message.h"
 #include "struct_decls/struct_02022550_decl.h"
@@ -110,6 +112,8 @@
 #include "unk_020363E8.h"
 #include "gmm/pl_msg_0367.h"
 #include "gmm/pl_msg_0353.h"
+
+Debug gDebug;
 
 typedef enum FieldMenuPos {
     MENU_POS_POKEDEX,
@@ -570,7 +574,13 @@ static void sub_0203ADFC (TaskManager * taskMan)
             v8 = MessageLoader_GetNewStrbuf(v2, Unk_020EA05C[menu->unk_30[v4]][0]);
 
             //StringTemplate_SetPlayerName(v6, 0, SaveData_GetTrainerInfo(fieldSystem->saveData));
-            StringTemplate_SetNumber(v6, 0, CommTiming_SyncNoPersonal(), 2, 0, 1);
+            if (CommSys_CurNetId() == 1) {
+                StringTemplate_SetNumber(v6, 0, CommPlayer_XPos(0), 6, 0, 1);
+            } else {
+                StringTemplate_SetNumber(v6, 0, Player_XPos(fieldSystem->playerAvatar), 6, 0, 1);
+            }
+            
+            //StringTemplate_SetNumber(v6, 0, gDebug.incFlag, 3, 0, 1);
             StringTemplate_Format(v6, v7, v8);
             sub_02013A6C(menu->unk_24, v7, menu->unk_30[v4]);
 

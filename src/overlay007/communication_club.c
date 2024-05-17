@@ -1,6 +1,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "core_sys.h"
 
 #include "struct_decls/struct_0200112C_decl.h"
@@ -1534,6 +1536,7 @@ static void CommClubTask_WaitForGroup (SysTask * task, void * param1)
             commClubMan->connectedCnt = CommSys_ConnectedCount();
             ov7_0224B3A8(commClubMan);
             CommTiming_StartSync(92);
+            gDebug.reachedFlag = 2;
             SysTask_Done(task);
             return;
         }
