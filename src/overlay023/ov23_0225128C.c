@@ -37,11 +37,11 @@
 #include "communication_information.h"
 #include "unk_02033200.h"
 #include "communication_system.h"
-#include "unk_0203CC84.h"
+#include "field_system.h"
 #include "unk_020507CC.h"
 #include "unk_020508D4.h"
 #include "comm_player_manager.h"
-#include "unk_0205E7D0.h"
+#include "player_avatar.h"
 #include "unk_0206A780.h"
 #include "unk_0206A8DC.h"
 #include "overlay023/ov23_0223E140.h"
@@ -78,8 +78,8 @@ typedef struct {
     SysTask * unk_10;
 } UnkStruct_ov23_02252038;
 
-static void ov23_022520E8(FieldSystem * param0, UnkStruct_ov23_022513B0 * param1);
-static void ov23_02251F94(FieldSystem * param0);
+static void ov23_022520E8(FieldSystem * fieldSystem, UnkStruct_ov23_022513B0 * param1);
+static void ov23_02251F94(FieldSystem * fieldSystem);
 static void ov23_022521C8(UnkStruct_ov23_02250CD4 * param0);
 
 static const UnkStruct_ov61_0222C884 Unk_ov23_022569C8 = {
@@ -179,8 +179,6 @@ BOOL ov23_02251324 (int param0, UnkStruct_ov23_0224271C * param1)
                 u8 v5 = 3;
                 ov23_0224A570(param0, 1, &v5, NULL);
                 return 1;
-            } else {
-                (void)0;
             }
         }
 
@@ -602,8 +600,8 @@ static void ov23_02251A84 (BOOL param0, FieldSystem * param1)
     VecFx32 v0;
 
     v0.y = 0;
-    v0.x = 15 * FX32_ONE * 16 - Player_XPos(param1->playerAvatar) * FX32_ONE * 16;
-    v0.z = 17 * FX32_ONE * 16 - Player_ZPos(param1->playerAvatar) * FX32_ONE * 16;
+    v0.x = 15 * FX32_ONE * 16 - Player_GetXPos(param1->playerAvatar) * FX32_ONE * 16;
+    v0.z = 17 * FX32_ONE * 16 - Player_GetZPos(param1->playerAvatar) * FX32_ONE * 16;
 
     if (!param0) {
         v0.x = -v0.x;
@@ -617,7 +615,7 @@ static BOOL ov23_02251ACC (TaskManager * param0)
 {
     FieldSystem * v0 = TaskManager_FieldSystem(param0);
     UnkStruct_ov23_02251ACC * v1 = TaskManager_Environment(param0);
-    UnkStruct_02049FA8 v2;
+    Location v2;
     u32 v3;
     BOOL v4 = 0;
     int v5;
@@ -630,7 +628,7 @@ static BOOL ov23_02251ACC (TaskManager * param0)
         break;
     case 1:
         if (ScreenWipe_Done()) {
-            sub_0205EB18(v0->playerAvatar, 0);
+            PlayerAvatar_SetHidden(v0->playerAvatar, 0);
 
             ov23_02251A84(1, v0);
             v1->unk_00 = 2;
@@ -644,7 +642,7 @@ static BOOL ov23_02251ACC (TaskManager * param0)
         v1->unk_00 = 4;
         break;
     case 4:
-        sub_0205EB18(v0->playerAvatar, 1);
+        PlayerAvatar_SetHidden(v0->playerAvatar, 1);
         ov23_02251A84(0, v0);
         sub_0200F174(1, 1, 1, 0x0, 6, 1, 4);
         v1->unk_00 = 5;

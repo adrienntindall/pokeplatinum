@@ -23,7 +23,7 @@
 #include "communication_system.h"
 #include "unk_020363E8.h"
 #include "unk_020366A0.h"
-#include "unk_0203CC84.h"
+#include "field_system.h"
 #include "unk_0203E880.h"
 #include "unk_02050A74.h"
 #include "comm_player_manager.h"
@@ -468,7 +468,7 @@ static void sub_02059C7C (void)
 
 static void sub_02059C8C (void)
 {
-    if (sub_020363A0() || (0 != sub_020593CC(CommSys_CurNetId()))) {
+    if (sub_020363A0() || (0 != CommPlayer_GetMovementTimer(CommSys_CurNetId()))) {
         return;
     }
 

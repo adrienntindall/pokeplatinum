@@ -41,16 +41,16 @@
 #include "unk_02033200.h"
 #include "communication_system.h"
 #include "unk_020366A0.h"
-#include "unk_0203CC84.h"
+#include "field_system.h"
 #include "unk_020507CC.h"
 #include "unk_020508D4.h"
 #include "unk_020530C8.h"
 #include "unk_02054D00.h"
 #include "unk_020573FC.h"
 #include "comm_player_manager.h"
-#include "unk_0205E7D0.h"
+#include "player_avatar.h"
 #include "unk_0205F180.h"
-#include "unk_02063400.h"
+#include "map_object_move.h"
 #include "unk_020655F4.h"
 #include "unk_0206A8DC.h"
 #include "overlay005/ov5_021E15F4.h"
@@ -184,9 +184,9 @@ static void ov23_0224B39C(UnkStruct_02029894 * param0, u32 * param1);
 static void ov23_0224C448(void);
 static void ov23_0224C6E8(void);
 static void ov23_0224C588(int param0, int param1, int param2, int param3);
-static void ov23_0224CAF0(FieldSystem * param0, int param1, int param2, int param3, int param4, BOOL param5);
-static void ov23_0224BC5C(FieldSystem * param0, int param1, int param2, int param3, int param4, int param5);
-static void ov23_0224C090(FieldSystem * param0, int param1, int param2, int param3, int param4, int param5);
+static void ov23_0224CAF0(FieldSystem * fieldSystem, int param1, int param2, int param3, int param4, BOOL param5);
+static void ov23_0224BC5C(FieldSystem * fieldSystem, int param1, int param2, int param3, int param4, int param5);
+static void ov23_0224C090(FieldSystem * fieldSystem, int param1, int param2, int param3, int param4, int param5);
 static BOOL ov23_0224B79C(int param0, int param1);
 static void ov23_0224B844(int param0, int param1, BOOL param2);
 static void ov23_0224D238(void);
@@ -843,7 +843,7 @@ static void ov23_0224BAAC (SysTask * param0, void * param1)
 {
     UnkStruct_ov23_0224BA48 * v0 = param1;
     FieldSystem * v1 = v0->unk_00;
-    UnkStruct_02049FA8 v2;
+    Location v2;
     int v3 = 0, v4 = 0, v5, v6, v7 = 0;
     UnkStruct_ov23_0224B730 v8;
 
@@ -1043,7 +1043,7 @@ static void ov23_0224BE28 (SysTask * param0, void * param1)
 {
     UnkStruct_ov23_0224BA48 * v0 = param1;
     FieldSystem * v1 = v0->unk_00;
-    UnkStruct_02049FA8 v2;
+    Location v2;
     int v3 = 0, v4 = 0, v5, v6, v7 = 0;
     UnkStruct_ov23_0224B730 v8;
 
@@ -1465,8 +1465,8 @@ static void ov23_0224C5B4 (SysTask * param0, void * param1)
         return;
     }
 
-    v4 = Player_XPos(Unk_ov23_022577AC->unk_00->playerAvatar);
-    v5 = Player_ZPos(Unk_ov23_022577AC->unk_00->playerAvatar);
+    v4 = Player_GetXPos(Unk_ov23_022577AC->unk_00->playerAvatar);
+    v5 = Player_GetZPos(Unk_ov23_022577AC->unk_00->playerAvatar);
 
     if (ov23_02242E58(v4, v5)) {
         return;
@@ -1571,7 +1571,7 @@ static BOOL ov23_0224C790 (TaskManager * param0)
 {
     FieldSystem * v0 = TaskManager_FieldSystem(param0);
     UnkStruct_ov23_0224BA48 * v1 = TaskManager_Environment(param0);
-    UnkStruct_02049FA8 v2;
+    Location v2;
     int v3 = 0, v4 = 0;
 
     switch (v1->unk_0C) {
@@ -1673,7 +1673,7 @@ static BOOL ov23_0224C790 (TaskManager * param0)
         break;
     case 11:
         CommPlayerMan_ForceDir();
-        sub_02061550(v0->playerAvatar, sub_02065838(1, 0x24), 1);
+        PlayerAvatar_SetAnimationCode(v0->playerAvatar, sub_02065838(1, 0x24), 1);
         CommPlayer_SetDir(1);
         ov23_02253F40(ov23_0224219C(), 68, 0, NULL);
         Sound_PlayEffect(1540);
@@ -1747,7 +1747,7 @@ static void ov23_0224CB1C (SysTask * param0, void * param1)
 {
     UnkStruct_ov23_0224CB1C * v0 = param1;
     FieldSystem * v1 = v0->unk_00;
-    UnkStruct_02049FA8 v2;
+    Location v2;
     u32 v3;
     BOOL v4 = 0;
     int v5;
@@ -1764,7 +1764,7 @@ static void ov23_0224CB1C (SysTask * param0, void * param1)
         ov23_02254098(ov23_0224219C(), 33);
         Sound_PlayEffect(1566);
 
-        ov5_021F58FC(Player_LocalMapObject(v1->playerAvatar), 0, 0, 0);
+        ov5_021F58FC(Player_MapObject(v1->playerAvatar), 0, 0, 0);
         ov23_02253F40(ov23_0224219C(), 33, 0, NULL);
 
         v0->unk_0C = 1;
@@ -1783,7 +1783,7 @@ static void ov23_0224CB1C (SysTask * param0, void * param1)
     {
         v6 = sub_02058D88(CommSys_CurNetId());
         v7 = sub_02058DC0(CommSys_CurNetId());
-        v8 = CommPlayer_GetOppositeDir(Player_Dir(v1->playerAvatar));
+        v8 = CommPlayer_GetOppositeDir(PlayerAvatar_GetDir(v1->playerAvatar));
 
         ov23_02253F40(ov23_0224219C(), 34, 0, NULL);
         ov23_0224C588(v6, v7, v8, 16);

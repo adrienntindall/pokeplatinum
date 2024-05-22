@@ -9,7 +9,7 @@
 
 #include "unk_02054D00.h"
 #include "unk_0205DAC8.h"
-#include "unk_0205E7D0.h"
+#include "player_avatar.h"
 #include "overlay005/ov5_021D1A94.h"
 #include "overlay005/ov5_021D431C.h"
 #include "overlay005/ov5_021EE75C.h"
@@ -39,8 +39,8 @@ static void ov5_021EE768 (UnkStruct_ov5_021D1BEC * param0, FieldSystem * param1,
     u8 v3;
     UnkStruct_ov5_021EE75C * v4 = (UnkStruct_ov5_021EE75C *)param2;
 
-    v1 = Player_XPos(param1->playerAvatar);
-    v2 = Player_ZPos(param1->playerAvatar);
+    v1 = Player_GetXPos(param1->playerAvatar);
+    v2 = Player_GetZPos(param1->playerAvatar);
 
     if ((v4->unk_00 == v1) && (v4->unk_04 == v2)) {
         return;

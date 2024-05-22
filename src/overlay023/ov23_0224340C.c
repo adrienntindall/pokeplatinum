@@ -46,12 +46,12 @@
 #include "communication_information.h"
 #include "communication_system.h"
 #include "unk_020366A0.h"
-#include "unk_0203CC84.h"
+#include "field_system.h"
 #include "unk_020507CC.h"
 #include "unk_02054D00.h"
 #include "comm_player_manager.h"
-#include "unk_0205E7D0.h"
-#include "unk_02063400.h"
+#include "player_avatar.h"
+#include "map_object_move.h"
 #include "unk_0206AFE0.h"
 #include "unk_0206CCB0.h"
 #include "unk_020711EC.h"
@@ -1626,7 +1626,7 @@ void ov23_0224461C (int param0, int param1, void * param2, void * param3)
     u8 * v0 = param2;
 
     if (v0[0] != CommSys_CurNetId()) {
-        sub_02058BA8(v0[0], v0[1], v0[2]);
+        CommPlayer_StartBlowAnimation(v0[0], v0[1], v0[2]);
     }
 }
 
@@ -1831,8 +1831,8 @@ static BOOL ov23_0224495C (int param0, BOOL param1)
 {
     int v0, v1, v2, v3, v4;
 
-    v0 = Player_XPos(Unk_ov23_02257764->unk_40->playerAvatar);
-    v1 = Player_ZPos(Unk_ov23_02257764->unk_40->playerAvatar);
+    v0 = Player_GetXPos(Unk_ov23_02257764->unk_40->playerAvatar);
+    v1 = Player_GetZPos(Unk_ov23_02257764->unk_40->playerAvatar);
     v4 = CommPlayer_GetOppositeDir(param0);
     v2 = Unk_ov23_02257764->unk_B28[CommSys_CurNetId()].unk_00.unk_00;
     v3 = Unk_ov23_02257764->unk_B28[CommSys_CurNetId()].unk_00.unk_02;
@@ -2014,8 +2014,8 @@ static int ov23_02244C10 (void)
 {
     int v0, v1, v2;
 
-    v1 = Player_XPos(Unk_ov23_02257764->unk_40->playerAvatar);
-    v2 = Player_ZPos(Unk_ov23_02257764->unk_40->playerAvatar);
+    v1 = Player_GetXPos(Unk_ov23_02257764->unk_40->playerAvatar);
+    v2 = Player_GetZPos(Unk_ov23_02257764->unk_40->playerAvatar);
 
     ov5_021F5634(Unk_ov23_02257764->unk_40, v1, 0, v2);
     ov23_022541B4(ov23_0224219C(), 0, Unk_ov23_02257764->unk_B9F);
@@ -2060,7 +2060,7 @@ static void ov23_02244C70 (SysTask * param0, void * param1)
             sub_0205948C(0x10);
             sub_0200AAE0(1, -4, 0, GX_BLEND_PLANEMASK_BG0, 1);
             ov23_02254044(ov23_0224219C());
-            sub_02058BA8(v0->unk_0C, v0->unk_10, v0->unk_18);
+            CommPlayer_StartBlowAnimation(v0->unk_0C, v0->unk_10, v0->unk_18);
             Sound_PlayEffect(1631);
             v0->unk_00 = 5;
         }
@@ -2104,7 +2104,7 @@ static void ov23_02244D80 (FieldSystem * param0, int param1, int param2, BOOL pa
 
 static void ov23_02244DE0 (int param0, BOOL param1)
 {
-    sub_02058BE8(param0);
+    CommPlayer_StopBlowAnimation(param0);
 
     if (Unk_ov23_02257764->unk_300) {
         UnkStruct_ov23_02244C70 * v0 = Unk_ov23_02257764->unk_300;
@@ -2118,7 +2118,7 @@ static void ov23_02244DE0 (int param0, BOOL param1)
 
 static void ov23_02244E10 (int param0, BOOL param1)
 {
-    sub_02058BE8(param0);
+    CommPlayer_StopBlowAnimation(param0);
 
     if (Unk_ov23_02257764->unk_300) {
         UnkStruct_ov23_02244C70 * v0 = Unk_ov23_02257764->unk_300;
@@ -2944,8 +2944,8 @@ static void ov23_02245BA8 (SysTask * param0, void * param1)
             ov23_02254044(ov23_0224219C());
 
             v0->unk_00 = 7;
-            v2 = Player_XPos(Unk_ov23_02257764->unk_40->playerAvatar);
-            v3 = Player_ZPos(Unk_ov23_02257764->unk_40->playerAvatar);
+            v2 = Player_GetXPos(Unk_ov23_02257764->unk_40->playerAvatar);
+            v3 = Player_GetZPos(Unk_ov23_02257764->unk_40->playerAvatar);
 
             if (!v0->unk_08) {
                 v0->unk_14 = ov5_021F4EAC(Unk_ov23_02257764->unk_40, v2, v3, 2, 32);
@@ -2958,7 +2958,7 @@ static void ov23_02245BA8 (SysTask * param0, void * param1)
         break;
     case 7:
     {
-        int v5 = Player_Dir(Unk_ov23_02257764->unk_40->playerAvatar);
+        int v5 = PlayerAvatar_GetDir(Unk_ov23_02257764->unk_40->playerAvatar);
 
         if (v0->unk_18 != v5) {
             Sound_PlayEffect(1515);
@@ -3029,7 +3029,7 @@ static void ov23_02245DF8 (BOOL param0, BOOL param1, int param2)
     v1->unk_08 = param0;
     v1->unk_10 = 0;
     v1->unk_0D = param1;
-    v1->unk_18 = Player_Dir(Unk_ov23_02257764->unk_40->playerAvatar);
+    v1->unk_18 = PlayerAvatar_GetDir(Unk_ov23_02257764->unk_40->playerAvatar);
     v1->unk_0C = param2;
 
     Unk_ov23_02257764->unk_300 = v1;
@@ -3947,8 +3947,8 @@ static BOOL ov23_02247568 (BGL * param0, UnkStruct_ov23_022471D8 * param1)
     switch (param1->unk_125) {
     case 0:
         param1->unk_124 = 0;
-        v5 = Player_XPos(Unk_ov23_02257764->unk_40->playerAvatar);
-        v6 = Player_ZPos(Unk_ov23_02257764->unk_40->playerAvatar);
+        v5 = Player_GetXPos(Unk_ov23_02257764->unk_40->playerAvatar);
+        v6 = Player_GetZPos(Unk_ov23_02257764->unk_40->playerAvatar);
         param1->unk_114 = ov5_021F4F18(Unk_ov23_02257764->unk_40, v5, v6, 5, 32);
         param1->unk_125 = 1;
         Sound_PlayEffect(1630);
@@ -4917,7 +4917,7 @@ static void ov23_02248A6C (SysTask * param0, void * param1)
 
         SysTask_Done(param0);
         Heap_FreeToHeap(v0);
-        sub_02058BE8(v3);
+        CommPlayer_StopBlowAnimation(v3);
 
         return;
     }
@@ -4994,7 +4994,7 @@ void ov23_02248B98 (int param0)
     Unk_ov23_02257764->unk_00[param0] = NULL;
     Unk_ov23_02257764->unk_20[param0] = NULL;
 
-    sub_02058BE8(param0);
+    CommPlayer_StopBlowAnimation(param0);
 }
 
 static void ov23_02248BD0 (void)

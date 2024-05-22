@@ -11,7 +11,7 @@
 #include "overlay101/struct_ov101_021D86B0.h"
 
 #include "heap.h"
-#include "unk_02063400.h"
+#include "map_object_move.h"
 #include "unk_020711EC.h"
 #include "unk_02073838.h"
 #include "overlay005/ov5_021DF440.h"
@@ -368,7 +368,7 @@ void ov5_021F4698 (UnkStruct_ov101_021D5D90 * param0, int param1, BOOL param2)
     v2->unk_00_7 = 0;
     v2->unk_00_0 = 1;
 
-    param1 = sub_0206447C(param1);
+    param1 = Direction_GetOpposite(param1);
 
     if (param2 == 1) {
         param1 += 4;

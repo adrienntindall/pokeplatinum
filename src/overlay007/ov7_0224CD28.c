@@ -54,7 +54,7 @@
 #include "unk_020508D4.h"
 #include "unk_020573FC.h"
 #include "unk_0205D8CC.h"
-#include "unk_0205E7D0.h"
+#include "player_avatar.h"
 #include "unk_0206AFE0.h"
 #include "unk_0206CCB0.h"
 #include "unk_0207CB08.h"
@@ -221,7 +221,7 @@ void ov7_0224CDA4 (TaskManager * param0, FieldSystem * param1, u16 * param2, u8 
 
 static u8 ov7_0224CE90 (FieldSystem * param0)
 {
-    int v0 = Player_Dir(param0->playerAvatar);
+    int v0 = PlayerAvatar_GetDir(param0->playerAvatar);
 
     if ((v0 == 0) || (v0 == 1) || (v0 == 3)) {
         return 10;

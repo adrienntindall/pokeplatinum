@@ -33,10 +33,10 @@
 #include "communication_information.h"
 #include "communication_system.h"
 #include "unk_0203A378.h"
-#include "unk_0203CC84.h"
+#include "field_system.h"
 #include "unk_020573FC.h"
 #include "comm_player_manager.h"
-#include "unk_02061804.h"
+#include "map_object.h"
 #include "overlay023/ov23_02241F74.h"
 #include "overlay023/ov23_02248C08.h"
 #include "overlay023/ov23_0224F294.h"
@@ -943,16 +943,16 @@ void ov23_022534A0 (FieldSystem * param0)
 
     {
         int v8, v9;
-        const UnkStruct_020619DC * v10;
-        LocalMapObject * v11;
+        const MapObjectHeader * v10;
+        MapObject * v11;
 
         v8 = sub_0203A4B4(v4->unk_0C);
         v10 = sub_0203A4BC(v4->unk_0C);
 
         for (v9 = 0; v9 < v8; v9++) {
             if ((v10[v9].unk_1A == v1) && (v10[v9].unk_1C == v2)) {
-                v11 = MapObjMan_LocalMapObjByIndex(v4->unk_0C->unk_38, v9);
-                sub_02062974(v11, v3);
+                v11 = MapObjMan_LocalMapObjByIndex(v4->unk_0C->mapObjMan, v9);
+                MapObject_SetDir(v11, v3);
             }
         }
     }
