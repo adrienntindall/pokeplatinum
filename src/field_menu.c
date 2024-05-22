@@ -577,7 +577,7 @@ static void sub_0203ADFC (TaskManager * taskMan)
             if (CommSys_CurNetId() == 1) {
                 StringTemplate_SetNumber(v6, 0, CommPlayer_XPos(0), 6, 0, 1);
             } else {
-                StringTemplate_SetNumber(v6, 0, Player_XPos(fieldSystem->playerAvatar), 6, 0, 1);
+                StringTemplate_SetNumber(v6, 0, Player_GetXPos(fieldSystem->playerAvatar), 6, 0, 1);
             }
             
             //StringTemplate_SetNumber(v6, 0, gDebug.incFlag, 3, 0, 1);
