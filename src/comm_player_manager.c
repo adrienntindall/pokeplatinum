@@ -359,7 +359,7 @@ void CommPlayer_SendDataTask (void * data)
 
 static void sub_02057C2C (void * data)
 {
-    gDebug.reachedFlag = 35;
+    //gDebug.reachedFlag = 35;
     for (int netId = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
         if (sCommPlayerManager->isActive[netId]) {
             CommPlayerLocation * location = &sCommPlayerManager->playerLocationServer[netId];
@@ -600,9 +600,13 @@ void sub_0205805C (FieldSystem * fieldSystem, BOOL param1)
         sCommPlayerManager->playerAvatar[CommSys_CurNetId()] = fieldSystem->playerAvatar;
     }
 
+    gDebug.reachedFlag = 45;
+
     if (CommSys_IsInitialized() && (CommSys_CurNetId() == 0)) {
         CommPlayer_Move(NULL, sCommPlayerManager);
     }
+    
+    gDebug.reachedFlag = 46;
 
     if (CommSys_IsInitialized() && (CommSys_CurNetId() == 0)) {
         if (!sCommPlayerManager->isUnderground) {
@@ -702,9 +706,15 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
     CommPlayerLocation * playerLocation;
     UnkStruct_ov23_02249978 * v8 = NULL;
 
+    gDebug.reachedFlag = 99;
+
     for (netId = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
         if (sCommPlayerManager->isActive[netId] && sCommPlayerManager->unk_E2[netId] && sCommPlayerManager->unk_EA[netId]) {
             playerLocation = &sCommPlayerManager->playerLocationServer[netId];
+            
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 10 + netId;
+            }
 
             if (sCommPlayerManager->unk_04) {
                 v8 = ov23_0224993C(sCommPlayerManager->unk_04, netId);
@@ -714,6 +724,10 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
                 if (ov23_0224C1C8(netId)) {
                     continue;
                 }
+            }
+
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 20 + netId;
             }
 
             if (sCommPlayerManager->moveTimerServer[netId] != 0) {
@@ -734,10 +748,18 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
                 }
             }
 
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 30 + netId;
+            }
+
             if (v8) {
                 if (!ov23_022499AC(v8)) {
                     continue;
                 }
+            }
+
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 40 + netId;
             }
 
             if (!sCommPlayerManager->unk_F2[netId]) {
@@ -754,10 +776,18 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
 
             v6 = sub_020581CC(sCommPlayerManager->unk_10A[netId], sCommPlayerManager->unk_12A[netId]);
 
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 50 + netId;
+            }
+
             if (CommPlayer_MoveBlow(netId, v6)) {
                 sCommPlayerManager->moveTimerServer[netId] = v6;
                 sCommPlayerManager->movementChanged[netId] = 1;
                 continue;
+            }
+    
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 60 + netId;
             }
 
             if (playerLocation->collisionFlag == 1) {
@@ -772,6 +802,10 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
                 sCommPlayerManager->unk_122[netId] = 1;
                 sub_02035B48(40, &v9);
                 continue;
+            }
+
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 70 + netId;
             }
 
             dir = CommPlayer_Direction(keys, keys);
@@ -813,6 +847,9 @@ static void CommPlayer_Move (SysTask * param0, void * param1)
                         }
                     }
                 }
+            }
+            if (CommSys_CurNetId() != netId) {
+                gDebug.reachedFlag = 100 + netId;
             }
         }
     }

@@ -326,6 +326,7 @@ void FieldSystem_Control (FieldSystem * fieldSystem)
                 }
             }
         }
+        sub_0205805C(fieldSystem, v2);
         break;
     default:
         if (v2) {
@@ -352,6 +353,7 @@ void FieldSystem_Control (FieldSystem * fieldSystem)
                 }
             }
         }
+        sub_0205805C(fieldSystem, v2);
         break;
     }
 }

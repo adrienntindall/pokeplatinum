@@ -575,12 +575,12 @@ static void sub_0203ADFC (TaskManager * taskMan)
 
             //StringTemplate_SetPlayerName(v6, 0, SaveData_GetTrainerInfo(fieldSystem->saveData));
             if (CommSys_CurNetId() == 1) {
-                StringTemplate_SetNumber(v6, 0, CommPlayer_XPos(0), 6, 0, 1);
+                //StringTemplate_SetNumber(v6, 0, CommPlayer_XPos(0), 6, 0, 1);
             } else {
-                StringTemplate_SetNumber(v6, 0, Player_GetXPos(fieldSystem->playerAvatar), 6, 0, 1);
+                //StringTemplate_SetNumber(v6, 0, Player_GetXPos(fieldSystem->playerAvatar), 6, 0, 1);
             }
             
-            //StringTemplate_SetNumber(v6, 0, gDebug.incFlag, 3, 0, 1);
+            StringTemplate_SetNumber(v6, 0, gDebug.reachedFlag, 3, 0, 1);
             StringTemplate_Format(v6, v7, v8);
             sub_02013A6C(menu->unk_24, v7, menu->unk_30[v4]);
 

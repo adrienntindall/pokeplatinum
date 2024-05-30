@@ -1536,7 +1536,8 @@ static void CommClubTask_WaitForGroup (SysTask * task, void * param1)
             commClubMan->connectedCnt = CommSys_ConnectedCount();
             ov7_0224B3A8(commClubMan);
             CommTiming_StartSync(92);
-            gDebug.reachedFlag = 2;
+            //commClubMan->fieldSystem->unk_70 = 1;
+            //gDebug.reachedFlag = 2;
             SysTask_Done(task);
             return;
         }

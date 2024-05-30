@@ -311,9 +311,9 @@ static void sub_020599E4 (void)
     if (CommSys_CurNetId() == 0) {
         CommInfo_ServerSendArray();
     }
-    gDebug.reachedFlag = 3;
+    //gDebug.reachedFlag = 3;
     if (CommTiming_IsSyncState(92)) {
-        gDebug.reachedFlag = 1;
+        //gDebug.reachedFlag = 1;
         sub_0200F174(0, 1, 1, 0x0, 6, 1, 4);
         sub_0200F32C(0);
         sub_0200F32C(1);
