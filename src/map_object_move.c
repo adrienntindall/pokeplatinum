@@ -588,9 +588,9 @@ u32 sub_02063EBC (const MapObject * mapObj, int param1)
 {
     int x, y, z;
 
-    x = MapObject_GetXPos(mapObj) + sub_0206419C(param1);
+    x = MapObject_GetXPos(mapObj) + MapObject_GetDxFromDir(param1);
     y = MapObject_GetYPos(mapObj);
-    z = MapObject_GetZPos(mapObj) + sub_020641A8(param1);
+    z = MapObject_GetZPos(mapObj) + MapObject_GetDyFromDir(param1);
 
     return sub_02063E94(mapObj, x, y, z, param1);
 }
@@ -685,9 +685,9 @@ int sub_02063FAC (const MapObject * mapObj, int param1, int param2, int param3)
 int sub_02064004 (const MapObject * mapObj, int param1, int param2, int param3)
 {
     if (sub_02062FDC(mapObj) == 0) {
-        FieldSystem * v0 = MapObject_FieldSystem(mapObj);
+        FieldSystem * fieldSystem = MapObject_FieldSystem(mapObj);
         u8 v1 = sub_02062BE8(mapObj);
-        u8 v2 = sub_02054F94(v0, param1, param2);
+        u8 v2 = sub_02054F94(fieldSystem, param1, param2);
 
         if (v2 == sub_0205DF98()) {
             return 1;
@@ -800,7 +800,7 @@ int sub_0206417C (MapObject * mapObj, u32 param1)
     return 0;
 }
 
-static const int Unk_020EE75C[] = {
+static const int sMapObjectDxDir[] = {
     0x0,
     0x0,
     -1,
@@ -814,21 +814,21 @@ static const int DATA_GPosY_Dir4AddTbl[] = {
     0
 };
 
-static const int Unk_020EE78C[] = {
+static const int sMapObjectDyDir[] = {
     -1,
     0x1,
     0x0,
     0x0
 };
 
-int sub_0206419C (int param0)
+int MapObject_GetDxFromDir (int param0)
 {
-    return Unk_020EE75C[param0];
+    return sMapObjectDxDir[param0];
 }
 
-int sub_020641A8 (int param0)
+int MapObject_GetDyFromDir (int param0)
 {
-    return Unk_020EE78C[param0];
+    return sMapObjectDyDir[param0];
 }
 
 void sub_020641B4 (MapObject * mapObj, int param1)
@@ -837,9 +837,9 @@ void sub_020641B4 (MapObject * mapObj, int param1)
     MapObject_SetYPosPrev(mapObj, MapObject_GetYPos(mapObj));
     MapObject_SetZPosPrev(mapObj, MapObject_GetZPos(mapObj));
 
-    MapObject_AddX(mapObj, sub_0206419C(param1));
+    MapObject_AddX(mapObj, MapObject_GetDxFromDir(param1));
     MapObject_AddY(mapObj, 0);
-    MapObject_AddZ(mapObj, sub_020641A8(param1));
+    MapObject_AddZ(mapObj, MapObject_GetDyFromDir(param1));
 }
 
 void sub_02064208 (MapObject * mapObj)
@@ -851,8 +851,8 @@ void sub_02064208 (MapObject * mapObj)
 
 u32 sub_02064238 (MapObject * mapObj, int param1)
 {
-    int v0 = MapObject_GetXPos(mapObj) + sub_0206419C(param1);
-    int v1 = MapObject_GetZPos(mapObj) + sub_020641A8(param1);
+    int v0 = MapObject_GetXPos(mapObj) + MapObject_GetDxFromDir(param1);
+    int v1 = MapObject_GetZPos(mapObj) + MapObject_GetDyFromDir(param1);
     FieldSystem * fieldSystem = MapObject_FieldSystem(mapObj);
     u8 v3 = sub_02054F94(fieldSystem, v0, v1);
 
@@ -873,7 +873,7 @@ void MapObject_AddVecToPos (MapObject * mapObj, const VecFx32 * vec)
 }
 
 //TODO: This could really use a better name
-void MapObject_AddValInDir (MapObject * mapObj, int dir, fx32 param2)
+void MapObject_StepDirection (MapObject * mapObj, int dir, fx32 param2)
 {
     VecFx32 pos;
 
@@ -954,7 +954,7 @@ int sub_02064390 (MapObject * mapObj)
     return 1;
 }
 
-void VecFx32_AddValInDirection (int dir, VecFx32 * vec, fx32 val)
+void VecFx32_StepDirection (int dir, VecFx32 * vec, fx32 val)
 {
     switch (dir) {
     case DIR_NORTH:

@@ -7,8 +7,8 @@
 #include "savedata.h"
 #include "overlay023/struct_ov23_0224271C_decl.h"
 
-void ov23_0224B144(void * param0, FieldSystem * param1);
-void ov23_0224B2C8(FieldSystem * param0);
+void ov23_0224B144(void * param0, FieldSystem * fieldSystem);
+void ov23_0224B2C8(FieldSystem * fieldSystem);
 void ov23_0224B430(void);
 void ov23_0224B460(void);
 void ov23_0224B4E4(void);
@@ -61,7 +61,7 @@ void ov23_0224D6AC(int param0, int param1, void * param2, void * param3);
 int ov23_0224D6F4(void);
 BOOL ov23_0224D7C8(int param0);
 BOOL ov23_0224D87C(int param0);
-void ov23_0224D898(int param0);
+void Underground_SecretBaseRemovePlayer(int param0);
 BOOL ov23_0224D9AC(int param0, BOOL param1);
 void ov23_0224DA8C(void);
 void ov23_0224DAB4(void);
