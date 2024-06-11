@@ -2372,7 +2372,7 @@ static BOOL sub_02040294 (ScriptContext * ctx)
         return 1;
     }
 
-    if (gCoreSys.pressedKeys & (PAD_KEY_UP | PAD_KEY_DOWN | PAD_KEY_LEFT | PAD_KEY_RIGHT)) {
+    if (gCoreSys.pressedKeys & PAD_KEY) {
         return 1;
     }
 
@@ -4717,7 +4717,7 @@ static BOOL ScrCmd_0C0 (ScriptContext * ctx)
     {
         int v0;
 
-        if (sub_0205F16C(ctx->fieldSystem->playerAvatar) == 1) {
+        if (PlayerAvatar_DistortionStateOnFloor(ctx->fieldSystem->playerAvatar) == TRUE) {
             v0 = PlayerAvatar_GetDir(ctx->fieldSystem->playerAvatar);
         } else {
             v0 = PlayerAvatar_GetMoveDir(ctx->fieldSystem->playerAvatar);
