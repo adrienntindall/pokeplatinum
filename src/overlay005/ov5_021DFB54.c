@@ -643,8 +643,8 @@ static BOOL ov5_021E0160 (TaskManager * taskMan)
     case 2:
     {
         if (PlayerAvatar_MapDistortionState(v0->playerAvatar) == AVATAR_DISTORTION_STATE_NONE) {
-            int v1 = Player_GetXPos(v0->playerAvatar) + sub_0206419C(v0->unk_04);
-            int v2 = Player_GetZPos(v0->playerAvatar) + sub_020641A8(v0->unk_04);
+            int v1 = Player_GetXPos(v0->playerAvatar) + MapObject_GetDxFromDir(v0->unk_04);
+            int v2 = Player_GetZPos(v0->playerAvatar) + MapObject_GetDyFromDir(v0->unk_04);
 
             v0->unk_28 = ov5_021F261C(v0->unk_24, v1, v2, v0->unk_04, 0);
         } else {
