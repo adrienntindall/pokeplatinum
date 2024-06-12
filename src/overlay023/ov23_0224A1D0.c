@@ -6,7 +6,6 @@
 #include "strbuf.h"
 #include "trainer_info.h"
 #include "struct_decls/struct_0202855C_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 
 #include "field/field_system.h"
 #include "struct_defs/struct_02057B48.h"
@@ -24,7 +23,7 @@
 #include "communication_information.h"
 #include "communication_system.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "comm_player_manager.h"
 #include "player_avatar.h"
 #include "map_object_move.h"
@@ -205,7 +204,7 @@ void ov23_0224A410 (int param0, int param1, void * param2, void * param3)
 {
     CommPlayerManager * commPlayerMan = CommPlayerMan_Get();
     UnkStruct_ov23_0224A348 * v1 = param2;
-    UnkStruct_020507E4 * v2 = SaveData_Events(commPlayerMan->fieldSystem->saveData);
+    VarsFlags * v2 = SaveData_GetVarsFlags(commPlayerMan->fieldSystem->saveData);
 
     GF_ASSERT(v1->unk_01 < (7 + 1));
 
@@ -473,7 +472,7 @@ void ov23_0224A77C (int param0, int param1, void * param2, void * param3)
             u8 v6 = sub_0202958C(v5);
 
             sub_020295C0(v5);
-            sub_0206AA40(SaveData_Events(commPlayerMan->fieldSystem->saveData));
+            sub_0206AA40(SaveData_GetVarsFlags(commPlayerMan->fieldSystem->saveData));
 
             if (commPlayerMan->unk_290[v1->unk_01]) {
                 sub_0206DAB8(commPlayerMan->fieldSystem, commPlayerMan->unk_290[v1->unk_01]);

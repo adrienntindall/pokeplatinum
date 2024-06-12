@@ -2069,7 +2069,6 @@ u32 sub_020611FC (PlayerAvatar * playerAvatar, MapObject * mapObj, int param2)
 static int sub_02061248 (PlayerAvatar * playerAvatar, MapObject * mapObj, int param2)
 {
     BOOL v0 = 0;
-
     if ((param2 != -1) && PlayerAvatar_MapDistortionState(playerAvatar) == AVATAR_DISTORTION_STATE_FLOOR) {
         FieldSystem * fieldSystem = MapObject_FieldSystem(mapObj);
 

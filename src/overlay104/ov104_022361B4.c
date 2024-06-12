@@ -35,7 +35,7 @@
 #include "unk_0203061C.h"
 #include "communication_information.h"
 #include "communication_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0205DFC4.h"
 #include "unk_0206AFE0.h"
 #include "pokemon.h"
@@ -97,7 +97,7 @@ UnkStruct_ov104_0223BA10 * ov104_022361B4 (SaveData * param0, u16 param1, u8 par
         sub_020302D0(v4);
 
         if (v9->unk_10 == 3) {
-            v5 = sub_0206B6FC(SaveData_Events(v9->unk_04));
+            v5 = sub_0206B6FC(SaveData_GetVarsFlags(v9->unk_04));
         } else {
             v5 = (u8)sub_02030470(v10, 9, v9->unk_10, 0, NULL);
         }

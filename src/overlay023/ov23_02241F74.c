@@ -35,7 +35,7 @@
 #include "communication_system.h"
 #include "unk_020366A0.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_02054D00.h"
 #include "comm_player_manager.h"
 #include "unk_0206A8DC.h"
@@ -154,7 +154,7 @@ static void CommManUnderground_Init (CommManUnderground * param0, FieldSystem * 
         sCommManUnderground->unk_DC[v1] = NULL;
     }
 
-    sub_0206A9F4(SaveData_Events(sCommManUnderground->fieldSystem->saveData));
+    sub_0206A9F4(SaveData_GetVarsFlags(sCommManUnderground->fieldSystem->saveData));
     sCommManUnderground->unk_14 = SysTask_Start(ov23_02243310, NULL, 0);
     sub_02032110(ov23_022433F4);
 }

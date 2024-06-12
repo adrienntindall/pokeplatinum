@@ -15,7 +15,6 @@
 #include "trainer_info.h"
 #include "struct_decls/struct_0202855C_decl.h"
 #include "struct_decls/struct_020298B0_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "struct_decls/struct_020508D4_decl.h"
 #include "overlay101/struct_ov101_021D5D90_decl.h"
 
@@ -47,7 +46,7 @@
 #include "communication_system.h"
 #include "unk_020366A0.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_02054D00.h"
 #include "comm_player_manager.h"
 #include "player_avatar.h"
@@ -1597,7 +1596,7 @@ void ov23_0224448C (int param0, int param1, void * param2, void * param3)
         }
 
         {
-            UnkStruct_020507E4 * v2 = SaveData_Events(Unk_ov23_02257764->fieldSystem->saveData);
+            VarsFlags * v2 = SaveData_GetVarsFlags(Unk_ov23_02257764->fieldSystem->saveData);
             sub_0206B43C(v2, sub_0206B42C(v2) + 1);
         }
 
@@ -2211,7 +2210,7 @@ static void ov23_02244EF8 (int param0, int param1, int param2, int param3, u8 * 
     }
 
     if (v7) {
-        if (!sub_020057D4(1577)) {
+        if (!Sound_IsEffectPlaying(1577)) {
             Sound_PlayEffect(1577);
         }
     }

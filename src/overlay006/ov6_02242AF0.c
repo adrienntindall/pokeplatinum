@@ -175,7 +175,7 @@ void ov6_02242B58 (FieldSystem * fieldSystem, const u16 param1, const u16 param2
         v2->unk_00 = ov6_02242E60;
     }
 
-    sub_02050944(fieldSystem->unk_10, ov6_02242C5C, v2);
+    FieldTask_Start(fieldSystem->unk_10, ov6_02242C5C, v2);
 }
 
 u32 ov6_02242C3C (FieldSystem * fieldSystem, const u16 param1)
@@ -224,7 +224,7 @@ static BOOL ov6_02242C5C (TaskManager * taskMan)
 
         (v1->unk_05)++;
     case 2:
-        if (!sub_020057D4(1755)) {
+        if (!Sound_IsEffectPlaying(1755)) {
             (v1->unk_05)++;
         }
         break;

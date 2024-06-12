@@ -7,7 +7,7 @@
 
 #include "unk_0201D15C.h"
 #include "unk_0204CDDC.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0206AFE0.h"
 
 #include "constants/species.h"
@@ -18,7 +18,7 @@ BOOL ScrCmd_2E1(ScriptContext * param0);
 
 BOOL ScrCmd_215 (ScriptContext * param0)
 {
-    sub_0206B218(SaveData_Events(param0->fieldSystem->saveData));
+    sub_0206B218(SaveData_GetVarsFlags(param0->fieldSystem->saveData));
     return 0;
 }
 
@@ -26,7 +26,7 @@ BOOL ScrCmd_216 (ScriptContext * param0)
 {
     u16 * v0 = ScriptContext_GetVarPointer(param0);
 
-    *v0 = sub_0206B228(SaveData_Events(param0->fieldSystem->saveData));
+    *v0 = sub_0206B228(SaveData_GetVarsFlags(param0->fieldSystem->saveData));
     return 0;
 }
 

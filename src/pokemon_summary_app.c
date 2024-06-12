@@ -43,7 +43,7 @@
 #include "trainer_info.h"
 #include "game_options.h"
 #include "unk_020393C8.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0206A8DC.h"
 #include "pokemon.h"
 #include "move_table.h"
@@ -135,7 +135,7 @@ const OverlayManagerTemplate Unk_020F410C = {
 
 BOOL PokemonSummary_ShowContestData(SaveData * param0)
 {
-    return EventFlag_VisitedContestHall(SaveData_Events(param0));
+    return ContestHall_IsVisited(SaveData_GetVarsFlags(param0));
 }
 
 static int sub_0208C330 (OverlayManager * param0, int * param1)

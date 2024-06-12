@@ -6,7 +6,6 @@
 
 #include "struct_decls/struct_02018340_decl.h"
 #include "struct_decls/sys_task.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "overlay025/poketch_system.h"
 #include "overlay047/struct_ov47_02256634_decl.h"
 
@@ -17,7 +16,7 @@
 #include "unk_0200D9E8.h"
 #include "heap.h"
 #include "unk_0202D7A8.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "poketch_data.h"
 #include "unk_0206AFE0.h"
 #include "overlay047/ov47_02256634.h"
@@ -96,7 +95,7 @@ static BOOL ov47_0225621C (UnkStruct_ov47_0225621C * param0, PoketchSystem * par
     param0->unk_04.unk_08 = 0;
 
     {
-        UnkStruct_020507E4 * v1 = SaveData_Events(PoketchSystem_SaveData(param1));
+        VarsFlags * v1 = SaveData_GetVarsFlags(PoketchSystem_SaveData(param1));
 
         for (v0 = 0; v0 < 4; v0++) {
             param0->unk_04.unk_2C[v0] = sub_0206B1F0(v1, v0);

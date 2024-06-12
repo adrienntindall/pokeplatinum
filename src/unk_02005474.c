@@ -29,7 +29,7 @@ void sub_020055D0(u16 param0, int param1);
 static void sub_020055F4(void);
 void sub_0200560C(int param0, int param1, int param2);
 void sub_0200564C(int param0, int param1);
-int sub_02005684(void);
+int Sound_CheckFade(void);
 int sub_02005690(u16 param0);
 void sub_0200569C(void);
 void sub_020056D4(void);
@@ -39,7 +39,6 @@ BOOL sub_02005728(u16 param0, int param1);
 void sub_020057A4(u16 param0, int param1);
 void sub_020057AC(int param0, int param1);
 void sub_020057BC(int param0);
-int sub_020057D4(u16 param0);
 int sub_020057E0(void);
 void sub_020057FC(u16 param0, u16 param1, int param2);
 void sub_02005818(int param0);
@@ -228,7 +227,7 @@ void sub_0200564C (int param0, int param1)
         return;
     }
 
-    if (sub_02005684() == 0) {
+    if (Sound_CheckFade() == 0) {
         v1 = sub_020040F0(v0);
 
         sub_02004A54(v1, param0, param1);
@@ -239,7 +238,7 @@ void sub_0200564C (int param0, int param1)
     return;
 }
 
-int sub_02005684 ()
+int Sound_CheckFade ()
 {
     u16 * v0 = sub_02003D5C(7);
     return *v0;
@@ -363,7 +362,7 @@ void sub_020057BC (int param0)
     return;
 }
 
-int sub_020057D4 (u16 param0)
+int Sound_IsEffectPlaying (u16 param0)
 {
     return sub_02004B04(sub_02004B18(param0));
 }

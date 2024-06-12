@@ -5,7 +5,6 @@
 #include "strbuf.h"
 #include "trainer_info.h"
 #include "struct_decls/struct_0202CD88_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "struct_decls/struct_020508D4_decl.h"
 #include "struct_decls/struct_party_decl.h"
 
@@ -38,10 +37,10 @@
 #include "unk_0202631C.h"
 #include "unk_0202CD50.h"
 #include "unk_0202DF8C.h"
-#include "unk_0203A6DC.h"
+#include "field_overworld_state.h"
 #include "unk_0203D178.h"
 #include "unk_0203D1B8.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020508D4.h"
 #include "unk_02052C6C.h"
 #include "unk_02054884.h"
@@ -93,10 +92,10 @@ static void sub_02052C6C (FieldSystem * fieldSystem, BOOL param1)
 static BOOL sub_02052CBC (TaskManager * param0)
 {
     Location * v0;
-    UnkStruct_020507E4 * v1;
+    VarsFlags * v1;
     FieldSystem * fieldSystem = TaskManager_FieldSystem(param0);
     UnkStruct_0205300C * v3 = TaskManager_Environment(param0);
-    int * v4 = sub_02050A68(param0);
+    int * v4 = FieldTask_GetState(param0);
     UnkStruct_0203E234 * v5 = &v3->unk_04;
 
     switch (*v4) {
@@ -182,7 +181,7 @@ void sub_02052E58 (TaskManager * param0)
 {
     FieldSystem * fieldSystem;
     Location * v1, * v2;
-    UnkStruct_020507E4 * v3;
+    VarsFlags * v3;
     TrainerInfo * v4;
     UnkStruct_0205300C * v5;
     UnkStruct_0202CD88 * v6;
@@ -190,15 +189,15 @@ void sub_02052E58 (TaskManager * param0)
 
     fieldSystem = TaskManager_FieldSystem(param0);
     v5 = Heap_AllocFromHeap(32, sizeof(UnkStruct_0205300C));
-    v3 = SaveData_Events(fieldSystem->saveData);
+    v3 = SaveData_GetVarsFlags(fieldSystem->saveData);
     v4 = SaveData_GetTrainerInfo(fieldSystem->saveData);
-    v1 = sub_0203A730(sub_0203A790(fieldSystem->saveData));
-    v2 = sub_0203A72C(sub_0203A790(fieldSystem->saveData));
+    v1 = sub_0203A730(SaveData_GetFieldOverworldState(fieldSystem->saveData));
+    v2 = sub_0203A72C(SaveData_GetFieldOverworldState(fieldSystem->saveData));
 
     v5->unk_00 = sub_0206A954(v3);
     v5->unk_04.unk_00 = SaveData_GetTrainerInfo(fieldSystem->saveData);
     v5->unk_04.unk_04 = Party_GetFromSavedata(fieldSystem->saveData);
-    v5->unk_04.unk_08 = sub_02025E5C(fieldSystem->saveData);
+    v5->unk_04.playTime = SaveData_GetPlayTime(fieldSystem->saveData);
     v5->unk_10.unk_00 = TrainerInfo_Gender(SaveData_GetTrainerInfo(fieldSystem->saveData));
     v5->unk_10.unk_04 = sub_0206A954(v3);
     v5->unk_10.unk_08 = SaveData_Pokedex(fieldSystem->saveData);
@@ -219,7 +218,7 @@ void sub_02052E58 (TaskManager * param0)
     v6 = sub_0202CD88(fieldSystem->saveData);
 
     sub_0202CF28(v6, (((70 + 1)) + 2));
-    sub_02050944(param0, sub_02052CBC, v5);
+    FieldTask_Start(param0, sub_02052CBC, v5);
 }
 
 static void sub_02052F28 (FieldSystem * fieldSystem, UnkStruct_0205300C * param1)

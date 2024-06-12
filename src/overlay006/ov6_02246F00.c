@@ -37,7 +37,7 @@ void ov6_02246F00 (FieldSystem * fieldSystem, const u8 param1, const u8 param2)
         v1->unk_01 = param1;
         v1->unk_02 = 0;
 
-        sub_02050944(fieldSystem->unk_10, ov6_02246F40, v1);
+        FieldTask_Start(fieldSystem->unk_10, ov6_02246F40, v1);
     } else {
         GF_ASSERT(FALSE);
     }
@@ -95,7 +95,7 @@ static BOOL ov6_02246F40 (TaskManager * param0)
         }
         break;
     case 3:
-        if (!sub_020057D4(1521)) {
+        if (!Sound_IsEffectPlaying(1521)) {
             (v1->unk_02)++;
         }
         break;

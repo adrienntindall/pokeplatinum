@@ -5,7 +5,6 @@
 
 #include "struct_decls/struct_02024440_decl.h"
 #include "struct_decls/pokedexdata_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "struct_decls/struct_020797DC_decl.h"
 
 #include "field_script_context.h"
@@ -18,7 +17,7 @@
 #include "unk_0202EEC0.h"
 #include "unk_0202F180.h"
 #include "unk_0204C500.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020562F8.h"
 #include "unk_0206A8DC.h"
 #include "pokemon.h"
@@ -27,7 +26,7 @@
 
 BOOL ScrCmd_253 (ScriptContext * param0)
 {
-    UnkStruct_020507E4 * v0 = SaveData_Events(param0->fieldSystem->saveData);
+    VarsFlags * v0 = SaveData_GetVarsFlags(param0->fieldSystem->saveData);
     u16 v1 = ScriptContext_GetVar(param0);
 
     if (v1 == 0) {

@@ -15,7 +15,7 @@
 #include "communication_system.h"
 #include "unk_020366A0.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "comm_player_manager.h"
 #include "field_comm_manager.h"
 #include "unk_0206A8DC.h"
@@ -78,7 +78,7 @@ void ov23_022499E8 (FieldSystem * fieldSystem)
     v0 = FieldCommMan_Get();
     Heap_Create(3, 33, 0xe800);
 
-    if (!sub_0206ADDC(SaveData_Events(v0->fieldSystem->saveData))) {
+    if (!sub_0206ADDC(SaveData_GetVarsFlags(v0->fieldSystem->saveData))) {
         sub_02036894();
     }
 }
@@ -270,7 +270,7 @@ static void ov23_02249C34 (void)
     ov23_02243AF0();
     ov23_0224C21C();
 
-    if (!sub_0206ADDC(SaveData_Events(v0->fieldSystem->saveData))) {
+    if (!sub_0206ADDC(SaveData_GetVarsFlags(v0->fieldSystem->saveData))) {
         ov23_02249C24(ov23_02249C98, 0);
     } else {
         sub_02059524();
@@ -282,7 +282,7 @@ static void ov23_02249C98 (void)
 {
     FieldCommunicationManager * v0 = FieldCommMan_Get();
 
-    if (!sub_0206ADDC(SaveData_Events(v0->fieldSystem->saveData))) {
+    if (!sub_0206ADDC(SaveData_GetVarsFlags(v0->fieldSystem->saveData))) {
         return;
     }
 

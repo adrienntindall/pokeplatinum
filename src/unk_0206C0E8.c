@@ -3,7 +3,6 @@
 
 #include "core_sys.h"
 
-#include "struct_decls/struct_020507E4_decl.h"
 #include "struct_decls/struct_020508D4_decl.h"
 #include "struct_decls/struct_02061AB4_decl.h"
 #include "overlay006/struct_ov6_022426B8_decl.h"
@@ -15,9 +14,9 @@
 
 #include "unk_02005474.h"
 #include "heap.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020508D4.h"
-#include "unk_020530C8.h"
+#include "field_map_change.h"
 #include "unk_02055808.h"
 #include "unk_02056B30.h"
 #include "player_avatar.h"
@@ -48,7 +47,7 @@ void sub_0206C0E8 (FieldSystem * fieldSystem)
     v0->unk_0C = 0;
     v0->unk_0D = 0;
 
-    sub_02050944(fieldSystem->unk_10, sub_0206C120, v0);
+    FieldTask_Start(fieldSystem->unk_10, sub_0206C120, v0);
 }
 
 static BOOL sub_0206C120 (TaskManager * taskMan)
@@ -70,7 +69,7 @@ static BOOL sub_0206C120 (TaskManager * taskMan)
         break;
     case 2:
     {
-        UnkStruct_020507E4 * v2 = SaveData_Events(fieldSystem->saveData);
+        VarsFlags * v2 = SaveData_GetVarsFlags(fieldSystem->saveData);
 
         if (v1->unk_0D == 0) {
             sub_0206AE0C(v2);

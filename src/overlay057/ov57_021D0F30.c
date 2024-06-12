@@ -8,7 +8,7 @@
 #include "unk_02025E08.h"
 #include "trainer_info.h"
 #include "unk_0203D178.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0206A8DC.h"
 #include "overlay057/ov57_021D0F30.h"
 
@@ -28,5 +28,5 @@ void ov57_021D0F44 (int param0, SaveData * param1)
 
     v0 = SaveData_GetTrainerInfo(param1);
     TrainerInfo_SetMoney(v0, 3000);
-    sub_0206A92C(SaveData_Events(param1));
+    sub_0206A92C(SaveData_GetVarsFlags(param1));
 }

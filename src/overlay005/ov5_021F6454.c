@@ -12,7 +12,6 @@
 #include "struct_decls/struct_0202C878_decl.h"
 #include "struct_decls/struct_0202CD88_decl.h"
 #include "struct_decls/struct_020308A0_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "struct_decls/struct_02061830_decl.h"
 #include "struct_decls/struct_02061AB4_decl.h"
 #include "pokemon.h"
@@ -46,7 +45,7 @@
 #include "unk_02038F8C.h"
 #include "field_script_context.h"
 #include "unk_0203E880.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0205DFC4.h"
 #include "player_avatar.h"
 #include "map_object.h"
@@ -806,13 +805,13 @@ BOOL ScrCmd_305 (ScriptContext * param0)
 
 BOOL ScrCmd_30F (ScriptContext * param0)
 {
-    UnkStruct_020507E4 * v0;
+    VarsFlags * v0;
     UnkStruct_0202CD88 * v1;
     FieldSystem * fieldSystem = param0->fieldSystem;
     u16 v3 = ScriptContext_GetVar(param0);
     u16 * v4 = ScriptContext_GetVarPointer(param0);
 
-    v0 = SaveData_Events(fieldSystem->saveData);
+    v0 = SaveData_GetVarsFlags(fieldSystem->saveData);
     v1 = sub_0202CD88(fieldSystem->saveData);
     *v4 = 1;
 
@@ -995,7 +994,7 @@ BOOL ScrCmd_32D (ScriptContext * ctx)
         if (v7 != v6) {
             MapObject_SetStatusFlagOn(v7, (1 << 13));
 
-            if (sub_020628D8(v7, (1 << 12)) == 1) {
+            if (MapObject_GetStateFlag(v7, (1 << 12)) == 1) {
                 MapObject_PosVectorOut(v7, &v1);
                 v1.y = v0;
                 MapObject_SetPosVec(v7, &v1);

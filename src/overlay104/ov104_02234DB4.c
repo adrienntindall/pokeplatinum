@@ -17,7 +17,7 @@
 #include "unk_02030108.h"
 #include "unk_0203061C.h"
 #include "unk_02030880.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0205DFC4.h"
 #include "unk_0206AFE0.h"
 #include "pokemon.h"
@@ -76,7 +76,7 @@ UnkStruct_ov104_0223B5C0 * ov104_02234DB4 (SaveData * param0, u16 param1, u8 par
         sub_02030108(v0);
 
         if (v10->unk_04 == 3) {
-            v2 = sub_0206B6FC(SaveData_Events(v10->unk_6FC));
+            v2 = sub_0206B6FC(SaveData_GetVarsFlags(v10->unk_6FC));
         } else {
             v2 = (u8)sub_020302B4(v1, 5, v10->unk_04, 0, NULL);
         }

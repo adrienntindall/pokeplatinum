@@ -15,7 +15,7 @@
 #include "overlay101/struct_ov101_021D5D90_decl.h"
 
 #include "field/field_system.h"
-#include "overlay005/struct_ov5_021F8E3C.h"
+#include "overlay005/map_object_anim_cmd.h"
 #include "overlay006/battle_params.h"
 
 #include "unk_02005474.h"
@@ -508,7 +508,7 @@ static void ov5_021DFF88 (int param0, FieldSystem * fieldSystem, PlayerAvatar * 
     v0->unk_10 = param3;
     v0->playerAvatar = playerAvatar;
 
-    sub_02050904(fieldSystem, ov5_021DFFBC, v0);
+    FieldTask_Set(fieldSystem, ov5_021DFFBC, v0);
     sub_0202CF28(sub_0202CD88(fieldSystem->saveData), (1 + 54));
 }
 
@@ -587,7 +587,7 @@ static void ov5_021E00B0 (FieldSystem * fieldSystem, int param1, const UnkStruct
     v0->unk_24 = Player_MapObject(v0->playerAvatar);
     v0->unk_0C = *param2;
 
-    sub_02050944(fieldSystem->unk_10, ov5_021E0160, v0);
+    FieldTask_Start(fieldSystem->unk_10, ov5_021E0160, v0);
 }
 
 void ov5_021E00EC (TaskManager * taskMan, int param1, int param2)
@@ -645,7 +645,6 @@ static BOOL ov5_021E0160 (TaskManager * taskMan)
         if (PlayerAvatar_MapDistortionState(v0->playerAvatar) == AVATAR_DISTORTION_STATE_NONE) {
             int v1 = Player_GetXPos(v0->playerAvatar) + MapObject_GetDxFromDir(v0->unk_04);
             int v2 = Player_GetZPos(v0->playerAvatar) + MapObject_GetDyFromDir(v0->unk_04);
-
             v0->unk_28 = ov5_021F261C(v0->unk_24, v1, v2, v0->unk_04, 0);
         } else {
             int v3 = MapObject_GetXPos(v0->unk_24);
@@ -747,7 +746,7 @@ static void ov5_021E0390 (int param0, FieldSystem * fieldSystem, PlayerAvatar * 
     v0->unk_10 = Player_MapObject(param2);
     v0->unk_14 = sub_0205EC04(param2);
 
-    sub_02050904(fieldSystem, ov5_021E03C8, v0);
+    FieldTask_Set(fieldSystem, ov5_021E03C8, v0);
 }
 
 static BOOL ov5_021E03C8 (TaskManager * param0)
@@ -792,7 +791,7 @@ static BOOL ov5_021E03C8 (TaskManager * param0)
 
         sub_0205EC00(v0->playerAvatar, NULL);
         PlayerAvatar_SetPlayerState(v0->playerAvatar, 0x0);
-        sub_02055554(v0->fieldSystem, sub_020554A4(v0->fieldSystem, v0->fieldSystem->unk_1C->unk_00), 1);
+        sub_02055554(v0->fieldSystem, sub_020554A4(v0->fieldSystem, v0->fieldSystem->location->mapId), 1);
         ov5_021E1134(v0);
         return 1;
     }
@@ -844,7 +843,7 @@ static void ov5_021E0534 (FieldSystem * fieldSystem, PlayerAvatar * playerAvatar
     v0->fieldSystem = fieldSystem;
     v0->playerAvatar = playerAvatar;
 
-    sub_02050904(fieldSystem, ov5_021E0560, v0);
+    FieldTask_Set(fieldSystem, ov5_021E0560, v0);
     sub_0202CF28(sub_0202CD88(fieldSystem->saveData), (1 + 55));
 }
 
@@ -972,7 +971,7 @@ static void ov5_021E06F8 (FieldSystem * fieldSystem, int param1, const UnkStruct
     v0->unk_14 = Player_MapObject(v0->playerAvatar);
     v0->unk_1C = *param2;
 
-    sub_02050944(fieldSystem->unk_10, ov5_021E07A0, v0);
+    FieldTask_Start(fieldSystem->unk_10, ov5_021E07A0, v0);
 }
 
 void ov5_021E0734 (TaskManager * param0, int param1, int param2)
@@ -1158,7 +1157,7 @@ static UnkStruct_ov5_021F9B10 * ov5_021E0948 (FieldSystem * fieldSystem, int par
 void ov5_021E097C (FieldSystem * fieldSystem, int param1)
 {
     UnkStruct_ov5_021F9B10 * v0 = ov5_021E0948(fieldSystem, param1, NULL);
-    sub_02050904(fieldSystem, ov5_021E09D4, v0);
+    FieldTask_Set(fieldSystem, ov5_021E09D4, v0);
 }
 
 void ov5_021E0998 (TaskManager * param0, int param1, int param2)
@@ -1171,7 +1170,7 @@ void ov5_021E0998 (TaskManager * param0, int param1, int param2)
 
     {
         UnkStruct_ov5_021F9B10 * v3 = ov5_021E0948(fieldSystem, param1, &v0);
-        sub_02050944(param0, ov5_021E09D4, v3);
+        FieldTask_Start(param0, ov5_021E09D4, v3);
     }
 }
 
@@ -1452,7 +1451,7 @@ static int(*const Unk_ov5_021F9AFC[])(UnkStruct_ov5_021F9B10 *) = {
     ov5_021E0D40
 };
 
-static const UnkStruct_ov5_021F8E3C Unk_ov5_021F9B9C[] = {
+static const MapObjectAnimCmd Unk_ov5_021F9B9C[] = {
     {0x1, 0x1},
     {0x3C, 0x2},
     {0x2, 0x1},
@@ -1480,7 +1479,7 @@ static const UnkStruct_ov5_021F8E3C Unk_ov5_021F9B9C[] = {
     {0xfe, 0x0}
 };
 
-static const UnkStruct_ov5_021F8E3C Unk_ov5_021F9C00[] = {
+static const MapObjectAnimCmd Unk_ov5_021F9C00[] = {
     {0x1, 0x1},
     {0x2, 0x1},
     {0x0, 0x1},
@@ -1524,7 +1523,7 @@ static void ov5_021E0DE0 (FieldSystem * fieldSystem)
     v0->unk_08 = Player_MapObject(v0->playerAvatar);
     v0->unk_10 = PlayerAvatar_Gender(v0->playerAvatar);
 
-    sub_02050944(fieldSystem->unk_10, ov5_021E0E10, v0);
+    FieldTask_Start(fieldSystem->unk_10, ov5_021E0E10, v0);
 }
 
 static BOOL ov5_021E0E10 (TaskManager * param0)
@@ -1533,23 +1532,23 @@ static BOOL ov5_021E0E10 (TaskManager * param0)
 
     switch (v0->unk_0C) {
     case 0:
-        v0->unk_14 = sub_02065700(v0->unk_08, Unk_ov5_021F9B9C);
+        v0->unk_14 = MapObject_StartAnimation(v0->unk_08, Unk_ov5_021F9B9C);
         v0->unk_0C++;
         break;
     case 1:
-        if (sub_0206574C(v0->unk_14) == 1) {
+        if (MapObject_HasAnimationEnded(v0->unk_14) == 1) {
             int v1 = Player_MoveStateFromGender(0x12, v0->unk_10);
 
             PlayerAvatar_Redraw(v0->playerAvatar, v1);
-            sub_02065758(v0->unk_14);
+            MapObject_FinishAnimation(v0->unk_14);
 
-            v0->unk_14 = sub_02065700(v0->unk_08, Unk_ov5_021F9C00);
+            v0->unk_14 = MapObject_StartAnimation(v0->unk_08, Unk_ov5_021F9C00);
             v0->unk_0C++;
         }
         break;
     case 2:
-        if (sub_0206574C(v0->unk_14) == 1) {
-            sub_02065758(v0->unk_14);
+        if (MapObject_HasAnimationEnded(v0->unk_14) == 1) {
+            MapObject_FinishAnimation(v0->unk_14);
             ov5_021E1134(v0);
             return 1;
         }
@@ -1690,12 +1689,12 @@ void ov5_021E100C (SysTask * param0)
     ov5_021E0FC0(param0);
 }
 
-SysTask * ov5_021E1014 (FieldSystem * fieldSystem)
+SysTask * FieldSystem_StartVsSeekerTask (FieldSystem * fieldSystem)
 {
     return ov5_021E0F54(fieldSystem, (1 << 9));
 }
 
-void ov5_021E1020 (SysTask * param0)
+void FieldSystem_EndVsSeekerTask (SysTask * param0)
 {
     ov5_021E0FC0(param0);
 }
@@ -1725,7 +1724,6 @@ static int ov5_021E1050 (UnkStruct_ov5_021E1050 * param0)
 static void PlayerAvatar_Redraw (PlayerAvatar * playerAvatar, int param1)
 {
     MapObject * v0 = Player_MapObject(playerAvatar);
-
     if (PlayerAvatar_MapDistortionState(playerAvatar) == AVATAR_DISTORTION_STATE_NONE) {
         ov5_021EE3FC(v0, param1, NULL, NULL);
     } else {

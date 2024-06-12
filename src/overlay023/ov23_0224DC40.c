@@ -9,7 +9,6 @@
 #include "struct_decls/struct_02013A04_decl.h"
 #include "struct_decls/sys_task.h"
 #include "trainer_info.h"
-#include "struct_decls/struct_020507E4_decl.h"
 
 #include "struct_defs/struct_02013A04_t.h"
 #include "field/field_system.h"
@@ -35,7 +34,7 @@
 #include "communication_information.h"
 #include "communication_system.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020573FC.h"
 #include "comm_player_manager.h"
 #include "unk_0206AFE0.h"
@@ -736,7 +735,7 @@ static void ov23_0224E2D8 (SysTask * param0, void * param1)
     case 22:
         ov23_0224E124(v0);
         {
-            UnkStruct_020507E4 * v2 = SaveData_Events(v0->fieldSystem->saveData);
+            VarsFlags * v2 = SaveData_GetVarsFlags(v0->fieldSystem->saveData);
             sub_0206B3FC(v2, sub_0206B3EC(v2) + 1);
         }
 

@@ -16,7 +16,6 @@
 #include "trainer_info.h"
 #include "struct_decls/struct_0202855C_decl.h"
 #include "struct_decls/struct_020298B0_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "savedata.h"
 
 #include "struct_defs/struct_0200C738.h"
@@ -58,14 +57,14 @@
 #include "trainer_info.h"
 #include "unk_0202631C.h"
 #include "unk_0202854C.h"
-#include "unk_0202B604.h"
+#include "journal.h"
 #include "unk_0202CD50.h"
 #include "communication_information.h"
 #include "communication_system.h"
 #include "unk_020393C8.h"
 #include "unk_02039C80.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020508D4.h"
 #include "unk_02054D00.h"
 #include "comm_player_manager.h"
@@ -1687,7 +1686,7 @@ static void ov23_0223F70C (FieldSystem * fieldSystem)
     v0->fieldSystem = fieldSystem;
 
     ov5_021EF3FC(fieldSystem->unk_04->unk_1C);
-    sub_0206AA04(SaveData_Events(fieldSystem->saveData));
+    sub_0206AA04(SaveData_GetVarsFlags(fieldSystem->saveData));
 
     Unk_ov23_02257740->unk_8CC = SysTask_Start(ov23_0223F118, v0, 100);
 }
@@ -2619,7 +2618,7 @@ static BOOL ov23_02240A90 (UnkStruct_ov23_0223EE80 * param0)
                 if ((v2 >= 23) && ((28 + 1) > v2) || (v2 == 36) || (v2 == 37)) {
                     sub_02029644(v3, 1);
                     {
-                        UnkStruct_020507E4 * v5 = SaveData_Events(Unk_ov23_02257740->fieldSystem->saveData);
+                        VarsFlags * v5 = SaveData_GetVarsFlags(Unk_ov23_02257740->fieldSystem->saveData);
 
                         sub_0206B41C(v5, sub_0206B40C(v5) + 1);
                     }

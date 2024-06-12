@@ -5,7 +5,6 @@
 #include "struct_decls/sys_task.h"
 #include "strbuf.h"
 #include "struct_decls/struct_0203EF60_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "struct_decls/struct_020508D4_decl.h"
 #include "struct_decls/struct_02061AB4_decl.h"
 #include "overlay005/struct_ov5_021DC1A4_decl.h"
@@ -15,11 +14,11 @@
 #include "constdata/const_020EAC58.h"
 #include "constdata/const_020EAB80.h"
 
-#include "struct_defs/struct_0203A594.h"
 #include "field/field_system.h"
 #include "struct_defs/struct_0203F478.h"
 #include "struct_defs/struct_0205AA50.h"
 
+#include "constants/battle.h"
 #include "narc.h"
 #include "message.h"
 #include "string_template.h"
@@ -27,15 +26,20 @@
 #include "unk_0201D15C.h"
 #include "strbuf.h"
 #include "map_header.h"
-#include "unk_0203A378.h"
+#include "map_header_data.h"
 #include "field_menu.h"
 #include "field_script_context.h"
 #include "unk_0203E880.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020508D4.h"
 #include "player_avatar.h"
 #include "map_object.h"
 #include "trainer_data.h"
+
+#define SINGLE_BATTLE_EVENT_ID_OFFSET 3000
+#define DOUBLE_BATTLE_EVENT_ID_OFFSET 5000
+
+#define TRAINER_DEFEATED_FLAG_OFFSET 1360
 
 typedef void (* UnkFuncPtr_0203E950)(FieldSystem *);
 
@@ -108,12 +112,9 @@ u16 sub_0203F164(FieldSystem * fieldSystem, u16 param1);
 BOOL sub_0203F188(FieldSystem * fieldSystem, u16 param1);
 void sub_0203F19C(FieldSystem * fieldSystem, u16 param1);
 void sub_0203F1B0(FieldSystem * fieldSystem, u16 param1);
-void sub_0203F1C4(FieldSystem * fieldSystem);
+void FieldSystem_ClearLocalFlags(FieldSystem * fieldSystem);
 void sub_0203F1FC(FieldSystem * fieldSystem);
-u16 sub_0203F254(u16 param0);
 BOOL sub_0203F278(u16 param0);
-BOOL sub_0203F28C(u16 param0);
-BOOL sub_0203F2A0(FieldSystem * fieldSystem, u16 param1);
 void sub_0203F2BC(FieldSystem * fieldSystem, u16 param1);
 void sub_0203F2D8(FieldSystem * fieldSystem, u16 param1);
 u16 sub_0203F2F4(u16 param0);
@@ -121,7 +122,7 @@ u16 sub_0203F304(u16 param0);
 u8 sub_0203F3C8(u16 param0);
 static BOOL sub_0203F404(UnkStruct_0203EF60 * param0, u16 param1);
 void sub_0203F310(FieldSystem * fieldSystem);
-void sub_0203F598(FieldSystem * fieldSystem);
+void FieldSystem_InitNewGameState(FieldSystem * fieldSystem);
 void sub_0203F5A4(FieldSystem * fieldSystem, u16 param1);
 BOOL sub_0203F5C0(FieldSystem * fieldSystem, u8 param1);
 static u16 sub_0203F610(const u8 * param0, u8 param1);
@@ -133,7 +134,7 @@ void sub_0203E880 (FieldSystem * fieldSystem, u16 param1, MapObject * param2)
     UnkStruct_0203EF60 * v0 = sub_0203EA28();
 
     sub_0203EA68(fieldSystem, v0, param1, param2, NULL);
-    sub_02050904(fieldSystem, sub_0203E950, v0);
+    FieldTask_Set(fieldSystem, sub_0203E950, v0);
 
     return;
 }
@@ -157,7 +158,7 @@ void sub_0203E8E0 (TaskManager * param0, u16 param1, MapObject * param2, void * 
     UnkStruct_0203EF60 * v1 = sub_0203EA28();
 
     sub_0203EA68(fieldSystem, v1, param1, param2, param3);
-    sub_02050944(param0, sub_0203E950, v1);
+    FieldTask_Start(param0, sub_0203E950, v1);
 
     return;
 }
@@ -168,7 +169,7 @@ void sub_0203E918 (TaskManager * param0, u16 param1, MapObject * param2)
     UnkStruct_0203EF60 * v1 = sub_0203EA28();
 
     sub_0203EA68(fieldSystem, v1, param1, param2, NULL);
-    sub_02050924(param0, sub_0203E950, v1);
+    FieldTask_Change(param0, sub_0203E950, v1);
 
     return;
 }
@@ -421,10 +422,10 @@ static void sub_0203EF14 (FieldSystem * fieldSystem, ScriptContext * param1, int
 
 static void sub_0203EF38 (FieldSystem * fieldSystem, ScriptContext * param1)
 {
-    u8 * v0 = sub_0203F0FC(fieldSystem->unk_1C->unk_00);
+    u8 * v0 = sub_0203F0FC(fieldSystem->location->mapId);
 
     param1->scripts = (u8 *)v0;
-    param1->loader = MessageLoader_Init(1, 26, sub_0203F110(fieldSystem->unk_1C->unk_00), 11);
+    param1->loader = MessageLoader_Init(1, 26, sub_0203F110(fieldSystem->location->mapId), 11);
 
     return;
 }
@@ -594,16 +595,14 @@ static u32 sub_0203F110 (int param0)
 
 u16 * sub_0203F118 (FieldSystem * fieldSystem, u16 param1)
 {
-    UnkStruct_020507E4 * v0;
-
-    v0 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v0 = SaveData_GetVarsFlags(fieldSystem->saveData);
 
     if (param1 < 0x4000) {
         return NULL;
     }
 
     if (param1 < 0x8000) {
-        return sub_020508B8(v0, param1);
+        return VarsFlags_GetVarAddress(v0, param1);
     }
 
     return sub_0203F098(fieldSystem, (41 + param1 - 0x8000));
@@ -628,40 +627,40 @@ u16 sub_0203F164 (FieldSystem * fieldSystem, u16 param1)
 
 BOOL sub_0203F188 (FieldSystem * fieldSystem, u16 param1)
 {
-    return sub_020507F0(SaveData_Events(fieldSystem->saveData), param1);
+    return VarsFlags_CheckFlag(SaveData_GetVarsFlags(fieldSystem->saveData), param1);
 }
 
 void sub_0203F19C (FieldSystem * fieldSystem, u16 param1)
 {
-    sub_0205081C(SaveData_Events(fieldSystem->saveData), param1);
+    VarsFlags_SetFlag(SaveData_GetVarsFlags(fieldSystem->saveData), param1);
     return;
 }
 
 void sub_0203F1B0 (FieldSystem * fieldSystem, u16 param1)
 {
-    sub_02050844(SaveData_Events(fieldSystem->saveData), param1);
+    VarsFlags_ClearFlag(SaveData_GetVarsFlags(fieldSystem->saveData), param1);
     return;
 }
 
-void sub_0203F1C4 (FieldSystem * fieldSystem)
+void FieldSystem_ClearLocalFlags (FieldSystem * fieldSystem)
 {
     int v0;
-    UnkStruct_020507E4 * v1;
+    VarsFlags * v1;
 
-    v1 = SaveData_Events(fieldSystem->saveData);
+    v1 = SaveData_GetVarsFlags(fieldSystem->saveData);
 
-    memset(sub_02050870(v1, 1), 0, (64 / 8));
-    memset(sub_020508B8(v1, (0 + 0x4000)), 0, 2 * 32);
+    memset(VarsFlags_GetFlagChunk(v1, 1), 0, (64 / 8));
+    memset(VarsFlags_GetVarAddress(v1, (0 + 0x4000)), 0, 2 * 32);
 
     return;
 }
 
 void sub_0203F1FC (FieldSystem * fieldSystem)
 {
-    UnkStruct_020507E4 * v0;
+    VarsFlags * v0;
 
-    v0 = SaveData_Events(fieldSystem->saveData);
-    memset(sub_02050870(v0, 2400 + 320), 0, 192 / 8);
+    v0 = SaveData_GetVarsFlags(fieldSystem->saveData);
+    memset(VarsFlags_GetFlagChunk(v0, 2400 + 320), 0, 192 / 8);
 
     return;
 }
@@ -674,12 +673,12 @@ void sub_0203F21C (FieldSystem * fieldSystem, u16 param1, u16 param2, u16 param3
     *(u16 *)sub_0203F098(fieldSystem, 44) = param4;
 }
 
-u16 sub_0203F254 (u16 param0)
+u16 Script_GetTrainerID(u16 eventID)
 {
-    if (param0 < 5000) {
-        return param0 - 3000 + 1;
+    if (eventID < DOUBLE_BATTLE_EVENT_ID_OFFSET) {
+        return eventID - SINGLE_BATTLE_EVENT_ID_OFFSET + 1;
     } else {
-        return param0 - 5000 + 1;
+        return eventID - DOUBLE_BATTLE_EVENT_ID_OFFSET + 1;
     }
 }
 
@@ -692,29 +691,25 @@ BOOL sub_0203F278 (u16 param0)
     }
 }
 
-BOOL sub_0203F28C (u16 param0)
+BOOL Script_IsTrainerDoubleBattle(u16 trainerID)
 {
-    if (TrainerData_LoadParam(param0, 9) == 0x0) {
-        return 0;
-    }
-
-    return 1;
+    return TrainerData_LoadParam(trainerID, TRDATA_BATTLE_TYPE) != BATTLE_TYPE_SINGLES;
 }
 
-BOOL sub_0203F2A0 (FieldSystem * fieldSystem, u16 param1)
+BOOL Script_IsTrainerDefeated(FieldSystem *fieldSystem, u16 trainerID)
 {
-    return sub_020507F0(SaveData_Events(fieldSystem->saveData), 1360 + param1);
+    return VarsFlags_CheckFlag(SaveData_GetVarsFlags(fieldSystem->saveData), TRAINER_DEFEATED_FLAG_OFFSET + trainerID);
 }
 
-void sub_0203F2BC (FieldSystem * fieldSystem, u16 param1)
+void sub_0203F2BC (FieldSystem *fieldSystem, u16 param1)
 {
-    sub_0205081C(SaveData_Events(fieldSystem->saveData), 1360 + param1);
+    VarsFlags_SetFlag(SaveData_GetVarsFlags(fieldSystem->saveData), TRAINER_DEFEATED_FLAG_OFFSET + param1);
     return;
 }
 
-void sub_0203F2D8 (FieldSystem * fieldSystem, u16 param1)
+void sub_0203F2D8 (FieldSystem *fieldSystem, u16 param1)
 {
-    sub_02050844(SaveData_Events(fieldSystem->saveData), 1360 + param1);
+    VarsFlags_ClearFlag(SaveData_GetVarsFlags(fieldSystem->saveData), TRAINER_DEFEATED_FLAG_OFFSET + param1);
     return;
 }
 
@@ -750,17 +745,17 @@ void sub_0203F310 (FieldSystem * fieldSystem)
 
     v0 = (LCRNG_Next() % (NELEMS(Unk_02100AE0)));
 
-    if (fieldSystem->unk_1C->unk_00 != Unk_02100AE0[v0][0]) {
+    if (fieldSystem->location->mapId != Unk_02100AE0[v0][0]) {
         sub_0203F1B0(fieldSystem, (730 + Unk_02100AE0[v0][1]));
     }
 
     v0 = (LCRNG_Next() % (NELEMS(Unk_02100AE0)));
 
-    if (fieldSystem->unk_1C->unk_00 != Unk_02100AE0[v0][0]) {
+    if (fieldSystem->location->mapId != Unk_02100AE0[v0][0]) {
         sub_0203F1B0(fieldSystem, (730 + Unk_02100AE0[v0][1]));
     }
 
-    if (fieldSystem->unk_1C->unk_00 != 256) {
+    if (fieldSystem->location->mapId != 256) {
         v0 = (LCRNG_Next() % (NELEMS(Unk_02100AD4)));
         sub_0203F1B0(fieldSystem, (730 + Unk_02100AD4[v0]));
 
@@ -827,12 +822,12 @@ static BOOL sub_0203F404 (UnkStruct_0203EF60 * param0, u16 param1)
 UnkStruct_0203F478 * sub_0203F478 (FieldSystem * fieldSystem, int param1)
 {
     UnkStruct_0203F478 * v0;
-    const UnkStruct_0203A594 * v1;
+    const BgEvent * v1;
     int v2, v3, v4, v5, v6, v7;
     int v8, v9, v10, v11;
 
     v6 = 0;
-    v5 = sub_0203A448(fieldSystem);
+    v5 = MapHeaderData_GetNumBgEvents(fieldSystem);
     v5++;
     v0 = Heap_AllocFromHeap(param1, sizeof(UnkStruct_0203F478) * v5);
 
@@ -843,7 +838,7 @@ UnkStruct_0203F478 * sub_0203F478 (FieldSystem * fieldSystem, int param1)
         return v0;
     }
 
-    v1 = sub_0203A440(fieldSystem);
+    v1 = MapHeaderData_GetBgEvents(fieldSystem);
 
     if (v1 == NULL) {
         v0[0].unk_04 = 0xff;
@@ -868,12 +863,12 @@ UnkStruct_0203F478 * sub_0203F478 (FieldSystem * fieldSystem, int param1)
     }
 
     for (v4 = 0; v4 < v5; v4++) {
-        if ((v1[v4].unk_02 == 2) && (sub_0203F188(fieldSystem, sub_0203F2F4(v1[v4].unk_00)) == 0)) {
-            if ((v1[v4].unk_04 >= v8) && (v1[v4].unk_04 <= v9) && (v1[v4].unk_08 >= v10) && (v1[v4].unk_08 <= v11)) {
-                v0[v6].unk_04 = sub_0203F3C8(v1[v4].unk_00);
-                v7 = (v2 - v1[v4].unk_04);
+        if ((v1[v4].type == 2) && (sub_0203F188(fieldSystem, sub_0203F2F4(v1[v4].script)) == 0)) {
+            if ((v1[v4].x >= v8) && (v1[v4].x <= v9) && (v1[v4].z >= v10) && (v1[v4].z <= v11)) {
+                v0[v6].unk_04 = sub_0203F3C8(v1[v4].script);
+                v7 = (v2 - v1[v4].x);
                 v0[v6].unk_00 = abs(7 - v7);
-                v7 = (v3 - v1[v4].unk_08);
+                v7 = (v3 - v1[v4].z);
                 v0[v6].unk_02 = abs(7 - v7);
                 v6++;
             }
@@ -887,7 +882,7 @@ UnkStruct_0203F478 * sub_0203F478 (FieldSystem * fieldSystem, int param1)
     return v0;
 }
 
-void sub_0203F598 (FieldSystem * fieldSystem)
+void FieldSystem_InitNewGameState (FieldSystem * fieldSystem)
 {
     sub_0203F5A4(fieldSystem, 9600);
     return;
@@ -895,14 +890,13 @@ void sub_0203F598 (FieldSystem * fieldSystem)
 
 void sub_0203F5A4 (FieldSystem * fieldSystem, u16 param1)
 {
-    ScriptContext * v0 = sub_0203EAB8(fieldSystem, param1);
+    ScriptContext * ctx = sub_0203EAB8(fieldSystem, param1);
 
-    while (ScriptContext_Run(v0) == 1) {
+    while (ScriptContext_Run(ctx) == 1) {
         (void)0;
     }
 
-    sub_0203EA50(v0);
-    return;
+    sub_0203EA50(ctx);
 }
 
 BOOL sub_0203F5C0 (FieldSystem * fieldSystem, u8 param1)
@@ -910,7 +904,7 @@ BOOL sub_0203F5C0 (FieldSystem * fieldSystem, u8 param1)
     u16 v0;
     const u8 * v1;
 
-    v1 = sub_0203A68C(fieldSystem);
+    v1 = MapHeaderData_GetScripts(fieldSystem);
 
     if (v1 == NULL) {
         return 0;

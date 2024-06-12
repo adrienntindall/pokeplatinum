@@ -17,7 +17,6 @@
 #include "field/field_system.h"
 #include "struct_defs/struct_02057B48.h"
 #include "struct_defs/struct_020590C4.h"
-#include "struct_defs/struct_020619DC.h"
 
 #include "unk_0200D9E8.h"
 #include "heap.h"
@@ -28,7 +27,7 @@
 #include "communication_information.h"
 #include "communication_system.h"
 #include "unk_020366A0.h"
-#include "unk_0203A378.h"
+#include "map_header_data.h"
 #include "field_system.h"
 #include "unk_02054D00.h"
 #include "comm_player_manager.h"
@@ -46,6 +45,8 @@
 #include "overlay023/ov23_022499E4.h"
 #include "overlay023/ov23_0224A1D0.h"
 #include "overlay023/ov23_0224B05C.h"
+
+#include "constants/communication/comm_packets.h"
 
 static int sub_020581CC(int param0, int param1);
 static BOOL CommPlayer_MoveBlow(int param0, int param1);
@@ -309,7 +310,7 @@ void CommPlayer_SendPosServer (BOOL param0)
 
 static void CommPlayer_SendPosNetId (int netId, const CommPlayerLocation * playerLocation)
 {
-    u8 data[4 + 1];
+    u8 data[COMM_PACKET_SIZE_POS_NETID + 1];
     int x = playerLocation->x, z = playerLocation->z;
 
     if (playerLocation->x < 0) {
@@ -531,7 +532,7 @@ static void sub_02057EF8 (void * param0)
                 ov23_0224AF7C(netId);
             }
         } else if (sCommPlayerManager->isActive[netId]) {
-            if ((CommSys_CurNetId() == 0) && (sCommPlayerManager->isUnderground)) {
+            if (CommSys_CurNetId() == 0 && sCommPlayerManager->isUnderground) {
                 ov23_022436F0(netId);
                 ov23_02241648(netId);
             }
@@ -639,13 +640,13 @@ static int CommPlayer_Direction (u16 unused, u16 keys)
 BOOL CommPlayer_CheckNPCCollision (int x, int z)
 {
     int npcCnt, i;
-    const MapObjectHeader * npcList;
+    const ObjectEvent * npcList;
 
-    npcCnt = sub_0203A4B4(sCommPlayerManager->fieldSystem);
-    npcList = sub_0203A4BC(sCommPlayerManager->fieldSystem);
+    npcCnt = MapHeaderData_GetNumObjectEvents(sCommPlayerManager->fieldSystem);
+    npcList = MapHeaderData_GetObjectEvents(sCommPlayerManager->fieldSystem);
 
     for (i = 0; i < npcCnt; i++) {
-        if ((npcList[i].unk_1A == x) && (npcList[i].unk_1C == z)) {
+        if ((npcList[i].x == x) && (npcList[i].z == z)) {
             return 1;
         }
     }
@@ -661,7 +662,7 @@ static BOOL CommPlayer_CheckCollision (int x, int z, int netIdTarget)
                 continue;
             }
 
-            if ((x == CommPlayer_GetXServer(netId)) && (z == CommPlayer_GetZServer(netId))) {
+            if (x == CommPlayer_GetXServer(netId) && z == CommPlayer_GetZServer(netId)) {
                 return TRUE;
             }
         }
@@ -920,9 +921,9 @@ void CommPlayer_RecvDelete (int unused0, int unused2, void * src, void * param3)
     CommInfo_InitPlayer(netId);
 }
 
-int sub_020585A4 (void)
+int CommPacketSizeOf_RecvLocation (void)
 {
-    return 5;
+    return COMM_PACKET_SIZE_LOCATION;
 }
 
 void CommPlayer_RecvLocationAndInit (int netId, int size, void * src, void * unused)
@@ -1276,9 +1277,9 @@ void CommPlayer_StopBlowAnimation (int netId)
     }
 }
 
-int sub_02058C3C (void)
+int CommPacketSizeOf_RecvLocationAndInit (void)
 {
-    return 4;
+    return COMM_PACKET_SIZE_POS_NETID;
 }
 
 BOOL sub_02058C40 (void)

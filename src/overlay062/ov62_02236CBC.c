@@ -9,7 +9,6 @@
 #include "struct_decls/struct_0200C704_decl.h"
 #include "struct_decls/struct_02018340_decl.h"
 #include "struct_decls/struct_0202D750_decl.h"
-#include "struct_decls/struct_020507E4_decl.h"
 
 #include "struct_defs/struct_0200D0F4.h"
 #include "struct_defs/struct_0208C06C.h"
@@ -28,7 +27,7 @@
 #include "touch_screen.h"
 #include "unk_0202D05C.h"
 #include "unk_02030A80.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0206AFE0.h"
 #include "unk_0208B284.h"
 #include "overlay062/ov62_0222F2C0.h"
@@ -230,7 +229,7 @@ static void ov62_0223712C (UnkStruct_0208C06C * param0)
     int v6[5];
 
     {
-        UnkStruct_020507E4 * v7 = SaveData_Events(param0->unk_830);
+        VarsFlags * v7 = SaveData_GetVarsFlags(param0->unk_830);
 
         v6[0] = sub_0206B5C8(v7);
         v6[1] = sub_0206B588(v7);
@@ -326,7 +325,7 @@ static void ov62_022371CC (UnkStruct_0208C06C * param0)
     v9.priority = 20;
 
     {
-        UnkStruct_020507E4 * v10 = SaveData_Events(param0->unk_830);
+        VarsFlags * v10 = SaveData_GetVarsFlags(param0->unk_830);
 
         v3[0] = sub_0206B5C8(v10);
         v3[1] = sub_0206B588(v10);

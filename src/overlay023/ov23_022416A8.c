@@ -20,7 +20,7 @@
 #include "unk_0202CD50.h"
 #include "communication_system.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_02054D00.h"
 #include "comm_player_manager.h"
 #include "unk_0206A8DC.h"
@@ -399,7 +399,7 @@ void ov23_02241AE8 (int param0, int param1, int param2, int param3)
         ov23_02250128(param0);
 
         Sound_PlayEffect(1585);
-        sub_0206AA14(SaveData_Events(Unk_ov23_02257744->fieldSystem->saveData));
+        sub_0206AA14(SaveData_GetVarsFlags(Unk_ov23_02257744->fieldSystem->saveData));
         sub_0202CF28(sub_0202CD88(Unk_ov23_02257744->fieldSystem->saveData), (1 + 46));
 
         ov5_021F57C8(Unk_ov23_02257744->fieldSystem, param2, param3);

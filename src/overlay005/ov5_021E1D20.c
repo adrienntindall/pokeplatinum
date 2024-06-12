@@ -4,7 +4,6 @@
 #include "message.h"
 #include "struct_decls/struct_02018340_decl.h"
 #include "strbuf.h"
-#include "struct_decls/struct_02025E5C_decl.h"
 #include "trainer_info.h"
 #include "struct_decls/pokedexdata_decl.h"
 #include "savedata.h"
@@ -27,10 +26,10 @@
 #include "unk_02025E08.h"
 #include "trainer_info.h"
 #include "unk_0202631C.h"
-#include "unk_0202CBE4.h"
+#include "play_time.h"
 #include "unk_020366A0.h"
 #include "map_header.h"
-#include "unk_0203A6DC.h"
+#include "field_overworld_state.h"
 #include "player_avatar.h"
 #include "overlay005/ov5_021E1D20.h"
 #include "overlay005/ov5_021EA714.h"
@@ -39,7 +38,7 @@ typedef struct {
     int unk_00;
     int unk_04;
     TrainerInfo * unk_08;
-    UnkStruct_02025E5C * unk_0C;
+    PlayTime *playTime;
 } UnkStruct_ov5_021E1D20;
 
 struct UnkStruct_ov5_021E1FF4_t {
@@ -75,10 +74,10 @@ static const int Unk_ov5_021F9CBC[] = {
 static void ov5_021E1D20 (UnkStruct_ov5_021E1D20 * param0, const FieldSystem * fieldSystem)
 {
     SaveData * v0 = fieldSystem->saveData;
-    Location * v1 = sub_0203A720(sub_0203A790(v0));
+    Location * location = sub_0203A720(SaveData_GetFieldOverworldState(v0));
     PokedexData * v2 = SaveData_Pokedex(v0);
 
-    param0->unk_04 = MapHeader_GetMapLabelTextID(v1->unk_00);
+    param0->unk_04 = MapHeader_GetMapLabelTextID(location->mapId);
 
     if (sub_02027520(v2)) {
         param0->unk_00 = sub_02026E48(v2);
@@ -87,7 +86,7 @@ static void ov5_021E1D20 (UnkStruct_ov5_021E1D20 * param0, const FieldSystem * f
     }
 
     param0->unk_08 = SaveData_GetTrainerInfo(v0);
-    param0->unk_0C = sub_02025E5C(v0);
+    param0->playTime = SaveData_GetPlayTime(v0);
 }
 
 static void ov5_021E1D6C (StringTemplate * strTemplate, const UnkStruct_ov5_021E1D20 * param1)
@@ -110,7 +109,7 @@ static void ov5_021E1D6C (StringTemplate * strTemplate, const UnkStruct_ov5_021E
     }
 
     StringTemplate_SetNumber(strTemplate, 3, param1->unk_00, v0, v1, 1);
-    v2 = sub_0202CC58(param1->unk_0C);
+    v2 = PlayTime_GetHours(param1->playTime);
 
     if (v2 >= 100) {
         v0 = 3;
@@ -124,7 +123,7 @@ static void ov5_021E1D6C (StringTemplate * strTemplate, const UnkStruct_ov5_021E
     }
 
     StringTemplate_SetNumber(strTemplate, 4, v2, v0, v1, 1);
-    StringTemplate_SetNumber(strTemplate, 5, sub_0202CC5C(param1->unk_0C), 2, 2, 1);
+    StringTemplate_SetNumber(strTemplate, 5, PlayTime_GetMinutes(param1->playTime), 2, 2, 1);
 }
 
 static int ov5_021E1E10 (const UnkStruct_ov5_021E1D20 * param0)
@@ -230,13 +229,13 @@ BOOL ov5_021E200C (FieldSystem * fieldSystem)
 
 static void ov5_021E2028 (FieldSystem * fieldSystem)
 {
-    sub_0203A7A8(fieldSystem);
+    FieldSystem_SaveObjects(fieldSystem);
     ov5_021EA714(fieldSystem, 4, 0);
 
-    fieldSystem->unk_1C->unk_08 = Player_GetXPos(fieldSystem->playerAvatar);
-    fieldSystem->unk_1C->unk_0C = Player_GetZPos(fieldSystem->playerAvatar);
-    fieldSystem->unk_1C->unk_04 = -1;
-    fieldSystem->unk_1C->unk_10 = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
+    fieldSystem->location->x = Player_GetXPos(fieldSystem->playerAvatar);
+    fieldSystem->location->z = Player_GetZPos(fieldSystem->playerAvatar);
+    fieldSystem->location->unk_04 = -1;
+    fieldSystem->location->unk_10 = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
 }
 
 void ov5_021E2064 (FieldSystem * fieldSystem)
@@ -246,7 +245,7 @@ void ov5_021E2064 (FieldSystem * fieldSystem)
         return;
     }
 
-    switch (fieldSystem->unk_1C->unk_00) {
+    switch (fieldSystem->location->mapId) {
     case 466:
     case 332:
     case 333:

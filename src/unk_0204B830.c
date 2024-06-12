@@ -6,7 +6,6 @@
 
 #include "strbuf.h"
 #include "trainer_info.h"
-#include "struct_decls/struct_020507E4_decl.h"
 #include "pokemon.h"
 #include "struct_decls/struct_party_decl.h"
 #include "struct_decls/struct_0207D3C0_decl.h"
@@ -32,7 +31,7 @@
 #include "field_script_context.h"
 #include "unk_0203E880.h"
 #include "unk_0204B830.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_02054884.h"
 #include "poketch_data.h"
 #include "unk_0206AFE0.h"
@@ -186,7 +185,7 @@ static void sub_0204BAAC (FieldSystem * fieldSystem, void * param1)
 {
     UnkUnion_0204C4D0 * v0 = sub_0204B844(fieldSystem);
     TrainerInfo * v1 = SaveData_GetTrainerInfo(fieldSystem->saveData);
-    UnkStruct_020507E4 * v2 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v2 = SaveData_GetVarsFlags(fieldSystem->saveData);
     Party * v3;
     Pokemon * v4;
     BOOL v5;
@@ -557,7 +556,7 @@ static void sub_0204C15C (FieldSystem * fieldSystem, void * param1)
 {
     UnkStruct_0207D3C0 * v0 = sub_0207D990(fieldSystem->saveData);
     UnkUnion_0204C4D0 * v1 = sub_0204B844(fieldSystem);
-    UnkStruct_020507E4 * v2 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v2 = SaveData_GetVarsFlags(fieldSystem->saveData);
     u16 v3;
     u16 v4 = 454;
 
@@ -601,7 +600,7 @@ static void sub_0204C220 (FieldSystem * fieldSystem, void * param1)
 {
     UnkStruct_0207D3C0 * v0 = sub_0207D990(fieldSystem->saveData);
     UnkUnion_0204C4D0 * v1 = sub_0204B844(fieldSystem);
-    UnkStruct_020507E4 * v2 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v2 = SaveData_GetVarsFlags(fieldSystem->saveData);
     u16 v3;
     u16 v4 = 452;
 
@@ -649,7 +648,7 @@ static void sub_0204C2F4 (FieldSystem * fieldSystem, void * param1)
 {
     UnkStruct_0207D3C0 * v0 = sub_0207D990(fieldSystem->saveData);
     UnkUnion_0204C4D0 * v1 = sub_0204B844(fieldSystem);
-    UnkStruct_020507E4 * v2 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v2 = SaveData_GetVarsFlags(fieldSystem->saveData);
     u16 v3;
     u16 v4 = 467;
 
@@ -693,7 +692,7 @@ static void sub_0204C3B8 (FieldSystem * fieldSystem, void * param1)
 {
     UnkStruct_0207D3C0 * v0 = sub_0207D990(fieldSystem->saveData);
     UnkUnion_0204C4D0 * v1 = sub_0204B844(fieldSystem);
-    UnkStruct_020507E4 * v2 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v2 = SaveData_GetVarsFlags(fieldSystem->saveData);
     u16 v3;
     u16 v4 = 455;
 

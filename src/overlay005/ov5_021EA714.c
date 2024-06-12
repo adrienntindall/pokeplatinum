@@ -1,14 +1,12 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/struct_020507E4_decl.h"
-
 #include "field/field_system.h"
 #include "field/field_system_sub2_t.h"
 
 #include "game_overlay.h"
 #include "unk_0200A784.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "poketch_data.h"
 #include "unk_0206A8DC.h"
 #include "overlay005/ov5_021EA714.h"
@@ -29,7 +27,7 @@ void ov5_021EA714 (FieldSystem * fieldSystem, int param1, u32 param2)
 void ov5_021EA728 (FieldSystem * fieldSystem)
 {
     PoketchData * v0 = SaveData_PoketchData(fieldSystem->saveData);
-    UnkStruct_020507E4 * v1 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v1 = SaveData_GetVarsFlags(fieldSystem->saveData);
 
     if (PoketchData_IsEnabled(v0)
         && (sub_0206AE2C(v1) == 0)) {
@@ -44,7 +42,7 @@ void ov5_021EA728 (FieldSystem * fieldSystem)
 void ov5_021EA790 (FieldSystem * fieldSystem)
 {
     PoketchData * v0 = SaveData_PoketchData(fieldSystem->saveData);
-    UnkStruct_020507E4 * v1 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v1 = SaveData_GetVarsFlags(fieldSystem->saveData);
 
     if (PoketchData_IsEnabled(v0)
         && (sub_0206AE2C(v1) == 0)) {
@@ -57,7 +55,7 @@ void ov5_021EA790 (FieldSystem * fieldSystem)
 u8 ov5_021EA7CC (FieldSystem * fieldSystem)
 {
     PoketchData * v0 = SaveData_PoketchData(fieldSystem->saveData);
-    UnkStruct_020507E4 * v1 = SaveData_Events(fieldSystem->saveData);
+    VarsFlags * v1 = SaveData_GetVarsFlags(fieldSystem->saveData);
 
     if (PoketchData_IsEnabled(v0)
         && (sub_0206AE2C(v1) == 0)) {

@@ -3,7 +3,6 @@
 
 #include "inlines.h"
 
-#include "struct_decls/struct_020507E4_decl.h"
 #include "pokemon.h"
 #include "struct_decls/struct_020797DC_decl.h"
 
@@ -12,7 +11,7 @@
 
 #include "savedata/save_table.h"
 #include "unk_020480A8.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_0206AFE0.h"
 #include "pokemon.h"
 #include "unk_020797C8.h"
@@ -22,7 +21,7 @@ static u8 sub_02048268(u16 param0, u16 param1);
 
 BOOL ScrCmd_24E (ScriptContext * param0)
 {
-    UnkStruct_020507E4 * v0 = SaveData_Events(param0->fieldSystem->saveData);
+    VarsFlags * v0 = SaveData_GetVarsFlags(param0->fieldSystem->saveData);
     u16 * v1 = ScriptContext_GetVarPointer(param0);
     u32 v2;
 
@@ -107,7 +106,7 @@ BOOL ScrCmd_24F (ScriptContext * param0)
 
 BOOL ScrCmd_250 (ScriptContext * param0)
 {
-    UnkStruct_020507E4 * v0 = SaveData_Events(param0->fieldSystem->saveData);
+    VarsFlags * v0 = SaveData_GetVarsFlags(param0->fieldSystem->saveData);
 
     sub_0206B2C8(v0);
     return 0;

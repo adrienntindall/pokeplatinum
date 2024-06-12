@@ -34,7 +34,7 @@
 #include "heap.h"
 #include "unk_02018340.h"
 #include "unk_0202854C.h"
-#include "unk_0202B604.h"
+#include "journal.h"
 #include "unk_0202CD50.h"
 #include "unk_02030EE0.h"
 #include "communication_information.h"
@@ -42,9 +42,9 @@
 #include "communication_system.h"
 #include "unk_020366A0.h"
 #include "field_system.h"
-#include "unk_020507CC.h"
+#include "vars_flags.h"
 #include "unk_020508D4.h"
-#include "unk_020530C8.h"
+#include "field_map_change.h"
 #include "unk_02054D00.h"
 #include "unk_020573FC.h"
 #include "comm_player_manager.h"
@@ -973,7 +973,7 @@ static UnkStruct_ov23_0224BA48 * ov23_0224BCC4 (FieldSystem * fieldSystem, int p
         v0->unk_2B = param4;
         v0->unk_2C = param5;
 
-        GF_ASSERT(fieldSystem->unk_1C->unk_00 == 2);
+        GF_ASSERT(fieldSystem->location->mapId == 2);
 
         v0->unk_14 = 2;
         v0->unk_24 = param3;
@@ -1608,10 +1608,10 @@ static BOOL ov23_0224C790 (TaskManager * param0)
         }
         break;
     case 4:
-        v2.unk_00 = v1->unk_14;
+        v2.mapId = v1->unk_14;
         v2.unk_04 = v1->unk_18;
-        v2.unk_08 = v1->unk_1C;
-        v2.unk_0C = v1->unk_20;
+        v2.x = v1->unk_1C;
+        v2.z = v1->unk_20;
         v2.unk_10 = v1->unk_24;
         sub_020544F0(param0, &v2);
         (v1->unk_0C)++;
@@ -1739,7 +1739,7 @@ static void ov23_0224CAF0 (FieldSystem * fieldSystem, int param1, int param2, in
 
     if (v0) {
         v0->unk_2D = param5;
-        sub_02050904(fieldSystem, ov23_0224C790, v0);
+        FieldTask_Set(fieldSystem, ov23_0224C790, v0);
     }
 }
 
@@ -2171,7 +2171,7 @@ static void ov23_0224D238 (void)
     v16[0][0] = 16;
     v16[0][1] = 12;
 
-    sub_0206AA20(SaveData_Events(Unk_ov23_022577AC->fieldSystem->saveData));
+    sub_0206AA20(SaveData_GetVarsFlags(Unk_ov23_022577AC->fieldSystem->saveData));
     sub_020292CC(v0);
     sub_02028B34(v1);
     CommSys_Seed(&v15);

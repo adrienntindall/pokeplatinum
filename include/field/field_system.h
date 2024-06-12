@@ -4,9 +4,8 @@
 #include "struct_decls/struct_02018340_decl.h"
 #include "struct_decls/struct_020203AC_decl.h"
 #include "struct_defs/struct_0202610C.h"
-#include "struct_decls/struct_0202B628_decl.h"
+#include "journal.h"
 #include "struct_decls/struct_02039E30_decl.h"
-#include "struct_decls/struct_0203A3E8_decl.h"
 #include "field/field_system_sub1_decl.h"
 #include "field/field_system_sub2_decl.h"
 #include "field/field_system_sub3.h"
@@ -43,6 +42,7 @@
 #include "overlay023/struct_ov23_0224942C_decl.h"
 #include "overlay056/struct_ov56_02256468_decl.h"
 #include "overlay066/struct_ov66_0222DCE0_sub1.h"
+#include "map_header_data.h"
 
 typedef struct FieldSystem_t {
     FieldSystem_sub1 * unk_00;
@@ -50,9 +50,9 @@ typedef struct FieldSystem_t {
     BGL * unk_08;
     SaveData * saveData;
     TaskManager * unk_10;
-    UnkStruct_0203A3E8 * unk_14;
+    MapHeaderData * mapHeaderData;
     int unk_18;
-    Location * unk_1C;
+    Location * location;
     int unk_20;
     UnkStruct_020203AC * unk_24;
     UnkStruct_ov5_021E8F60 * unk_28;
@@ -84,7 +84,7 @@ typedef struct FieldSystem_t {
     int unk_90;
     RadarChain *chain;
     UnkStruct_0207D99C * unk_98;
-    UnkStruct_0202B628 * unk_9C;
+    Journal * unk_9C;
     UnkStruct_ov5_021EF300 * unk_A0;
     UnkStruct_ov5_021E1608 * unk_A4;
     UnkStruct_ov5_021EFB30 * unk_A8;
