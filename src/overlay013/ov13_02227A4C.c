@@ -1,20 +1,20 @@
+#include "overlay013/ov13_02227A4C.h"
+
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_defs/struct_0207CDEC.h"
 #include "overlay013/struct_ov13_02227244.h"
 
+#include "bag.h"
 #include "item.h"
-#include "unk_0207D3B8.h"
-#include "overlay013/ov13_02227A4C.h"
 
-u8 ov13_02227A4C (UnkStruct_ov13_02227244 * param0)
+u8 ov13_02227A4C(UnkStruct_ov13_02227244 *param0)
 {
     if (param0->unk_00->unk_20 == 0) {
         return 0;
     }
 
-    if (sub_0207D688(param0->unk_00->unk_08, param0->unk_00->unk_20, 1, param0->unk_00->unk_0C) == 0) {
+    if (Bag_CanRemoveItem(param0->unk_00->unk_08, param0->unk_00->unk_20, 1, param0->unk_00->unk_0C) == 0) {
         param0->unk_00->unk_20 = 0;
         param0->unk_00->unk_1F = 0;
         return 0;
@@ -23,7 +23,7 @@ u8 ov13_02227A4C (UnkStruct_ov13_02227244 * param0)
     return 1;
 }
 
-void ov13_02227A7C (UnkStruct_ov13_02227244 * param0)
+void ov13_02227A7C(UnkStruct_ov13_02227244 *param0)
 {
     u32 v0;
 
@@ -44,9 +44,9 @@ static const u8 Unk_ov13_02229BB0[] = {
     0x0
 };
 
-void ov13_02227AC8 (UnkStruct_ov13_02227244 * param0)
+void ov13_02227AC8(UnkStruct_ov13_02227244 *param0)
 {
-    BagItem * v0;
+    BagItem *v0;
     u32 v1, v2, v3;
     s32 v4;
 
@@ -54,7 +54,7 @@ void ov13_02227AC8 (UnkStruct_ov13_02227244 * param0)
         v2 = 0;
 
         while (TRUE) {
-            v0 = sub_0207D910(param0->unk_00->unk_08, v1, v2);
+            v0 = Bag_GetItemSlot(param0->unk_00->unk_08, v1, v2);
 
             if (v0 == NULL) {
                 break;
@@ -90,7 +90,7 @@ void ov13_02227AC8 (UnkStruct_ov13_02227244 * param0)
     }
 }
 
-u16 ov13_02227BA8 (UnkStruct_ov13_02227244 * param0, u32 param1)
+u16 ov13_02227BA8(UnkStruct_ov13_02227244 *param0, u32 param1)
 {
     if ((param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].item != 0) && (param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].quantity != 0)) {
         return param0->unk_3C[param0->unk_114D][param0->unk_00->unk_2C[param0->unk_114D] * 6 + param1].item;

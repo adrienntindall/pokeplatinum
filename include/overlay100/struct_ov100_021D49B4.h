@@ -1,15 +1,14 @@
 #ifndef POKEPLATINUM_STRUCT_OV100_021D49B4_H
 #define POKEPLATINUM_STRUCT_OV100_021D49B4_H
 
-#include "struct_defs/struct_020170F4.h"
-#include "struct_defs/struct_02017248.h"
-#include "struct_defs/struct_02017294.h"
 #include "overlay100/struct_ov100_021D54D0.h"
 
+#include "easy3d_object.h"
+
 typedef struct {
-    UnkStruct_02017294 unk_00;
-    UnkStruct_020170F4 unk_78;
-    UnkStruct_02017248 unk_88[10];
+    Easy3DObject unk_00;
+    Easy3DModel unk_78;
+    Easy3DAnim unk_88[10];
     fx32 unk_150;
     fx32 unk_154;
     int unk_158;
@@ -23,7 +22,7 @@ typedef struct {
     int unk_178;
     int unk_17C;
     int unk_180;
-    UnkStruct_ov100_021D54D0 * unk_184;
+    UnkStruct_ov100_021D54D0 *unk_184;
 } UnkStruct_ov100_021D49B4;
 
 #endif // POKEPLATINUM_STRUCT_OV100_021D49B4_H

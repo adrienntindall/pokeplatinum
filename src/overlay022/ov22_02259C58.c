@@ -1,7 +1,6 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/struct_02009DC8_decl.h"
 #include "message.h"
 #include "struct_decls/struct_02012744_decl.h"
 #include "strbuf.h"
@@ -9,21 +8,19 @@
 #include "struct_defs/struct_020127E8.h"
 #include "touch_screen.h"
 #include "struct_defs/struct_0205AA50.h"
-#include "overlay019/struct_ov19_021DA864.h"
 #include "overlay022/struct_ov22_02259C58.h"
 #include "overlay022/struct_ov22_02259C58_1.h"
 #include "overlay022/struct_ov22_02259C9C.h"
 #include "overlay022/struct_ov22_02259D2C.h"
 #include "overlay022/struct_ov22_0225A0E4.h"
 #include "overlay022/struct_ov22_0225A154.h"
-#include "overlay115/struct_ov115_02261520.h"
 
 #include "overlay022/funcptr_ov22_02259D78.h"
 
 #include "unk_02002B7C.h"
 #include "unk_02005474.h"
 #include "unk_020093B4.h"
-#include "unk_02009714.h"
+#include "sprite_resource.h"
 #include "unk_0200A328.h"
 #include "message.h"
 #include "unk_02012744.h"
@@ -31,7 +28,7 @@
 #include "unk_0201D670.h"
 #include "unk_0201E86C.h"
 #include "unk_0201F834.h"
-#include "unk_020218BC.h"
+#include "cell_actor.h"
 #include "error_handling.h"
 #include "strbuf.h"
 #include "unk_02023FCC.h"
@@ -58,7 +55,7 @@ void ov22_02259C58 (UnkStruct_ov22_02259C58 * param0, UnkStruct_ov22_02259C58_1 
     GF_ASSERT(param0);
     GF_ASSERT(param1);
 
-    param0->unk_00 = sub_02021AA0(param1->unk_00);
+    param0->unk_00 = CellActorCollection_AddEx(param1->unk_00);
     GF_ASSERT(param0->unk_00);
 
     param0->unk_04 = param1->unk_0C;
@@ -79,7 +76,7 @@ void ov22_02259C9C (UnkStruct_ov22_0225A154 * param0, UnkStruct_ov22_02259C9C * 
 
     v0.unk_00 = param1->unk_14;
     v0.unk_04 = param1->unk_10;
-    v0.unk_08 = param1->unk_00.unk_00->unk_00;
+    v0.unk_08 = param1->unk_00.unk_00->collection;
     v0.unk_0C = param1->unk_18;
     v0.unk_10 = param0->unk_00.unk_00;
     v0.unk_14 = param1->unk_24;
@@ -87,15 +84,15 @@ void ov22_02259C9C (UnkStruct_ov22_0225A154 * param0, UnkStruct_ov22_02259C9C * 
     v0.unk_1C = param1->unk_20;
     v0.unk_20 = 0;
     v0.unk_24 = 0;
-    v0.unk_28 = param1->unk_00.unk_00->unk_28;
-    v0.unk_2C = param1->unk_00.unk_00->unk_2C;
+    v0.unk_28 = param1->unk_00.unk_00->vramType;
+    v0.unk_2C = param1->unk_00.unk_00->heapID;
 
     param0->unk_10 = sub_020127E8(&v0);
 }
 
 void ov22_02259CE8 (UnkStruct_ov22_02259C58 * param0)
 {
-    sub_02021BD4(param0->unk_00);
+    CellActor_Delete(param0->unk_00);
     memset(param0, 0, sizeof(UnkStruct_ov22_02259C58));
 }
 
@@ -415,7 +412,7 @@ asm static void ov22_0225A154 (UnkStruct_ov22_0225A154 * param0, int param1, Unk
     str r2, [sp, #0x90]
     str r0, [sp, #0xa0]
     ldr r0, [r4, #0x4c]
-    bl sub_02009DC8
+    bl SpriteResourceCollection_Find
     mov r1, #0
     bl sub_0200A72C
     str r0, [sp, #0x98]
@@ -545,11 +542,11 @@ static void ov22_0225A3DC (UnkStruct_ov22_02259C58 * param0, int param1, int par
     const VecFx32 * v0;
     VecFx32 v1;
 
-    v0 = sub_02021D28(param0->unk_00);
+    v0 = CellActor_GetPosition(param0->unk_00);
     v1 = *v0;
     v1.x += param1 << FX32_SHIFT;
     v1.y += param2 << FX32_SHIFT;
-    sub_02021C50(param0->unk_00, &v1);
+    CellActor_SetPosition(param0->unk_00, &v1);
 }
 
 static void ov22_0225A418 (UnkStruct_ov22_0225A154 * param0, int param1, int param2)

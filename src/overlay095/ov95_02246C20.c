@@ -1,47 +1,14 @@
+#include "overlay095/ov95_02246C20.h"
+
 #include <nitro.h>
 #include <string.h>
 
-#include "message.h"
 #include "struct_decls/struct_02018340_decl.h"
-#include "struct_decls/sys_task.h"
-#include "struct_decls/struct_020218BC_decl.h"
-#include "struct_decls/struct_02022550_decl.h"
-#include "strbuf.h"
-#include "pokemon.h"
-#include "overlay095/struct_ov95_02247004_decl.h"
-#include "overlay095/struct_ov95_022472C4_decl.h"
-#include "overlay095/struct_ov95_02247628_decl.h"
-
 #include "struct_defs/archived_sprite.h"
 #include "struct_defs/struct_0200C738.h"
 #include "struct_defs/struct_02013610.h"
-#include "overlay006/struct_ov6_02246254.h"
-#include "overlay019/struct_ov19_021DA864.h"
-#include "overlay083/struct_ov83_0223D9A8.h"
-#include "overlay095/struct_ov95_02247568.h"
 
-#include "unk_020041CC.h"
-#include "unk_02005474.h"
-#include "overlay_manager.h"
-#include "unk_02006E3C.h"
-#include "unk_020093B4.h"
-#include "unk_0200A784.h"
-#include "message.h"
-#include "string_template.h"
-#include "unk_0200D9E8.h"
-#include "unk_0200F174.h"
-#include "unk_020131EC.h"
-#include "unk_02017728.h"
-#include "heap.h"
-#include "unk_02018340.h"
-#include "unk_0201CCF0.h"
-#include "gx_layers.h"
-#include "unk_020218BC.h"
-#include "strbuf.h"
-#include "game_options.h"
-#include "unk_020393C8.h"
-#include "pokemon.h"
-#include "overlay095/ov95_02246C20.h"
+#include "overlay006/struct_ov6_02246254.h"
 #include "overlay095/ov95_02247B6C.h"
 #include "overlay095/ov95_02248590.h"
 #include "overlay095/ov95_02249740.h"
@@ -49,30 +16,56 @@
 #include "overlay095/ov95_0224A390.h"
 #include "overlay095/ov95_0224ABC0.h"
 #include "overlay095/ov95_0224B3D8.h"
+#include "overlay095/struct_ov95_02247004_decl.h"
+#include "overlay095/struct_ov95_022472C4_decl.h"
+#include "overlay095/struct_ov95_02247568.h"
+#include "overlay095/struct_ov95_02247628_decl.h"
+
+#include "cell_actor.h"
+#include "game_options.h"
+#include "gx_layers.h"
+#include "heap.h"
+#include "message.h"
+#include "overlay_manager.h"
+#include "pokemon.h"
+#include "strbuf.h"
+#include "string_template.h"
+#include "sys_task.h"
+#include "sys_task_manager.h"
+#include "unk_020041CC.h"
+#include "unk_02005474.h"
+#include "unk_02006E3C.h"
+#include "unk_020093B4.h"
+#include "unk_0200A784.h"
+#include "unk_0200F174.h"
+#include "unk_020131EC.h"
+#include "unk_02017728.h"
+#include "unk_02018340.h"
+#include "unk_020393C8.h"
 
 struct UnkStruct_ov95_02247628_t {
-    const UnkStruct_ov6_02246254 * unk_00;
+    const UnkStruct_ov6_02246254 *unk_00;
     int unk_04;
-    BGL * unk_08;
-    StringTemplate * unk_0C;
-    MessageLoader * unk_10;
-    Strbuf* unk_14;
-    GraphicElementManager * unk_18;
+    BGL *unk_08;
+    StringTemplate *unk_0C;
+    MessageLoader *unk_10;
+    Strbuf *unk_14;
+    CellActorCollection *unk_18;
     UnkStruct_0200C738 unk_1C;
-    SysTask * unk_1A8;
+    SysTask *unk_1A8;
     BOOL unk_1AC;
     u16 unk_1B0;
     u16 unk_1B2;
     u16 unk_1B4;
     u16 unk_1B6;
-    void * unk_1B8;
+    void *unk_1B8;
 };
 
 struct UnkStruct_ov95_02247004_t {
     u16 unk_00[96];
-    SysTask * unk_C0;
-    SysTask * unk_C4[8];
-    BOOL * unk_E4;
+    SysTask *unk_C0;
+    SysTask *unk_C4[8];
+    BOOL *unk_E4;
     BOOL unk_E8;
     int unk_EC;
     int unk_F0;
@@ -82,7 +75,7 @@ struct UnkStruct_ov95_02247004_t {
 };
 
 typedef struct {
-    UnkStruct_ov95_02247004 * unk_00;
+    UnkStruct_ov95_02247004 *unk_00;
     int unk_04;
     int unk_08;
     int unk_0C;
@@ -91,30 +84,30 @@ typedef struct {
 } UnkStruct_ov95_02247170;
 
 struct UnkStruct_ov95_022472C4_t {
-    BGL * unk_00;
-    volatile BOOL * unk_04;
+    BGL *unk_00;
+    volatile BOOL *unk_04;
     fx32 unk_08;
     fx32 unk_0C;
     fx32 unk_10;
     fx32 unk_14;
     int unk_18;
     int unk_1C;
-    SysTask * unk_20;
+    SysTask *unk_20;
 };
 
-typedef void *(* UnkFuncPtr_ov95_0224BE8C)(UnkStruct_ov95_02247628 *);
-typedef BOOL (* UnkFuncPtr_ov95_0224BE8C_1)(void *, int *);
-typedef void (* UnkFuncPtr_ov95_0224BE8C_2)(void *);
+typedef void *(*UnkFuncPtr_ov95_0224BE8C)(UnkStruct_ov95_02247628 *);
+typedef BOOL (*UnkFuncPtr_ov95_0224BE8C_1)(void *, int *);
+typedef void (*UnkFuncPtr_ov95_0224BE8C_2)(void *);
 
-static BOOL ov95_02246DEC(BoxPokemon * param0);
-static void ov95_02246F0C(SysTask * param0, void * param1);
-static void ov95_02247060(SysTask * param0, void * param1);
-static void ov95_02247148(UnkStruct_ov95_02247004 * param0, int param1, int param2, int param3);
-static void ov95_02247170(UnkStruct_ov95_02247004 * param0);
-static void ov95_02247224(UnkStruct_ov95_02247004 * param0, int param1);
-static void ov95_02247254(SysTask * param0, void * param1);
-static void ov95_0224732C(SysTask * param0, void * param1);
-static void ov95_022473A0(UnkStruct_ov95_022472C4 * param0);
+static BOOL ov95_02246DEC(BoxPokemon *param0);
+static void ov95_02246F0C(SysTask *param0, void *param1);
+static void ov95_02247060(SysTask *param0, void *param1);
+static void ov95_02247148(UnkStruct_ov95_02247004 *param0, int param1, int param2, int param3);
+static void ov95_02247170(UnkStruct_ov95_02247004 *param0);
+static void ov95_02247224(UnkStruct_ov95_02247004 *param0, int param1);
+static void ov95_02247254(SysTask *param0, void *param1);
+static void ov95_0224732C(SysTask *param0, void *param1);
+static void ov95_022473A0(UnkStruct_ov95_022472C4 *param0);
 static void ov95_02247688(void);
 static void ov95_02247694(void);
 
@@ -124,19 +117,19 @@ static const struct {
     UnkFuncPtr_ov95_0224BE8C_2 unk_08;
     int unk_0C;
 } Unk_ov95_0224BE8C[] = {
-    {ov95_02247B6C, ov95_02247C34, ov95_02247BC8, 1 | 2},
-    {ov95_02248590, ov95_02248650, ov95_022485FC, 1 | 2},
-    {ov95_02249740, ov95_022497A0, ov95_02249770, 1 | 2},
-    {ov95_02249F90, ov95_02249FC8, ov95_02249FB4, 1},
-    {ov95_0224A390, ov95_0224A3FC, ov95_0224A3CC, 1 | 4},
-    {ov95_0224ABC0, ov95_0224AC2C, ov95_0224ABF4, 1 | 4},
-    {ov95_0224B3D8, ov95_0224B49C, ov95_0224B438, 1 | 4},
+    { ov95_02247B6C, ov95_02247C34, ov95_02247BC8, 1 | 2 },
+    { ov95_02248590, ov95_02248650, ov95_022485FC, 1 | 2 },
+    { ov95_02249740, ov95_022497A0, ov95_02249770, 1 | 2 },
+    { ov95_02249F90, ov95_02249FC8, ov95_02249FB4, 1 },
+    { ov95_0224A390, ov95_0224A3FC, ov95_0224A3CC, 1 | 4 },
+    { ov95_0224ABC0, ov95_0224AC2C, ov95_0224ABF4, 1 | 4 },
+    { ov95_0224B3D8, ov95_0224B49C, ov95_0224B438, 1 | 4 },
 };
 
-int ov95_02246C20 (OverlayManager * param0, int * param1)
+int ov95_02246C20(OverlayManager *param0, int *param1)
 {
     if (ScreenWipe_Done()) {
-        UnkStruct_ov95_02247628 * v0;
+        UnkStruct_ov95_02247628 *v0;
 
         Heap_Create(3, 57, 98304);
         Heap_Create(3, 58, 98304);
@@ -199,7 +192,7 @@ int ov95_02246C20 (OverlayManager * param0, int * param1)
     return 0;
 }
 
-static BOOL ov95_02246DEC (BoxPokemon * param0)
+static BOOL ov95_02246DEC(BoxPokemon *param0)
 {
     int v0 = BoxPokemon_GetValue(param0, MON_DATA_SPECIES, NULL);
     int v1 = BoxPokemon_GetValue(param0, MON_DATA_FORM, NULL);
@@ -207,10 +200,10 @@ static BOOL ov95_02246DEC (BoxPokemon * param0)
     return PokemonPersonalData_GetFormValue(v0, v1, 28) == 0;
 }
 
-int ov95_02246E1C (OverlayManager * param0, int * param1)
+int ov95_02246E1C(OverlayManager *param0, int *param1)
 {
     OSIntrMode v0;
-    UnkStruct_ov95_02247628 * v1;
+    UnkStruct_ov95_02247628 *v1;
 
     v0 = OS_DisableInterrupts();
     v1 = OverlayManager_Data(param0);
@@ -221,7 +214,7 @@ int ov95_02246E1C (OverlayManager * param0, int * param1)
     MessageLoader_Free(v1->unk_10);
     Strbuf_Free(v1->unk_14);
     Heap_FreeToHeap(v1->unk_08);
-    sub_02021964(v1->unk_18);
+    CellActorCollection_Delete(v1->unk_18);
     sub_0200A878();
     OverlayManager_FreeData(param0);
     Heap_Destroy(57);
@@ -232,9 +225,9 @@ int ov95_02246E1C (OverlayManager * param0, int * param1)
     return 1;
 }
 
-int ov95_02246E7C (OverlayManager * param0, int * param1)
+int ov95_02246E7C(OverlayManager *param0, int *param1)
 {
-    UnkStruct_ov95_02247628 * v0 = OverlayManager_Data(param0);
+    UnkStruct_ov95_02247628 *v0 = OverlayManager_Data(param0);
 
     if (v0->unk_04 < NELEMS(Unk_ov95_0224BE8C)) {
         if (Unk_ov95_0224BE8C[v0->unk_04].unk_0C & v0->unk_00->unk_10) {
@@ -262,25 +255,25 @@ int ov95_02246E7C (OverlayManager * param0, int * param1)
     }
 }
 
-static void ov95_02246F0C (SysTask * param0, void * param1)
+static void ov95_02246F0C(SysTask *param0, void *param1)
 {
-    UnkStruct_ov95_02247628 * v0 = param1;
+    UnkStruct_ov95_02247628 *v0 = param1;
 
-    sub_020219F8(v0->unk_18);
+    CellActorCollection_Update(v0->unk_18);
     sub_0200A858();
 
     OS_SetIrqCheckFlag(OS_IE_V_BLANK);
 }
 
-UnkStruct_ov95_02247004 * ov95_02246F30 (BOOL * param0, int param1)
+UnkStruct_ov95_02247004 *ov95_02246F30(BOOL *param0, int param1)
 {
-    UnkStruct_ov95_02247004 * v0 = Heap_AllocFromHeap(57, sizeof(UnkStruct_ov95_02247004));
+    UnkStruct_ov95_02247004 *v0 = Heap_AllocFromHeap(57, sizeof(UnkStruct_ov95_02247004));
 
     *param0 = 0;
 
     if (v0) {
-        NNSG2dPaletteData * v1;
-        void * v2;
+        NNSG2dPaletteData *v1;
+        void *v2;
         u32 v3;
         int v4;
 
@@ -306,7 +299,7 @@ UnkStruct_ov95_02247004 * ov95_02246F30 (BOOL * param0, int param1)
         G2_SetBlendAlpha(GX_BLEND_PLANEMASK_BG2, GX_BLEND_PLANEMASK_BG2 | GX_BLEND_PLANEMASK_BG3, 16, 8);
         G2S_SetBlendAlpha(GX_BLEND_PLANEMASK_BG2, GX_BLEND_PLANEMASK_BG2 | GX_BLEND_PLANEMASK_BG3, 16, 8);
 
-        v0->unk_C0 = sub_0200DA3C(ov95_02247060, v0, 20);
+        v0->unk_C0 = SysTask_ExecuteAfterVBlank(ov95_02247060, v0, 20);
 
         if (v0->unk_C0) {
             *(v0->unk_E4) = 1;
@@ -316,14 +309,14 @@ UnkStruct_ov95_02247004 * ov95_02246F30 (BOOL * param0, int param1)
     return v0;
 }
 
-void ov95_02247004 (UnkStruct_ov95_02247004 * param0)
+void ov95_02247004(UnkStruct_ov95_02247004 *param0)
 {
     if (*(param0->unk_E4) == 1) {
         param0->unk_E8 = 1;
     }
 }
 
-void ov95_02247018 (UnkStruct_ov95_02247004 * param0)
+void ov95_02247018(UnkStruct_ov95_02247004 *param0)
 {
     if (*(param0->unk_E4) == 1) {
         int v0;
@@ -340,9 +333,9 @@ void ov95_02247018 (UnkStruct_ov95_02247004 * param0)
     }
 }
 
-static void ov95_02247060 (SysTask * param0, void * param1)
+static void ov95_02247060(SysTask *param0, void *param1)
 {
-    UnkStruct_ov95_02247004 * v0 = param1;
+    UnkStruct_ov95_02247004 *v0 = param1;
 
     if (v0->unk_E8 == 0) {
         if (--(v0->unk_F0) <= 0) {
@@ -387,7 +380,7 @@ static void ov95_02247060 (SysTask * param0, void * param1)
     }
 }
 
-static void ov95_02247148 (UnkStruct_ov95_02247004 * param0, int param1, int param2, int param3)
+static void ov95_02247148(UnkStruct_ov95_02247004 *param0, int param1, int param2, int param3)
 {
     if ((param1 >= 0) && (param1 < 96)) {
         param0->unk_00[param1] = 0x0;
@@ -400,10 +393,10 @@ static void ov95_02247148 (UnkStruct_ov95_02247004 * param0, int param1, int par
     param0->unk_EC = 1;
 }
 
-static void ov95_02247170 (UnkStruct_ov95_02247004 * param0)
+static void ov95_02247170(UnkStruct_ov95_02247004 *param0)
 {
     if (param0->unk_C4[param0->unk_F8] == NULL) {
-        UnkStruct_ov95_02247170 * v0 = Heap_AllocFromHeap(57, sizeof(UnkStruct_ov95_02247170));
+        UnkStruct_ov95_02247170 *v0 = Heap_AllocFromHeap(57, sizeof(UnkStruct_ov95_02247170));
 
         if (v0) {
             v0->unk_00 = param0;
@@ -433,19 +426,19 @@ static void ov95_02247170 (UnkStruct_ov95_02247004 * param0)
     }
 }
 
-static void ov95_02247224 (UnkStruct_ov95_02247004 * param0, int param1)
+static void ov95_02247224(UnkStruct_ov95_02247004 *param0, int param1)
 {
     if (param0->unk_C4[param1]) {
-        Heap_FreeToHeap(sub_0201CED0(param0->unk_C4[param1]));
+        Heap_FreeToHeap(SysTask_GetParam(param0->unk_C4[param1]));
         SysTask_Done(param0->unk_C4[param1]);
         param0->unk_C4[param1] = NULL;
         param0->unk_F4--;
     }
 }
 
-static void ov95_02247254 (SysTask * param0, void * param1)
+static void ov95_02247254(SysTask *param0, void *param1)
 {
-    UnkStruct_ov95_02247170 * v0 = param1;
+    UnkStruct_ov95_02247170 *v0 = param1;
 
     if (++(v0->unk_0C) >= v0->unk_08) {
         v0->unk_0C = 0;
@@ -470,9 +463,9 @@ static void ov95_02247254 (SysTask * param0, void * param1)
     }
 }
 
-UnkStruct_ov95_022472C4 * ov95_022472C4 (BGL * param0, fx32 param1, fx32 param2, fx32 param3, fx32 param4, int param5, volatile BOOL * param6)
+UnkStruct_ov95_022472C4 *ov95_022472C4(BGL *param0, fx32 param1, fx32 param2, fx32 param3, fx32 param4, int param5, volatile BOOL *param6)
 {
-    UnkStruct_ov95_022472C4 * v0 = Heap_AllocFromHeap(57, sizeof(UnkStruct_ov95_022472C4));
+    UnkStruct_ov95_022472C4 *v0 = Heap_AllocFromHeap(57, sizeof(UnkStruct_ov95_022472C4));
 
     *param6 = 1;
 
@@ -487,7 +480,7 @@ UnkStruct_ov95_022472C4 * ov95_022472C4 (BGL * param0, fx32 param1, fx32 param2,
         v0->unk_04 = param6;
         *param6 = 0;
 
-        v0->unk_20 = sub_0200DA04(ov95_0224732C, v0, 0);
+        v0->unk_20 = SysTask_ExecuteOnVBlank(ov95_0224732C, v0, 0);
 
         if (v0->unk_20) {
             (void)0;
@@ -500,9 +493,9 @@ UnkStruct_ov95_022472C4 * ov95_022472C4 (BGL * param0, fx32 param1, fx32 param2,
     return v0;
 }
 
-static void ov95_0224732C (SysTask * param0, void * param1)
+static void ov95_0224732C(SysTask *param0, void *param1)
 {
-    UnkStruct_ov95_022472C4 * v0 = param1;
+    UnkStruct_ov95_022472C4 *v0 = param1;
     fx32 v1;
 
     v1 = ((v0->unk_08 * v0->unk_10) >> FX32_SHIFT) / 32;
@@ -536,10 +529,11 @@ static void ov95_0224732C (SysTask * param0, void * param1)
     }
 }
 
-static void ov95_022473A0 (UnkStruct_ov95_022472C4 * param0)
+static void ov95_022473A0(UnkStruct_ov95_022472C4 *param0)
 {
     static const int v0[] = {
-        144, 56,
+        144,
+        56,
     };
     MtxFx22 v1;
 
@@ -552,21 +546,24 @@ static void ov95_022473A0 (UnkStruct_ov95_022472C4 * param0)
     sub_02019348(param0->unk_00, 6, &v1, 128, v0[param0->unk_1C]);
 }
 
-void ov95_022473E8 (UnkStruct_ov95_02247628 * param0, int param1, u32 param2, u32 param3, BOOL param4)
+void ov95_022473E8(UnkStruct_ov95_02247628 *param0, int param1, u32 param2, u32 param3, BOOL param4)
 {
     ArchivedSprite v0;
     u32 v1;
     u32 v2;
-    void * v3;
+    void *v3;
 
-    v2 = (param4) ?  0x20 * 200 : 0x20 * 100;
+    v2 = (param4) ? 0x20 * 200 : 0x20 * 100;
     v3 = Heap_AllocFromHeapAtEnd(57, v2);
 
     if (v3) {
         UnkStruct_02013610 v4 = {
-            0, 0, 10, 10,
+            0,
+            0,
+            10,
+            10,
         };
-        BoxPokemon * v5;
+        BoxPokemon *v5;
         BOOL v6;
         u32 v7;
         u16 v8;
@@ -595,10 +592,10 @@ void ov95_022473E8 (UnkStruct_ov95_02247628 * param0, int param1, u32 param2, u3
     sub_02006E84(v0.archive, v0.palette, v1, param3 * 0x20, 0x20, 57);
 }
 
-void ov95_022474D4 (UnkStruct_ov95_02247628 * param0, int param1, u32 param2, u32 param3, u32 param4, u32 param5)
+void ov95_022474D4(UnkStruct_ov95_02247628 *param0, int param1, u32 param2, u32 param3, u32 param4, u32 param5)
 {
-    void * v0;
-    NNSG2dScreenData * v1;
+    void *v0;
+    NNSG2dScreenData *v1;
     u32 v2;
 
     if (param1 == 0) {
@@ -616,13 +613,13 @@ void ov95_022474D4 (UnkStruct_ov95_02247628 * param0, int param1, u32 param2, u3
     }
 }
 
-void ov95_02247568 (UnkStruct_ov95_02247568 * param0, u32 param1, u32 param2, u32 param3)
+void ov95_02247568(UnkStruct_ov95_02247568 *param0, u32 param1, u32 param2, u32 param3)
 {
     param0->unk_00 = sub_02006FA0(param1, param2, 1, &(param0->unk_08), 58);
     param0->unk_04 = sub_02006FBC(param1, param3, 1, &(param0->unk_0C), 58);
 }
 
-void ov95_022475A0 (UnkStruct_ov95_02247568 * param0)
+void ov95_022475A0(UnkStruct_ov95_02247568 *param0)
 {
     if (param0->unk_00) {
         Heap_FreeToHeap(param0->unk_00);
@@ -635,112 +632,112 @@ void ov95_022475A0 (UnkStruct_ov95_02247568 * param0)
     }
 }
 
-void ov95_022475C4 (UnkStruct_ov19_021DA864 * param0, UnkStruct_ov95_02247568 * param1, NNSG2dImageProxy * param2, NNSG2dImagePaletteProxy * param3, u32 param4)
+void ov95_022475C4(CellActorResourceData *param0, UnkStruct_ov95_02247568 *param1, NNSG2dImageProxy *param2, NNSG2dImagePaletteProxy *param3, u32 param4)
 {
-    param0->unk_00 = param2;
-    param0->unk_08 = param3;
-    param0->unk_0C = param1->unk_08;
-    param0->unk_10 = param1->unk_0C;
-    param0->unk_20 = param4;
-    param0->unk_04 = NULL;
-    param0->unk_14 = NULL;
-    param0->unk_18 = NULL;
-    param0->unk_1C = 0;
+    param0->imageProxy = param2;
+    param0->paletteProxy = param3;
+    param0->cellBank = param1->unk_08;
+    param0->cellAnimBank = param1->unk_0C;
+    param0->priority = param4;
+    param0->charData = NULL;
+    param0->multiCellBank = NULL;
+    param0->multiCellAnimBank = NULL;
+    param0->isVRamTransfer = 0;
 }
 
-GraphicElementData * ov95_022475E4 (UnkStruct_ov95_02247628 * param0, UnkStruct_ov19_021DA864 * param1, u32 param2, u32 param3, u32 param4, int param5)
+CellActor *ov95_022475E4(UnkStruct_ov95_02247628 *param0, CellActorResourceData *param1, u32 param2, u32 param3, u32 param4, int param5)
 {
-    GraphicElementData * v0;
-    UnkStruct_ov83_0223D9A8 v1;
+    CellActor *v0;
+    CellActorInitParams v1;
 
-    v1.unk_00 = param0->unk_18;
-    v1.unk_04 = param1;
-    v1.unk_08.x = param2 * FX32_ONE;
-    v1.unk_08.y = param3 * FX32_ONE;
-    v1.unk_08.z = 0;
-    v1.unk_14 = param4;
-    v1.unk_18 = param5;
-    v1.unk_1C = 57;
+    v1.collection = param0->unk_18;
+    v1.resourceData = param1;
+    v1.position.x = param2 * FX32_ONE;
+    v1.position.y = param3 * FX32_ONE;
+    v1.position.z = 0;
+    v1.priority = param4;
+    v1.vramType = param5;
+    v1.heapID = 57;
 
-    v0 = sub_02021B90(&v1);
+    v0 = CellActorCollection_Add(&v1);
 
     if (v0) {
-        sub_02021CC8(v0, 1);
-        sub_02021CE4(v0, FX32_ONE);
+        CellActor_SetAnimateFlag(v0, 1);
+        CellActor_SetAnimSpeed(v0, FX32_ONE);
     }
 
     return v0;
 }
 
-BGL * ov95_02247628 (UnkStruct_ov95_02247628 * param0)
+BGL *ov95_02247628(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_08;
 }
 
-StringTemplate * ov95_0224762C (UnkStruct_ov95_02247628 * param0)
+StringTemplate *ov95_0224762C(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_0C;
 }
 
-MessageLoader * ov95_02247630 (UnkStruct_ov95_02247628 * param0)
+MessageLoader *ov95_02247630(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_10;
 }
 
-const BoxPokemon * ov95_02247634 (UnkStruct_ov95_02247628 * param0)
+const BoxPokemon *ov95_02247634(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_00->unk_00;
 }
 
-const BoxPokemon * ov95_0224763C (UnkStruct_ov95_02247628 * param0)
+const BoxPokemon *ov95_0224763C(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_00->unk_04;
 }
 
-u32 ov95_02247644 (UnkStruct_ov95_02247628 * param0)
+u32 ov95_02247644(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_00->unk_0C;
 }
 
-u16 ov95_0224764C (UnkStruct_ov95_02247628 * param0)
+u16 ov95_0224764C(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_1B0;
 }
 
-u16 ov95_02247654 (UnkStruct_ov95_02247628 * param0)
+u16 ov95_02247654(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_1B2;
 }
 
-u16 ov95_02247660 (UnkStruct_ov95_02247628 * param0)
+u16 ov95_02247660(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_1B4;
 }
 
-u16 ov95_02247668 (UnkStruct_ov95_02247628 * param0)
+u16 ov95_02247668(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_1B6;
 }
 
-int ov95_02247674 (UnkStruct_ov95_02247628 * param0)
+int ov95_02247674(UnkStruct_ov95_02247628 *param0)
 {
     return Options_Frame(param0->unk_00->unk_14);
 }
 
-int ov95_02247680 (UnkStruct_ov95_02247628 * param0)
+int ov95_02247680(UnkStruct_ov95_02247628 *param0)
 {
     return param0->unk_00->unk_10;
 }
 
 static int Unk_ov95_0224C2E0 = 0;
-static void * Unk_ov95_0224C2E4[32];
+static void *Unk_ov95_0224C2E4[32];
 
-static void ov95_02247688 (void)
+static void ov95_02247688(void)
 {
     Unk_ov95_0224C2E0 = 0;
 }
 
-static void ov95_02247694 (void)
+static void ov95_02247694(void)
 {
     if (Unk_ov95_0224C2E0) {
         int i;
@@ -753,7 +750,7 @@ static void ov95_02247694 (void)
     }
 }
 
-void ov95_022476C8 (void * param0)
+void ov95_022476C8(void *param0)
 {
     GF_ASSERT(Unk_ov95_0224C2E0 < 32);
     Unk_ov95_0224C2E4[Unk_ov95_0224C2E0++] = param0;

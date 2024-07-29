@@ -1,37 +1,36 @@
+#include "overlay082/ov82_0223B2E0.h"
+
 #include <nitro.h>
 #include <string.h>
 
 #include "struct_decls/struct_0207CB08_decl.h"
-#include "struct_decls/struct_0207D3C0_decl.h"
 
-#include "overlay084/const_ov84_02241130.h"
-
-#include "overlay083/struct_ov83_0223C344.h"
-
-#include "overlay_manager.h"
-#include "heap.h"
-#include "unk_0207CB08.h"
-#include "item.h"
-#include "unk_0207D3B8.h"
-#include "unk_020972FC.h"
 #include "overlay082/ov82_0223B140.h"
-#include "overlay082/ov82_0223B2E0.h"
+#include "overlay083/struct_ov83_0223C344.h"
+#include "overlay084/const_ov84_02241130.h"
 #include "overlay084/ov84_0223B5A0.h"
 #include "overlay085/ov85_02241440.h"
+
+#include "bag.h"
+#include "heap.h"
+#include "item.h"
+#include "overlay_manager.h"
+#include "unk_0207CB08.h"
+#include "unk_020972FC.h"
 
 FS_EXTERN_OVERLAY(overlay83);
 FS_EXTERN_OVERLAY(overlay84);
 FS_EXTERN_OVERLAY(overlay85);
 
-static int ov82_0223B380(UnkStruct_ov83_0223C344 * param0);
-static int ov82_0223B3DC(UnkStruct_ov83_0223C344 * param0);
-static int ov82_0223B470(UnkStruct_ov83_0223C344 * param0);
-static int ov82_0223B510(UnkStruct_ov83_0223C344 * param0);
-int ov83_0223B5B0(OverlayManager * param0, int * param1);
-int ov83_0223B65C(OverlayManager * param0, int * param1);
-int ov83_0223B710(OverlayManager * param0, int * param1);
+static int ov82_0223B380(UnkStruct_ov83_0223C344 *param0);
+static int ov82_0223B3DC(UnkStruct_ov83_0223C344 *param0);
+static int ov82_0223B470(UnkStruct_ov83_0223C344 *param0);
+static int ov82_0223B510(UnkStruct_ov83_0223C344 *param0);
+int ov83_0223B5B0(OverlayManager *param0, int *param1);
+int ov83_0223B65C(OverlayManager *param0, int *param1);
+int ov83_0223B710(OverlayManager *param0, int *param1);
 
-int ov82_0223B2E0 (UnkStruct_ov83_0223C344 * param0, int * param1)
+int ov82_0223B2E0(UnkStruct_ov83_0223C344 *param0, int *param1)
 {
     switch (*param1) {
     case 0:
@@ -55,7 +54,7 @@ int ov82_0223B2E0 (UnkStruct_ov83_0223C344 * param0, int * param1)
     return 0;
 }
 
-int ov82_0223B330 (UnkStruct_ov83_0223C344 * param0, int * param1)
+int ov82_0223B330(UnkStruct_ov83_0223C344 *param0, int *param1)
 {
     FS_EXTERN_OVERLAY(overlay83);
 
@@ -70,7 +69,7 @@ int ov82_0223B330 (UnkStruct_ov83_0223C344 * param0, int * param1)
     return 2;
 }
 
-int ov82_0223B35C (UnkStruct_ov83_0223C344 * param0, int * param1)
+int ov82_0223B35C(UnkStruct_ov83_0223C344 *param0, int *param1)
 {
     if (ov82_0223B140(&param0->unk_1C) == 0) {
         return 2;
@@ -83,14 +82,14 @@ int ov82_0223B35C (UnkStruct_ov83_0223C344 * param0, int * param1)
     }
 }
 
-int ov82_0223B37C (UnkStruct_ov83_0223C344 * param0, int * param1)
+int ov82_0223B37C(UnkStruct_ov83_0223C344 *param0, int *param1)
 {
     return 4;
 }
 
-static int ov82_0223B380 (UnkStruct_ov83_0223C344 * param0)
+static int ov82_0223B380(UnkStruct_ov83_0223C344 *param0)
 {
-    void * v0;
+    void *v0;
     u32 v1;
 
     FS_EXTERN_OVERLAY(overlay84);
@@ -118,9 +117,9 @@ static int ov82_0223B380 (UnkStruct_ov83_0223C344 * param0)
     return 1;
 }
 
-static int ov82_0223B3DC (UnkStruct_ov83_0223C344 * param0)
+static int ov82_0223B3DC(UnkStruct_ov83_0223C344 *param0)
 {
-    UnkStruct_0207CB08 * v0 = NULL;
+    UnkStruct_0207CB08 *v0 = NULL;
     BOOL v1;
 
     if (!ov82_0223B140(&param0->unk_1C)) {
@@ -152,17 +151,17 @@ static int ov82_0223B3DC (UnkStruct_ov83_0223C344 * param0)
         break;
     }
 
-    v1 = Bag_SubtractItem(param0->unk_10->unk_14, param0->unk_08, 1, param0->unk_00);
+    v1 = Bag_TryRemoveItem(param0->unk_10->unk_14, param0->unk_08, 1, param0->unk_00);
     GF_ASSERT(v1);
 
     return 4;
 }
 
-static int ov82_0223B470 (UnkStruct_ov83_0223C344 * param0)
+static int ov82_0223B470(UnkStruct_ov83_0223C344 *param0)
 {
     u8 v0;
     u8 v1, v2, v3, v4;
-    UnkStruct_0207D3C0 * v5 = param0->unk_10->unk_14;
+    Bag *v5 = param0->unk_10->unk_14;
 
     FS_EXTERN_OVERLAY(overlay85);
 
@@ -178,7 +177,7 @@ static int ov82_0223B470 (UnkStruct_ov83_0223C344 * param0)
     for (v0 = 0; v0 < 64; v0++) {
         v4 = Item_ForBerryNumber(v0);
 
-        if (sub_0207D688(v5, v4, 1, param0->unk_00) == 1) {
+        if (Bag_CanRemoveItem(v5, v4, 1, param0->unk_00) == 1) {
             sub_02097320(param0->unk_18, v4, 0);
             v3++;
         }
@@ -191,7 +190,7 @@ static int ov82_0223B470 (UnkStruct_ov83_0223C344 * param0)
     return 3;
 }
 
-static int ov82_0223B510 (UnkStruct_ov83_0223C344 * param0)
+static int ov82_0223B510(UnkStruct_ov83_0223C344 *param0)
 {
     u8 v0, v1;
 

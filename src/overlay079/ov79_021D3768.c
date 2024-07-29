@@ -1,24 +1,25 @@
+#include "overlay079/ov79_021D3768.h"
+
 #include <nitro.h>
 #include <string.h>
 
 #include "struct_decls/sprite_decl.h"
-
 #include "struct_defs/archived_sprite.h"
+
 #include "overlay079/struct_ov79_021D3820.h"
 #include "overlay079/struct_ov79_021D38D0.h"
-#include "overlay115/struct_ov115_0226527C.h"
+#include "overlay115/camera_angle.h"
 
-#include "unk_0200762C.h"
+#include "camera.h"
 #include "gx_layers.h"
-#include "unk_02020020.h"
-#include "unk_0202419C.h"
 #include "pokemon.h"
-#include "overlay079/ov79_021D3768.h"
+#include "unk_0200762C.h"
+#include "unk_0202419C.h"
 
-static void ov79_021D3870(UnkStruct_ov79_021D3820 * param0, int param1);
-static void ov79_021D38D0(UnkStruct_ov79_021D3820 * param0, UnkStruct_ov79_021D38D0 * param1, int param2);
+static void ov79_021D3870(UnkStruct_ov79_021D3820 *param0, int param1);
+static void ov79_021D38D0(UnkStruct_ov79_021D3820 *param0, UnkStruct_ov79_021D38D0 *param1, int param2);
 
-void ov79_021D3768 (UnkStruct_ov79_021D3820 * param0, UnkStruct_ov79_021D38D0 * param1, int param2)
+void ov79_021D3768(UnkStruct_ov79_021D3820 *param0, UnkStruct_ov79_021D38D0 *param1, int param2)
 {
     MI_CpuClear8(param0, sizeof(UnkStruct_ov79_021D3820));
 
@@ -42,10 +43,10 @@ void ov79_021D3768 (UnkStruct_ov79_021D3820 * param0, UnkStruct_ov79_021D38D0 * 
     G2_SetBG0Priority(1);
 }
 
-void ov79_021D3820 (UnkStruct_ov79_021D3820 * param0)
+void ov79_021D3820(UnkStruct_ov79_021D3820 *param0)
 {
     sub_020241B4();
-    sub_020203EC();
+    Camera_ComputeViewMatrix();
 
     G3_MtxMode(GX_MTXMODE_PROJECTION);
     G3_Identity();
@@ -59,31 +60,31 @@ void ov79_021D3820 (UnkStruct_ov79_021D3820 * param0)
     G3_SwapBuffers(GX_SORTMODE_MANUAL, GX_BUFFERMODE_Z);
 }
 
-void ov79_021D385C (UnkStruct_ov79_021D3820 * param0)
+void ov79_021D385C(UnkStruct_ov79_021D3820 *param0)
 {
-    sub_020203B8(param0->unk_00);
+    Camera_Delete(param0->camera);
     sub_02007B6C(param0->unk_04);
 }
 
-static void ov79_021D3870 (UnkStruct_ov79_021D3820 * param0, int param1)
+static void ov79_021D3870(UnkStruct_ov79_021D3820 *param0, int param1)
 {
-    VecFx32 v0 = {0, 0, 0x10000};
-    UnkStruct_ov115_0226527C v1 = {0, 0, 0};
+    VecFx32 v0 = { 0, 0, 0x10000 };
+    CameraAngle v1 = { 0, 0, 0 };
     fx32 v2 = 0x10000;
     u16 v3 = 0x5c1;
 
-    param0->unk_00 = sub_020203AC(param1);
+    param0->camera = Camera_Alloc(param1);
 
-    sub_02020738(&v0, v2, &v1, v3, 1, param0->unk_00);
-    sub_020206BC(0, FX32_CONST(100), param0->unk_00);
-    sub_020206B0(param0->unk_00);
-    sub_020203D4(param0->unk_00);
+    Camera_InitWithPosition(&v0, v2, &v1, v3, 1, param0->camera);
+    Camera_SetClipping(0, FX32_CONST(100), param0->camera);
+    Camera_ReleaseTarget(param0->camera);
+    Camera_SetAsActive(param0->camera);
 }
 
-static void ov79_021D38D0 (UnkStruct_ov79_021D3820 * param0, UnkStruct_ov79_021D38D0 * param1, int param2)
+static void ov79_021D38D0(UnkStruct_ov79_021D3820 *param0, UnkStruct_ov79_021D38D0 *param1, int param2)
 {
     ArchivedSprite v0;
-    Sprite * v1;
+    Sprite *v1;
 
     param0->unk_04 = sub_0200762C(param2);
 

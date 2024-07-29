@@ -1,3 +1,5 @@
+#include "overlay100/ov100_021D13E4.h"
+
 #include <nitro.h>
 #include <string.h>
 
@@ -6,41 +8,39 @@
 #include "struct_decls/struct_0200C6E4_decl.h"
 #include "struct_decls/struct_0200C704_decl.h"
 #include "struct_decls/struct_02018340_decl.h"
-#include "struct_decls/struct_020203AC_decl.h"
+#include "struct_defs/sprite_template.h"
 
+#include "overlay100/ov100_021D400C.h"
+#include "overlay100/ov100_021D46C8.h"
+#include "overlay100/ov100_021D4E04.h"
 #include "overlay100/struct_ov100_021D1808.h"
 #include "overlay100/struct_ov100_021D4DD8.h"
 #include "overlay100/struct_ov100_021D4EBC.h"
-#include "struct_defs/sprite_template.h"
-#include "overlay115/struct_ov115_0226527C.h"
+#include "overlay115/camera_angle.h"
 
+#include "camera.h"
+#include "easy3d_object.h"
+#include "gx_layers.h"
+#include "heap.h"
+#include "sys_task.h"
 #include "unk_02002F38.h"
 #include "unk_020041CC.h"
 #include "unk_02005474.h"
 #include "unk_02006E3C.h"
 #include "unk_0200C6E4.h"
-#include "unk_0200D9E8.h"
 #include "unk_0200F174.h"
-#include "unk_020170BC.h"
-#include "heap.h"
 #include "unk_0201D15C.h"
-#include "gx_layers.h"
-#include "unk_02020020.h"
 #include "unk_0202419C.h"
-#include "overlay100/ov100_021D13E4.h"
-#include "overlay100/ov100_021D400C.h"
-#include "overlay100/ov100_021D46C8.h"
-#include "overlay100/ov100_021D4E04.h"
 
-static void ov100_021D1808(UnkStruct_ov100_021D1808 * param0);
-static void ov100_021D1A24(UnkStruct_ov100_021D1808 * param0);
-static void ov100_021D1A54(UnkStruct_ov100_021D1808 * param0);
-static void ov100_021D17B4(UnkStruct_ov100_021D1808 * param0);
-static void ov100_021D1758(UnkStruct_020203AC * param0, VecFx32 * param1);
+static void ov100_021D1808(UnkStruct_ov100_021D1808 *param0);
+static void ov100_021D1A24(UnkStruct_ov100_021D1808 *param0);
+static void ov100_021D1A54(UnkStruct_ov100_021D1808 *param0);
+static void ov100_021D17B4(UnkStruct_ov100_021D1808 *param0);
+static void ov100_021D1758(Camera *camera, VecFx32 *param1);
 
-void * ov100_021D13E4 (UnkStruct_ov100_021D4DD8 * param0)
+void *ov100_021D13E4(UnkStruct_ov100_021D4DD8 *param0)
 {
-    UnkStruct_ov100_021D1808 * v0 = Heap_AllocFromHeap(111, sizeof(UnkStruct_ov100_021D1808));
+    UnkStruct_ov100_021D1808 *v0 = Heap_AllocFromHeap(111, sizeof(UnkStruct_ov100_021D1808));
 
     memset(v0, 0, sizeof(UnkStruct_ov100_021D1808));
 
@@ -70,7 +70,7 @@ void * ov100_021D13E4 (UnkStruct_ov100_021D4DD8 * param0)
         };
     }
 
-    ov100_021D1758(v0->unk_7C4->unk_18, &v0->unk_7C4->unk_44);
+    ov100_021D1758(v0->unk_7C4->camera, &v0->unk_7C4->unk_44);
     v0->unk_7C4->unk_44.y += FX32_CONST(25);
 
     G2S_BlendNone();
@@ -82,20 +82,28 @@ void * ov100_021D13E4 (UnkStruct_ov100_021D4DD8 * param0)
     return v0;
 }
 
-BOOL ov100_021D14A8 (void * param0)
+BOOL ov100_021D14A8(void *param0)
 {
-    UnkStruct_ov100_021D1808 * v0 = param0;
+    UnkStruct_ov100_021D1808 *v0 = param0;
     static const u16 v1[] = {
-        210, 120, 120,
+        210,
+        120,
+        120,
     };
     static const u16 v2[] = {
-        145, 119, 100,
+        145,
+        119,
+        100,
     };
     static const u16 v3[] = {
-        100, 19, 18,
+        100,
+        19,
+        18,
     };
     static const u32 v4[] = {
-        480, 481, 482,
+        480,
+        481,
+        482,
     };
 
     switch (v0->unk_00) {
@@ -112,7 +120,7 @@ BOOL ov100_021D14A8 (void * param0)
         v0->unk_00 = 2;
         break;
     case 2:
-        sub_02017348(&v0->unk_1A4.unk_00[v0->unk_08].unk_00, 1);
+        Easy3DObject_SetVisibility(&v0->unk_1A4.unk_00[v0->unk_08].unk_00, 1);
         v0->unk_1A4.unk_00[v0->unk_08].unk_160 = 1;
         v0->unk_1A4.unk_00[v0->unk_08].unk_16C = 1;
         v0->unk_00++;
@@ -138,7 +146,7 @@ BOOL ov100_021D14A8 (void * param0)
             G2_SetBlendBrightness((GX_BLEND_PLANEMASK_BG0 | GX_BLEND_PLANEMASK_OBJ | GX_BLEND_PLANEMASK_BD), v0->unk_7C4->unk_50.unk_03);
         } else {
             v0->unk_0C.unk_0C[v0->unk_08].unk_3C = 1;
-            sub_02017348(&v0->unk_1A4.unk_00[v0->unk_08].unk_00, 0);
+            Easy3DObject_SetVisibility(&v0->unk_1A4.unk_00[v0->unk_08].unk_00, 0);
             v0->unk_00++;
 
             v0->unk_08++;
@@ -176,9 +184,9 @@ BOOL ov100_021D14A8 (void * param0)
     return 1;
 }
 
-BOOL ov100_021D16C4 (void * param0)
+BOOL ov100_021D16C4(void *param0)
 {
-    UnkStruct_ov100_021D1808 * v0 = param0;
+    UnkStruct_ov100_021D1808 *v0 = param0;
 
     switch (v0->unk_00) {
     case 0:
@@ -203,20 +211,20 @@ BOOL ov100_021D16C4 (void * param0)
     return 1;
 }
 
-static void ov100_021D1758 (UnkStruct_020203AC * param0, VecFx32 * param1)
+static void ov100_021D1758(Camera *camera, VecFx32 *param1)
 {
-    UnkStruct_ov115_0226527C v0 = {1274, 0, 0};
+    CameraAngle v0 = { 1274, 0, 0 };
 
-    sub_020206D0(param1, FX32_CONST(200), &v0, 0xa66, 0, 1, param0);
-    sub_02020854(0, param0);
-    sub_020203D4(param0);
-    sub_020206BC(FX32_CONST(0.1), FX32_CONST(2048), param0);
+    Camera_InitWithTarget(param1, FX32_CONST(200), &v0, 0xa66, 0, 1, camera);
+    Camera_ComputeProjectionMatrix(0, camera);
+    Camera_SetAsActive(camera);
+    Camera_SetClipping(FX32_CONST(0.1), FX32_CONST(2048), camera);
 }
 
-static void ov100_021D17B4 (UnkStruct_ov100_021D1808 * param0)
+static void ov100_021D17B4(UnkStruct_ov100_021D1808 *param0)
 {
     sub_020241B4();
-    sub_020203EC();
+    Camera_ComputeViewMatrix();
 
     ov100_021D47A0(param0->unk_7C4);
     ov100_021D4844(param0->unk_7C4);
@@ -226,16 +234,16 @@ static void ov100_021D17B4 (UnkStruct_ov100_021D1808 * param0)
     ov100_021D49B4(&param0->unk_1A4.unk_00[2]);
     ov100_021D49B4(&param0->unk_1A4.unk_498);
 
-    sub_020241BC(GX_SORTMODE_AUTO, GX_BUFFERMODE_W);
+    G3_RequestSwapBuffers(GX_SORTMODE_AUTO, GX_BUFFERMODE_W);
 }
 
-static void ov100_021D1808 (UnkStruct_ov100_021D1808 * param0)
+static void ov100_021D1808(UnkStruct_ov100_021D1808 *param0)
 {
-    NARC * v0 = param0->unk_7C4->unk_00;
-    BGL * v1 = param0->unk_7C4->unk_0C;
-    SpriteRenderer * v2 = param0->unk_7C4->unk_04;
-    SpriteGfxHandler * v3 = param0->unk_7C4->unk_08;
-    PaletteData * v4 = param0->unk_7C4->unk_10;
+    NARC *v0 = param0->unk_7C4->unk_00;
+    BGL *v1 = param0->unk_7C4->unk_0C;
+    SpriteRenderer *v2 = param0->unk_7C4->unk_04;
+    SpriteGfxHandler *v3 = param0->unk_7C4->unk_08;
+    PaletteData *v4 = param0->unk_7C4->unk_10;
     int v5 = 50000;
 
     sub_020070E8(v0, 70, v1, 5, 0, 0, 0, 111);
@@ -244,7 +252,7 @@ static void ov100_021D1808 (UnkStruct_ov100_021D1808 * param0)
     PaletteSys_LoadPalette(v4, 172, 71, 111, 1, 0x20 * 2, 0);
 
     {
-        const u16 v6[] = {0x421};
+        const u16 v6[] = { 0x421 };
         sub_02002FBC(v4, &v6, 0, 0, 0x2);
     }
 
@@ -267,12 +275,12 @@ static void ov100_021D1808 (UnkStruct_ov100_021D1808 * param0)
     ov100_021D4B4C(0, &param0->unk_1A4.unk_00[2], 15, param0->unk_7C4->unk_00, &param0->unk_7C4->unk_1C);
     ov100_021D4B4C(1, &param0->unk_1A4.unk_00[2], 16, param0->unk_7C4->unk_00, &param0->unk_7C4->unk_1C);
 
-    sub_02017348(&param0->unk_1A4.unk_00[0].unk_00, 1);
-    sub_02017348(&param0->unk_1A4.unk_00[1].unk_00, 0);
-    sub_02017348(&param0->unk_1A4.unk_00[2].unk_00, 0);
+    Easy3DObject_SetVisibility(&param0->unk_1A4.unk_00[0].unk_00, 1);
+    Easy3DObject_SetVisibility(&param0->unk_1A4.unk_00[1].unk_00, 0);
+    Easy3DObject_SetVisibility(&param0->unk_1A4.unk_00[2].unk_00, 0);
 }
 
-static void ov100_021D1A24 (UnkStruct_ov100_021D1808 * param0)
+static void ov100_021D1A24(UnkStruct_ov100_021D1808 *param0)
 {
     int v0;
 
@@ -284,14 +292,14 @@ static void ov100_021D1A24 (UnkStruct_ov100_021D1808 * param0)
     }
 }
 
-static void ov100_021D1A54 (UnkStruct_ov100_021D1808 * param0)
+static void ov100_021D1A54(UnkStruct_ov100_021D1808 *param0)
 {
     int v0;
-    NARC * v1 = param0->unk_7C4->unk_00;
-    BGL * v2 = param0->unk_7C4->unk_0C;
-    SpriteRenderer * v3 = param0->unk_7C4->unk_04;
-    SpriteGfxHandler * v4 = param0->unk_7C4->unk_08;
-    PaletteData * v5 = param0->unk_7C4->unk_10;
+    NARC *v1 = param0->unk_7C4->unk_00;
+    BGL *v2 = param0->unk_7C4->unk_0C;
+    SpriteRenderer *v3 = param0->unk_7C4->unk_04;
+    SpriteGfxHandler *v4 = param0->unk_7C4->unk_08;
+    PaletteData *v5 = param0->unk_7C4->unk_10;
     SpriteTemplate v6;
 
     v6.x = 0;
@@ -334,9 +342,9 @@ static void ov100_021D1A54 (UnkStruct_ov100_021D1808 * param0)
     }
 
     for (v0 = 0; v0 < 3; v0++) {
-        s16 v7[] = {180, -20, 280};
-        s16 v8[] = {128, 190, 150};
-        f32 v9[] = {0.1f, 0.3f, 0.2f};
+        s16 v7[] = { 180, -20, 280 };
+        s16 v8[] = { 128, 190, 150 };
+        f32 v9[] = { 0.1f, 0.3f, 0.2f };
 
         if (v0 == 1) {
             v6.bgPriority = 0;

@@ -1,34 +1,34 @@
+#include "overlay093/ov93_021D111C.h"
+
 #include <nitro.h>
 #include <string.h>
 
 #include "struct_decls/struct_02006C24_decl.h"
-#include "struct_decls/struct_020203AC_decl.h"
-
 #include "struct_defs/struct_0206C8D4.h"
 #include "struct_defs/struct_02099F80.h"
+
 #include "overlay009/struct_ov9_02249FF4.h"
 
-#include "unk_02005474.h"
-#include "overlay_manager.h"
+#include "camera.h"
+#include "easy3d.h"
+#include "gx_layers.h"
+#include "heap.h"
 #include "narc.h"
+#include "overlay_manager.h"
+#include "unk_02005474.h"
 #include "unk_0200F174.h"
 #include "unk_02017728.h"
-#include "heap.h"
-#include "unk_0201C970.h"
-#include "gx_layers.h"
-#include "unk_02020020.h"
 #include "unk_0202419C.h"
 #include "unk_0208C098.h"
-#include "overlay093/ov93_021D111C.h"
 
 typedef struct {
-    UnkStruct_020203AC * unk_00;
+    Camera *camera;
     NNSG3dRenderObj unk_04;
-    NNSG3dResMdl * unk_58;
-    NNSG3dResFileHeader * unk_5C;
-    void * unk_60[3];
+    NNSG3dResMdl *unk_58;
+    NNSG3dResFileHeader *unk_5C;
+    void *unk_60[3];
     NNSFndAllocator unk_6C;
-    NNSG3dAnmObj * unk_7C[3];
+    NNSG3dAnmObj *unk_7C[3];
     VecFx32 unk_88;
     u8 unk_94;
     u8 unk_95;
@@ -41,11 +41,11 @@ typedef struct {
 
 static void ov93_021D133C(void);
 static void ov93_021D13A0(void);
-static void ov93_021D13C0(UnkStruct_ov93_021D13C0 * param0);
+static void ov93_021D13C0(UnkStruct_ov93_021D13C0 *param0);
 
 static const UnkStruct_ov9_02249FF4 Unk_ov93_021D1534 = {
     0x29AEC1,
-    {-0x29fe, 0x0, 0x0},
+    { -0x29fe, 0x0, 0x0 },
     0x0,
     0x5C1,
     0x0
@@ -65,27 +65,27 @@ static const GXRgb Unk_ov93_021D1524[8] = {
 static UnkStruct_ov93_021D15C8 Unk_ov93_021D15C8[4] = {
     {
         0x1,
-        {0x3, 0x2, 0x0}
+        { 0x3, 0x2, 0x0 },
     },
     {
         0x5,
-        {0x7, 0x6, 0x4}
+        { 0x7, 0x6, 0x4 },
     },
     {
         0x1,
-        {0x3, 0x2, 0x0}
+        { 0x3, 0x2, 0x0 },
     },
     {
         0x1,
-        {0x3, 0x2, 0x0}
-    }
+        { 0x3, 0x2, 0x0 },
+    },
 };
 
-int ov93_021D111C (OverlayManager * param0, int * param1)
+int ov93_021D111C(OverlayManager *param0, int *param1)
 {
     u8 v0;
-    UnkStruct_ov93_021D13C0 * v1;
-    UnkStruct_0206C8D4 * v2;
+    UnkStruct_ov93_021D13C0 *v1;
+    UnkStruct_0206C8D4 *v2;
 
     Heap_Create(3, 72, 0x20000);
 
@@ -96,16 +96,16 @@ int ov93_021D111C (OverlayManager * param0, int * param1)
 
     v1->unk_94 = v2->unk_00;
     v1->unk_95 = 0;
-    v1->unk_00 = sub_020203AC(72);
+    v1->camera = Camera_Alloc(72);
 
     ov93_021D133C();
     ov93_021D13C0(v1);
 
     {
-        VecFx32 v3 = {0, 0, 0};
+        VecFx32 v3 = { 0, 0, 0 };
 
-        sub_020206D0(&v3, Unk_ov93_021D1534.unk_00, &Unk_ov93_021D1534.unk_04, Unk_ov93_021D1534.unk_0E, Unk_ov93_021D1534.unk_0C, 0, v1->unk_00);
-        sub_020203D4(v1->unk_00);
+        Camera_InitWithTarget(&v3, Unk_ov93_021D1534.unk_00, &Unk_ov93_021D1534.cameraAngle, Unk_ov93_021D1534.unk_0E, Unk_ov93_021D1534.unk_0C, 0, v1->camera);
+        Camera_SetAsActive(v1->camera);
     }
 
     for (v0 = 0; v0 < 4; v0++) {
@@ -121,7 +121,7 @@ int ov93_021D111C (OverlayManager * param0, int * param1)
     return 1;
 }
 
-int ov93_021D120C (OverlayManager * param0, int * param1)
+int ov93_021D120C(OverlayManager *param0, int *param1)
 {
     u8 v0;
     BOOL v1;
@@ -146,7 +146,7 @@ int ov93_021D120C (OverlayManager * param0, int * param1)
         0,
         0
     };
-    UnkStruct_ov93_021D13C0 * v5 = OverlayManager_Data(param0);
+    UnkStruct_ov93_021D13C0 *v5 = OverlayManager_Data(param0);
 
     switch (*param1) {
     case 0:
@@ -173,17 +173,17 @@ int ov93_021D120C (OverlayManager * param0, int * param1)
     }
 
     sub_020241B4();
-    sub_020203EC();
-    sub_0201CA74(&v5->unk_04, &v4, &v2, &v3);
-    sub_020241BC(GX_SORTMODE_MANUAL, GX_BUFFERMODE_W);
+    Camera_ComputeViewMatrix();
+    Easy3D_DrawRenderObj(&v5->unk_04, &v4, &v2, &v3);
+    G3_RequestSwapBuffers(GX_SORTMODE_MANUAL, GX_BUFFERMODE_W);
 
     return 0;
 }
 
-int ov93_021D12F0 (OverlayManager * param0, int * param1)
+int ov93_021D12F0(OverlayManager *param0, int *param1)
 {
     u8 v0;
-    UnkStruct_ov93_021D13C0 * v1 = OverlayManager_Data(param0);
+    UnkStruct_ov93_021D13C0 *v1 = OverlayManager_Data(param0);
 
     for (v0 = 0; v0 < 3; v0++) {
         NNS_G3dFreeAnmObj(&v1->unk_6C, v1->unk_7C[v0]);
@@ -191,15 +191,15 @@ int ov93_021D12F0 (OverlayManager * param0, int * param1)
     }
 
     Heap_FreeToHeap(v1->unk_5C);
-    sub_020203B8(v1->unk_00);
+    Camera_Delete(v1->camera);
     OverlayManager_FreeData(param0);
-    sub_0201CBA0();
+    Easy3D_Shutdown();
     Heap_Destroy(72);
 
     return 1;
 }
 
-static void ov93_021D133C (void)
+static void ov93_021D133C(void)
 {
     SetMainCallback(NULL, NULL);
     DisableHBlank();
@@ -210,7 +210,7 @@ static void ov93_021D133C (void)
     GXS_SetVisiblePlane(0);
 
     ov93_021D13A0();
-    sub_0201CAF4(72);
+    Easy3D_Init(72);
 
     G3X_EdgeMarking(1);
     G3X_SetEdgeColorTable(Unk_ov93_021D1524);
@@ -218,7 +218,7 @@ static void ov93_021D133C (void)
     GXLayers_SwapDisplay();
 }
 
-static void ov93_021D13A0 (void)
+static void ov93_021D13A0(void)
 {
     UnkStruct_02099F80 v0 = {
         GX_VRAM_BG_128_C,
@@ -236,18 +236,18 @@ static void ov93_021D13A0 (void)
     GXLayers_SetBanks(&v0);
 }
 
-static void ov93_021D13C0 (UnkStruct_ov93_021D13C0 * param0)
+static void ov93_021D13C0(UnkStruct_ov93_021D13C0 *param0)
 {
     u8 v0;
-    NNSG3dResTex * v1;
-    void * v2;
-    NARC * v3;
+    NNSG3dResTex *v1;
+    void *v2;
+    NARC *v3;
 
     v3 = NARC_ctor(NARC_INDEX_ARC__SHIP_DEMO_PL, 72);
     Heap_FndInitAllocatorForExpHeap(&param0->unk_6C, 72, 4);
 
     param0->unk_5C = NARC_AllocAndReadWholeMember(v3, Unk_ov93_021D15C8[param0->unk_94].unk_00, 72);
-    sub_0201CA3C(&param0->unk_04, &param0->unk_58, &param0->unk_5C);
+    Easy3D_InitRenderObjFromResource(&param0->unk_04, &param0->unk_58, &param0->unk_5C);
     v1 = NNS_G3dGetTex(param0->unk_5C);
 
     NNS_G3dMdlUseGlbDiff(param0->unk_58);

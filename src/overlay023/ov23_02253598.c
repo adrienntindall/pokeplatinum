@@ -7,7 +7,7 @@
 #include "message.h"
 #include "struct_decls/struct_02013A04_decl.h"
 #include "struct_decls/struct_02018340_decl.h"
-#include "struct_decls/sys_task.h"
+#include "sys_task_manager.h"
 #include "strbuf.h"
 #include "trainer_info.h"
 #include "struct_decls/struct_0202855C_decl.h"
@@ -24,7 +24,7 @@
 #include "unk_02005474.h"
 #include "message.h"
 #include "string_template.h"
-#include "unk_0200D9E8.h"
+#include "sys_task.h"
 #include "unk_0200DA60.h"
 #include "heap.h"
 #include "unk_02018340.h"
@@ -32,7 +32,7 @@
 #include "strbuf.h"
 #include "trainer_info.h"
 #include "unk_0202854C.h"
-#include "unk_0202CD50.h"
+#include "game_records.h"
 #include "communication_system.h"
 #include "comm_player_manager.h"
 #include "overlay023/ov23_02241F74.h"
@@ -392,7 +392,7 @@ void ov23_02253834 (BGL * param0, TrainerInfo * param1, UnkFuncPtr_ov23_02253834
 void ov23_022538FC (int param0)
 {
     int v0 = sub_02028558();
-    int v1 = sub_0202D034(sub_0202CD88(Unk_ov23_022577BC->unk_08));
+    int v1 = GameRecords_GetTrainerScore(SaveData_GetGameRecordsPtr(Unk_ov23_022577BC->unk_08));
     u8 * v2 = Heap_AllocFromHeap(4, v0 + 1);
 
     MI_CpuClear8(v2, v0 + 1);
@@ -412,7 +412,7 @@ void ov23_022538FC (int param0)
 
 void ov23_02253968 (void)
 {
-    int v0 = sub_0202D034(sub_0202CD88(Unk_ov23_022577BC->unk_08));
+    int v0 = GameRecords_GetTrainerScore(SaveData_GetGameRecordsPtr(Unk_ov23_022577BC->unk_08));
 
     if (v0 >= 999999) {
         v0 = 999999;

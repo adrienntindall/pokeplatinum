@@ -99,6 +99,7 @@ __pycache__
 .python-version
 
 compile_commands.json
+
 pyvenv.cfg
 lib64
 lib/python3.11/site-packages/setuptools/windows_support.py
@@ -880,3 +881,18 @@ bin/Activate.ps1
 bin/activate.fish
 bin/activate.csh
 bin/activate
+
+# Save files
+*.dsv
+*.sav
+
+# Savestate files
+*.ds[0-9]
+*.dst
+*.ml[0-9]
+*.mln
+
+# Cheat files
+*.dct
+*.mch
+

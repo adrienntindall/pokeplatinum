@@ -1,11 +1,10 @@
+#include "overlay025/poketch_button.h"
+
 #include <nitro.h>
 #include <string.h>
 
-#include "overlay025/poketch_button.h"
-
-#include "touch_screen.h"
-
 #include "heap.h"
+#include "touch_screen.h"
 
 static void PoketchButton_Init(PoketchButton *button);
 static void PoketchButton_ChangeState(PoketchButton *button, enum ButtonEventState state);
@@ -17,7 +16,7 @@ static u32 Button_OnCheckDoubleTap(PoketchButton *button, BOOL touched, BOOL tap
 static u32 Button_OnDoubleTap(PoketchButton *button, BOOL touched, BOOL tapped);
 static u32 Button_OnReset(PoketchButton *button, BOOL touched, BOOL tapped);
 
-PoketchButtonManager* PoketchButtonManager_New(const TouchScreenHitTable *hitTable, u32 numButtons, PoketchButtonCallback callback, void *callbackData, u32 heapID)
+PoketchButtonManager *PoketchButtonManager_New(const TouchScreenHitTable *hitTable, u32 numButtons, PoketchButtonCallback callback, void *callbackData, u32 heapID)
 {
     GF_ASSERT(numButtons > 0);
 
@@ -52,7 +51,7 @@ void PoketchButtonManager_Free(PoketchButtonManager *buttonManager)
 }
 
 // These functions all return ButtonManagerState values.
-typedef u32(*const ButtonEvent[])(PoketchButton *button, BOOL touched, BOOL tapped);
+typedef u32 (*const ButtonEvent[])(PoketchButton *button, BOOL touched, BOOL tapped);
 static ButtonEvent sButtonEvents = {
     Button_OnIdle,
     Button_OnPressed,
@@ -81,7 +80,7 @@ void PoketchButtonManager_Update(PoketchButtonManager *buttonManager)
                 buttonManager->buttons[i].screenTouched = TouchScreen_LocationPressed(&buttonManager->hitTable[i]);
             }
         }
-    // Didn't touch the screen--just update the button states
+        // Didn't touch the screen--just update the button states
     } else {
         tapped = FALSE;
 
@@ -205,11 +204,11 @@ static u32 Button_OnPressed(PoketchButton *button, BOOL touched, BOOL tapped)
         }
     } else if (touched) {
         PoketchButton_ChangeState(button, BUTTON_STATE_IDLE);
-        return BUTTON_MANAGER_STATE_OUT;
+        return BUTTON_MANAGER_STATE_DRAGGING;
     } else {
         // We don't reset the timer because we want to check for double tap with the same timer
         if (button->doubleTapTime) {
-            PoketchButton_ChangeState_NoReset(button, BUTTON_STATE_CHECK_DOUBLETAP);
+            PoketchButton_ChangeState_NoReset(button, BUTTON_STATE_CHECK_DOUBLE_TAP);
         } else {
             PoketchButton_ChangeState(button, BUTTON_STATE_IDLE);
             return BUTTON_MANAGER_STATE_TAP;
@@ -230,8 +229,8 @@ static u32 Button_OnCheckDoubleTap(PoketchButton *button, BOOL touched, BOOL tap
     }
 
     if (button->screenTouched && tapped) {
-        PoketchButton_ChangeState(button, BUTTON_STATE_DOUBLETAP);
-        return BUTTON_MANAGER_STATE_DOUBLETAP;
+        PoketchButton_ChangeState(button, BUTTON_STATE_DOUBLE_TAP);
+        return BUTTON_MANAGER_STATE_DOUBLE_TAP;
     }
 
     return BUTTON_MANAGER_STATE_NULL;

@@ -3,12 +3,12 @@
 
 #define TOUCHSCREEN_USE_CIRCLE 0xfe
 
-/** 
+/**
  * These two structs represent regions that can be checked on the touch screen.
  * The first struct, TouchScreenRect, is for strictly rectangular regions.
  * The second struct, TouchScreenHitTable, is for rectangles OR circles.
  * To enable circle mode, set the 'code' value to TOUCHSCREEN_USE_CIRCLE.
-*/
+ */
 typedef union {
     struct {
         u8 top;
@@ -35,12 +35,12 @@ BOOL TouchScreen_Touched(void);
 
 /**
  * @brief Check if the touch screen is tapped.
- * 
+ *
  * @return TRUE if the touch screen is tapped, FALSE otherwise.
  */
 BOOL TouchScreen_Tapped(void);
-BOOL sub_020227A4(u32 * param0, u32 * param1);
-BOOL sub_020227C0(u32 * param0, u32 * param1);
+BOOL TouchScreen_GetHoldState(u32 *x, u32 *y);
+BOOL TouchScreen_GetTapState(u32 *x, u32 *y);
 int sub_020227DC(const TouchScreenHitTable *hitTable, u32 param1, u32 param2);
 BOOL sub_02022830(const TouchScreenHitTable *hitTable, u32 param1, u32 param2);
 

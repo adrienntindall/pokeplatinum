@@ -1,40 +1,38 @@
+#include "overlay005/ov5_021D1A94.h"
+
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/sys_task.h"
-#include "struct_decls/struct_0201CD88_decl.h"
-#include "overlay005/struct_ov5_021D1A94_decl.h"
-#include "overlay005/struct_ov5_021D1BEC_decl.h"
-
 #include "field/field_system.h"
 #include "field/field_system_sub2_t.h"
+#include "overlay005/struct_ov5_021D1A94_decl.h"
+#include "overlay005/struct_ov5_021D1BEC_decl.h"
 #include "overlay006/struct_ov6_0223E6EC.h"
 
-#include "unk_0200D9E8.h"
-#include "heap.h"
-#include "unk_0201CCF0.h"
 #include "field_system.h"
-#include "overlay005/ov5_021D1A94.h"
+#include "heap.h"
+#include "sys_task.h"
+#include "sys_task_manager.h"
 
 struct UnkStruct_ov5_021D1A94_t {
-    FieldSystem * fieldSystem;
+    FieldSystem *fieldSystem;
     int unk_04;
     int unk_08;
-    UnkStruct_ov5_021D1BEC * unk_0C;
-    UnkStruct_0201CD88 * unk_10;
+    UnkStruct_ov5_021D1BEC *unk_0C;
+    SysTaskManager *unk_10;
 };
 
 struct UnkStruct_ov5_021D1BEC_t {
-    UnkStruct_ov5_021D1A94 * unk_00;
-    SysTask * unk_04;
-    SysTask * unk_08;
-    const UnkStruct_ov6_0223E6EC * unk_0C;
-    void * unk_10;
+    UnkStruct_ov5_021D1A94 *unk_00;
+    SysTask *unk_04;
+    SysTask *unk_08;
+    const UnkStruct_ov6_0223E6EC *unk_0C;
+    void *unk_10;
 };
 
-UnkStruct_ov5_021D1A94 * ov5_021D1A94 (FieldSystem * fieldSystem, int param1, int param2)
+UnkStruct_ov5_021D1A94 *ov5_021D1A94(FieldSystem *fieldSystem, int param1, int param2)
 {
-    UnkStruct_ov5_021D1A94 * v0;
+    UnkStruct_ov5_021D1A94 *v0;
     u32 v1;
 
     v0 = Heap_AllocFromHeap(param1, sizeof(UnkStruct_ov5_021D1A94));
@@ -46,15 +44,15 @@ UnkStruct_ov5_021D1A94 * ov5_021D1A94 (FieldSystem * fieldSystem, int param1, in
 
     MI_CpuClear32(v0->unk_0C, sizeof(UnkStruct_ov5_021D1BEC) * param2);
 
-    v1 = sub_0201CD80(param2);
+    v1 = SysTaskManager_GetRequiredSize(param2);
 
     v0->unk_10 = Heap_AllocFromHeap(param1, v1);
-    v0->unk_10 = sub_0201CD88(param2, v0->unk_10);
+    v0->unk_10 = SysTaskManager_Init(param2, v0->unk_10);
 
     return v0;
 }
 
-void ov5_021D1AE4 (UnkStruct_ov5_021D1A94 * param0)
+void ov5_021D1AE4(UnkStruct_ov5_021D1A94 *param0)
 {
     int v0;
 
@@ -67,14 +65,14 @@ void ov5_021D1AE4 (UnkStruct_ov5_021D1A94 * param0)
     Heap_FreeToHeap(param0);
 }
 
-void ov5_021D1B18 (UnkStruct_ov5_021D1A94 * param0)
+void ov5_021D1B18(UnkStruct_ov5_021D1A94 *param0)
 {
-    sub_0201CDD4(param0->unk_10);
+    SysTaskManager_ExecuteTasks(param0->unk_10);
 }
 
-static void ov5_021D1B24 (SysTask * param0, void * param1)
+static void ov5_021D1B24(SysTask *param0, void *param1)
 {
-    UnkStruct_ov5_021D1BEC * v0 = param1;
+    UnkStruct_ov5_021D1BEC *v0 = param1;
 
     if (sub_0203CD5C(v0->unk_00->fieldSystem)) {
         if (v0->unk_0C->unk_10) {
@@ -83,9 +81,9 @@ static void ov5_021D1B24 (SysTask * param0, void * param1)
     }
 }
 
-static void ov5_021D1B48 (SysTask * param0, void * param1)
+static void ov5_021D1B48(SysTask *param0, void *param1)
 {
-    UnkStruct_ov5_021D1BEC * v0 = param1;
+    UnkStruct_ov5_021D1BEC *v0 = param1;
 
     if (sub_0203CD5C(v0->unk_00->fieldSystem)) {
         if (v0->unk_0C->unk_14) {
@@ -94,15 +92,15 @@ static void ov5_021D1B48 (SysTask * param0, void * param1)
     }
 }
 
-UnkStruct_ov5_021D1BEC * ov5_021D1B6C (UnkStruct_ov5_021D1A94 * param0, const UnkStruct_ov6_0223E6EC * param1)
+UnkStruct_ov5_021D1BEC *ov5_021D1B6C(UnkStruct_ov5_021D1A94 *param0, const UnkStruct_ov6_0223E6EC *param1)
 {
     int v0;
-    UnkStruct_ov5_021D1BEC * v1;
+    UnkStruct_ov5_021D1BEC *v1;
 
     for (v1 = param0->unk_0C, v0 = 0; v0 < param0->unk_08; v1++, v0++) {
         if (v1->unk_04 == NULL) {
             v1->unk_04 = SysTask_Start(ov5_021D1B24, v1, param1->unk_00);
-            v1->unk_08 = sub_0201CE14(param0->unk_10, ov5_021D1B48, v1, param1->unk_00);
+            v1->unk_08 = SysTaskManager_AddTask(param0->unk_10, ov5_021D1B48, v1, param1->unk_00);
             v1->unk_00 = param0;
             v1->unk_0C = param1;
 
@@ -125,7 +123,7 @@ UnkStruct_ov5_021D1BEC * ov5_021D1B6C (UnkStruct_ov5_021D1A94 * param0, const Un
     return NULL;
 }
 
-void ov5_021D1BEC (UnkStruct_ov5_021D1BEC * param0)
+void ov5_021D1BEC(UnkStruct_ov5_021D1BEC *param0)
 {
     if (param0->unk_04 == NULL) {
         return;
@@ -145,7 +143,7 @@ void ov5_021D1BEC (UnkStruct_ov5_021D1BEC * param0)
     MI_CpuClear32(param0, sizeof(UnkStruct_ov5_021D1BEC));
 }
 
-void * ov5_021D1C2C (UnkStruct_ov5_021D1BEC * param0)
+void *ov5_021D1C2C(UnkStruct_ov5_021D1BEC *param0)
 {
     return param0->unk_10;
 }

@@ -1,3 +1,4 @@
+
 #include <nitro.h>
 #include <string.h>
 
@@ -6,12 +7,10 @@
 
 #include "struct_decls/struct_02006C24_decl.h"
 #include "struct_decls/struct_02018340_decl.h"
-#include "struct_decls/sys_task.h"
-#include "struct_decls/struct_020203AC_decl.h"
+#include "sys_task_manager.h"
 #include "strbuf.h"
 #include "trainer_info.h"
 
-#include "struct_defs/struct_020170F4.h"
 #include "struct_defs/struct_0207C690.h"
 #include "struct_defs/struct_02099F80.h"
 #include "overlay084/struct_ov84_0223BA5C.h"
@@ -19,7 +18,7 @@
 #include "overlay104/struct_ov104_022412F4.h"
 #include "overlay104/struct_ov104_02241308.h"
 #include "overlay104/struct_ov104_0224133C.h"
-#include "overlay115/struct_ov115_0226527C.h"
+#include "overlay115/camera_angle.h"
 #include "overlay117/struct_ov117_02261280.h"
 #include "overlay117/struct_ov117_02261C2C.h"
 #include "overlay117/struct_ov117_02261F08.h"
@@ -37,12 +36,12 @@
 #include "message.h"
 #include "string_template.h"
 #include "unk_0200C6E4.h"
-#include "unk_0200D9E8.h"
+#include "sys_task.h"
 #include "unk_0200DA60.h"
 #include "unk_0200F174.h"
 #include "unk_02012744.h"
 #include "unk_02014000.h"
-#include "unk_020170BC.h"
+#include "easy3d_object.h"
 #include "unk_02017728.h"
 #include "heap.h"
 #include "unk_02018340.h"
@@ -50,7 +49,7 @@
 #include "unk_0201DBEC.h"
 #include "unk_0201E3D8.h"
 #include "gx_layers.h"
-#include "unk_02020020.h"
+#include "camera.h"
 #include "strbuf.h"
 #include "unk_0202419C.h"
 #include "unk_02024220.h"
@@ -113,11 +112,11 @@ BOOL ov117_02261E38(UnkStruct_ov117_02261280 * param0, int param1);
 void ov117_02261F08(UnkStruct_ov117_02261280 * param0, int param1, int param2);
 void ov117_02261F3C(UnkStruct_ov117_02261280 * param0);
 void ov117_02261FA4(UnkStruct_ov117_02261280 * param0);
-static void ov117_022626AC(UnkStruct_020203AC * param0);
+static void ov117_022626AC(Camera * camera);
 static u32 ov117_02261644(u32 param0, BOOL param1);
 static u32 ov117_02261668(u32 param0, BOOL param1);
 
-static const UnkStruct_ov115_0226527C Unk_ov117_02266918 = {
+static const CameraAngle Unk_ov117_02266918 = {
     0x0,
     0x0,
     0x0
@@ -424,7 +423,7 @@ int ov117_0226098C (OverlayManager * param0, int * param1)
         break;
     }
 
-    ov117_022626AC(v0->unk_9C);
+    ov117_022626AC(v0->camera1);
     v0->unk_3D50++;
 
     return 0;
@@ -549,22 +548,22 @@ static void ov117_02260EC0 (UnkStruct_ov117_02261280 * param0)
     VecFx32 v0 = {0, 0x1881e, 0};
     VecFx32 v1 = {0, 0x1881e, (FX32_ONE * 5)};
 
-    param0->unk_9C = sub_020203AC(110);
+    param0->camera1 = Camera_Alloc(110);
 
-    sub_020206D0(&v0, (0x7b << FX32_SHIFT), &Unk_ov117_02266918, (((22 * 0xffff) / 360)), 1, 0, param0->unk_9C);
-    sub_020206BC((FX32_ONE), (FX32_ONE * 900), param0->unk_9C);
-    sub_020203D4(param0->unk_9C);
+    Camera_InitWithTarget(&v0, (0x7b << FX32_SHIFT), &Unk_ov117_02266918, (((22 * 0xffff) / 360)), 1, 0, param0->camera1);
+    Camera_SetClipping((FX32_ONE), (FX32_ONE * 900), param0->camera1);
+    Camera_SetAsActive(param0->camera1);
 
-    param0->unk_A0 = sub_020203AC(110);
+    param0->camera2 = Camera_Alloc(110);
 
-    sub_020206D0(&v0, (80 << FX32_SHIFT), &Unk_ov117_02266918, (((22 * 0xffff) / 360)), 1, 0, param0->unk_A0);
-    sub_020206BC((FX32_ONE), (FX32_ONE * 900), param0->unk_A0);
+    Camera_InitWithTarget(&v0, (80 << FX32_SHIFT), &Unk_ov117_02266918, (((22 * 0xffff) / 360)), 1, 0, param0->camera2);
+    Camera_SetClipping((FX32_ONE), (FX32_ONE * 900), param0->camera2);
 }
 
 static void ov117_02260F64 (UnkStruct_ov117_02261280 * param0)
 {
-    sub_020203B8(param0->unk_9C);
-    sub_020203B8(param0->unk_A0);
+    Camera_Delete(param0->camera1);
+    Camera_Delete(param0->camera2);
 }
 
 static void ov117_02260F7C (SysTask * param0, void * param1)
@@ -594,9 +593,9 @@ static void ov117_02260F7C (SysTask * param0, void * param1)
 
     {
         sub_020241B4();
-        sub_020203D4(v0->unk_9C);
-        sub_02020854(1, v0->unk_9C);
-        sub_020203EC();
+        Camera_SetAsActive(v0->camera1);
+        Camera_ComputeProjectionMatrix(1, v0->camera1);
+        Camera_ComputeViewMatrix();
 
         NNS_G3dGlbLightVector(0, 0, -FX32_ONE, 0);
         NNS_G3dGlbLightColor(0, GX_RGB(28, 28, 28));
@@ -611,8 +610,8 @@ static void ov117_02260F7C (SysTask * param0, void * param1)
         NNS_G3dGePushMtx();
 
         {
-            sub_02017294(&v0->unk_13A0.unk_10);
-            sub_02017294(&v0->unk_D8.unk_10);
+            Easy3DObject_Draw(&v0->unk_13A0.unk_10);
+            Easy3DObject_Draw(&v0->unk_D8.unk_10);
             ov117_02261FA4(v0);
         }
 
@@ -634,7 +633,7 @@ static void ov117_02260F7C (SysTask * param0, void * param1)
 
     sub_0200C7EC(v0->unk_28);
     sub_0200C808();
-    sub_020241BC(GX_SORTMODE_AUTO, GX_BUFFERMODE_Z);
+    G3_RequestSwapBuffers(GX_SORTMODE_AUTO, GX_BUFFERMODE_Z);
     sub_02038A1C(110, v0->unk_2C);
 }
 
@@ -922,16 +921,16 @@ static void ov117_022614AC (UnkStruct_ov117_02261280 * param0, int param1)
 static void ov117_02261574 (UnkStruct_ov117_02261280 * param0)
 {
     void * v0;
-    UnkStruct_020203AC * v1;
+    Camera * camera;
     void * v2;
 
     sub_02014000();
 
     v0 = Heap_AllocFromHeap(110, 0x4800);
     param0->unk_A4 = sub_02014014(ov117_02261644, ov117_02261668, v0, 0x4800, 1, 110);
-    v1 = sub_02014784(param0->unk_A4);
+    camera = sub_02014784(param0->unk_A4);
 
-    sub_020206BC((FX32_ONE), (FX32_ONE * 900), v1);
+    Camera_SetClipping((FX32_ONE), (FX32_ONE * 900), camera);
     v2 = sub_020144C4(190, 0, 110);
     sub_020144CC(param0->unk_A4, v2, (1 << 1) | (1 << 3), 1);
 }
@@ -1352,34 +1351,34 @@ static void ov117_02261C2C (UnkStruct_ov117_02261280 * param0, NARC * param1)
 
     v4 = ov117_0226235C(param0, CommSys_CurNetId());
 
-    sub_020170D8(&v2->unk_00, param1, Unk_ov117_022669F0[v4].unk_00, 110);
-    sub_02017258(&v2->unk_10, &v2->unk_00);
-    sub_02017350(&v2->unk_10, (FX32_CONST(0)), (FX32_CONST(-25)), (FX32_CONST(0)));
-    sub_0201736C(&v2->unk_10, (FX32_CONST(1.00f)), (FX32_CONST(1.00f)), (FX32_CONST(1.00f)));
-    sub_02017348(&v2->unk_10, 1);
-    sub_020170D8(&v2->unk_88[0], param1, Unk_ov117_022669F0[v4].unk_04, 110);
-    sub_020170D8(&v2->unk_88[1], param1, Unk_ov117_022669F0[v4].unk_08, 110);
-    sub_020170D8(&v2->unk_88[2], param1, Unk_ov117_022669F0[v4].unk_0C, 110);
-    sub_020170D8(&v2->unk_88[3], param1, Unk_ov117_022669F0[v4].unk_10, 110);
+    Easy3DModel_LoadFrom(&v2->unk_00, param1, Unk_ov117_022669F0[v4].unk_00, 110);
+    Easy3DObject_Init(&v2->unk_10, &v2->unk_00);
+    Easy3DObject_SetPosition(&v2->unk_10, (FX32_CONST(0)), (FX32_CONST(-25)), (FX32_CONST(0)));
+    Easy3DObject_SetScale(&v2->unk_10, (FX32_CONST(1.00f)), (FX32_CONST(1.00f)), (FX32_CONST(1.00f)));
+    Easy3DObject_SetVisibility(&v2->unk_10, 1);
+    Easy3DModel_LoadFrom(&v2->unk_88[0], param1, Unk_ov117_022669F0[v4].unk_04, 110);
+    Easy3DModel_LoadFrom(&v2->unk_88[1], param1, Unk_ov117_022669F0[v4].unk_08, 110);
+    Easy3DModel_LoadFrom(&v2->unk_88[2], param1, Unk_ov117_022669F0[v4].unk_0C, 110);
+    Easy3DModel_LoadFrom(&v2->unk_88[3], param1, Unk_ov117_022669F0[v4].unk_10, 110);
 
     for (v0 = 0; v0 < 8; v0++) {
         for (v1 = 0; v1 < 4; v1++) {
             if (v5 == NULL) {
-                sub_02017164(&v2->unk_C8[v0][v1].unk_7C, &v2->unk_88[v1], param1, 35 + v1, 110, &param0->unk_A8);
-                v5 = v2->unk_C8[v0][v1].unk_7C.unk_00;
+                Easy3DAnim_LoadFrom(&v2->unk_C8[v0][v1].unk_7C, &v2->unk_88[v1], param1, 35 + v1, 110, &param0->unk_A8);
+                v5 = v2->unk_C8[v0][v1].unk_7C.data;
             } else {
-                sub_02017190(&v2->unk_C8[v0][v1].unk_7C, &v2->unk_88[v1], v5, &param0->unk_A8);
+                Easy3DAnim_LoadFromData(&v2->unk_C8[v0][v1].unk_7C, &v2->unk_88[v1], v5, &param0->unk_A8);
             }
 
-            sub_02017240(&v2->unk_C8[v0][v1].unk_7C, 0);
+            Easy3DAnim_SetFrame(&v2->unk_C8[v0][v1].unk_7C, 0);
         }
     }
 
-    sub_020170D8(&v3->unk_00, param1, 30, 110);
-    sub_02017258(&v3->unk_10, &v3->unk_00);
-    sub_02017350(&v3->unk_10, (FX32_CONST(0)), (FX32_CONST(-25)), (FX32_CONST(0)));
-    sub_0201736C(&v3->unk_10, (FX32_CONST(1.00f)), (FX32_CONST(1.00f)), (FX32_CONST(1.00f)));
-    sub_02017348(&v3->unk_10, 1);
+    Easy3DModel_LoadFrom(&v3->unk_00, param1, 30, 110);
+    Easy3DObject_Init(&v3->unk_10, &v3->unk_00);
+    Easy3DObject_SetPosition(&v3->unk_10, (FX32_CONST(0)), (FX32_CONST(-25)), (FX32_CONST(0)));
+    Easy3DObject_SetScale(&v3->unk_10, (FX32_CONST(1.00f)), (FX32_CONST(1.00f)), (FX32_CONST(1.00f)));
+    Easy3DObject_SetVisibility(&v3->unk_10, 1);
 }
 
 static void ov117_02261DD0 (UnkStruct_ov117_02261280 * param0)
@@ -1387,25 +1386,25 @@ static void ov117_02261DD0 (UnkStruct_ov117_02261280 * param0)
     int v0, v1;
     UnkStruct_ov117_02261F08 * v2 = &param0->unk_D8;
 
-    sub_02017110(&v2->unk_00);
+    Easy3DModel_Release(&v2->unk_00);
 
     for (v0 = 0; v0 < 4; v0++) {
-        sub_02017110(&v2->unk_88[v0]);
+        Easy3DModel_Release(&v2->unk_88[v0]);
     }
 
     for (v0 = 0; v0 < 8; v0++) {
         for (v1 = 0; v1 < 4; v1++) {
-            sub_020171A0(&v2->unk_C8[v0][v1].unk_7C, &param0->unk_A8);
+            Easy3DAnim_Release(&v2->unk_C8[v0][v1].unk_7C, &param0->unk_A8);
         }
     }
 
-    sub_02017110(&param0->unk_13A0.unk_00);
+    Easy3DModel_Release(&param0->unk_13A0.unk_00);
 }
 
 BOOL ov117_02261E38 (UnkStruct_ov117_02261280 * param0, int param1)
 {
     UnkStruct_ov117_02261F08 * v0 = &param0->unk_D8;
-    UnkStruct_020170F4 * v1;
+    Easy3DModel * v1;
     int v2, v3;
 
     if (param1 > 1200) {
@@ -1422,12 +1421,12 @@ BOOL ov117_02261E38 (UnkStruct_ov117_02261280 * param0, int param1)
 
     for (v2 = 0; v2 < 8; v2++) {
         if (v0->unk_C8[v2][v3].unk_00 == 0) {
-            sub_02017258(&v0->unk_C8[v2][v3].unk_04, v1);
-            sub_02017350(&v0->unk_C8[v2][v3].unk_04, (FX32_CONST(0)), (FX32_CONST(-25)), (FX32_CONST(0)));
-            sub_0201736C(&v0->unk_C8[v2][v3].unk_04, (FX32_CONST(1.00f)), (FX32_CONST(1.00f)), (FX32_CONST(1.00f)));
-            sub_02017348(&v0->unk_C8[v2][v3].unk_04, 1);
-            sub_02017240(&v0->unk_C8[v2][v3].unk_7C, 0);
-            sub_0201727C(&v0->unk_C8[v2][v3].unk_04, &v0->unk_C8[v2][v3].unk_7C);
+            Easy3DObject_Init(&v0->unk_C8[v2][v3].unk_04, v1);
+            Easy3DObject_SetPosition(&v0->unk_C8[v2][v3].unk_04, (FX32_CONST(0)), (FX32_CONST(-25)), (FX32_CONST(0)));
+            Easy3DObject_SetScale(&v0->unk_C8[v2][v3].unk_04, (FX32_CONST(1.00f)), (FX32_CONST(1.00f)), (FX32_CONST(1.00f)));
+            Easy3DObject_SetVisibility(&v0->unk_C8[v2][v3].unk_04, 1);
+            Easy3DAnim_SetFrame(&v0->unk_C8[v2][v3].unk_7C, 0);
+            Easy3DObject_AddAnim(&v0->unk_C8[v2][v3].unk_04, &v0->unk_C8[v2][v3].unk_7C);
 
             v0->unk_C8[v2][v3].unk_00 = 1;
 
@@ -1443,7 +1442,7 @@ void ov117_02261F08 (UnkStruct_ov117_02261280 * param0, int param1, int param2)
 {
     UnkStruct_ov117_02261F08 * v0 = &param0->unk_D8;
 
-    sub_02017288(&v0->unk_C8[param1][param2].unk_04, &v0->unk_C8[param1][param2].unk_7C);
+    Easy3DObject_RemoveAnim(&v0->unk_C8[param1][param2].unk_04, &v0->unk_C8[param1][param2].unk_7C);
     v0->unk_C8[param1][param2].unk_00 = 0;
 }
 
@@ -1455,7 +1454,7 @@ void ov117_02261F3C (UnkStruct_ov117_02261280 * param0)
     for (v1 = 0; v1 < 8; v1++) {
         for (v2 = 0; v2 < 4; v2++) {
             if (v0->unk_C8[v1][v2].unk_00 == 1) {
-                if (sub_02017204(&v0->unk_C8[v1][v2].unk_7C, FX32_ONE) == 1) {
+                if (Easy3DAnim_Update(&v0->unk_C8[v1][v2].unk_7C, FX32_ONE) == 1) {
                     ov117_02261F08(param0, v1, v2);
                 }
             }
@@ -1471,7 +1470,7 @@ void ov117_02261FA4 (UnkStruct_ov117_02261280 * param0)
     for (v1 = 0; v1 < 8; v1++) {
         for (v2 = 0; v2 < 4; v2++) {
             if (v0->unk_C8[v1][v2].unk_00 == 1) {
-                sub_02017294(&v0->unk_C8[v1][v2].unk_04);
+                Easy3DObject_Draw(&v0->unk_C8[v1][v2].unk_04);
             }
         }
     }
@@ -1952,7 +1951,7 @@ static BOOL ov117_02262664 (UnkStruct_ov117_02261280 * param0)
     return 0;
 }
 
-static void ov117_022626AC (UnkStruct_020203AC * param0)
+static void ov117_022626AC (Camera * camera)
 {
     return;
 }

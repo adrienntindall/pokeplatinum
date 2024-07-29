@@ -1,7 +1,7 @@
-    .include "macros/btlcmd.inc"
+#include "macros/btlcmd.inc"
 
     .data
 
 _000:
-    IncrementGameStat BTLSCR_ATTACKER, BATTLER_TYPE_SOLO_PLAYER, 76
+    IncrementGameRecord BTLSCR_ATTACKER, BATTLER_TYPE_SOLO_PLAYER, RECORD_USED_SPLASH
     GoToEffectScript 

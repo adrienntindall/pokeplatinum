@@ -5,20 +5,21 @@
 #include "constants/battle.h"
 #include "constants/items.h"
 #include "constants/species.h"
-#include "gmm/pl_msg_0368.h"
+#include "gmm/message_bank_battle_strings.h"
 #include "battle/btlcmd.h"
 
     .include "consts/abilities.inc"
     .include "consts/battle.inc"
     .include "consts/battle_subscripts.inc"
     .include "consts/btlcmd.inc"
+    .include "consts/game_records.inc"
     .include "consts/gender.inc"
     .include "consts/items.inc"
     .include "consts/moves.inc"
     .include "consts/pokemon.inc"
 
-    .equ FALSE 0
-    .equ TRUE 1
+    .equ FALSE, 0
+    .equ TRUE, 1
 
     .macro PlayEncounterAnimation
     .long 0
@@ -240,10 +241,10 @@
     .long \frames
     .endm
 
-    .macro PlaySound battler, sdat_id
+    .macro PlaySound battler, sdatID
     .long 31
     .long \battler
-    .long \sdat_id
+    .long \sdatID
     .endm
 
     .macro CompareVarToValue op, var, val, jump
@@ -1089,7 +1090,7 @@
     .long 194
     .endm
 
-    .macro IncrementGameStat battler, battler_type, game_stat
+    .macro IncrementGameRecord battler, battler_type, game_stat
     .long 195
     .long \battler
     .long \battler_type
@@ -1207,9 +1208,9 @@
     .long (\jump_not_over)-.) / 4 - 1
     .endm
 
-    .macro WaitTime delay
+    .macro WaitTime frames
     .long 218
-    .long \delay
+    .long \frames
     .endm
 
     .macro CheckCurMoveIsType type, jump

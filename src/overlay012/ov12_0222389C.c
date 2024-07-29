@@ -1,21 +1,20 @@
+#include "overlay012/ov12_0222389C.h"
+
 #include <nitro.h>
 #include <string.h>
 
 #include "struct_decls/struct_02014014_decl.h"
-#include "struct_decls/struct_020203AC_decl.h"
-#include "overlay012/struct_ov12_0221FCDC_decl.h"
 
-#include "overlay115/struct_ov115_0226527C.h"
-
-#include "spl.h"
-
-#include "unk_02014000.h"
-#include "unk_02020020.h"
 #include "overlay012/ov12_0221FC20.h"
-#include "overlay012/ov12_0222389C.h"
 #include "overlay012/ov12_02235254.h"
+#include "overlay012/struct_ov12_0221FCDC_decl.h"
+#include "overlay115/camera_angle.h"
 
-static s8 ov12_0222389C(UnkStruct_ov12_0221FCDC * param0, int param1, int param2);
+#include "camera.h"
+#include "spl.h"
+#include "unk_02014000.h"
+
+static s8 ov12_0222389C(UnkStruct_ov12_0221FCDC *param0, int param1, int param2);
 
 static const VecFx32 Unk_ov12_0223A218 = {
     0x1700,
@@ -29,7 +28,7 @@ static const VecFx32 Unk_ov12_0223A224 = {
     0x0
 };
 
-static s8 ov12_0222389C (UnkStruct_ov12_0221FCDC * param0, int param1, int param2)
+static s8 ov12_0222389C(UnkStruct_ov12_0221FCDC *param0, int param1, int param2)
 {
     s8 v0 = 1;
     int v1, v2;
@@ -59,15 +58,15 @@ static s8 ov12_0222389C (UnkStruct_ov12_0221FCDC * param0, int param1, int param
     return v0;
 }
 
-void ov12_022238DC (UnkSPLStruct6 * param0)
+void ov12_022238DC(UnkSPLStruct6 *param0)
 {
     return;
 }
 
-void ov12_022238E0 (UnkSPLStruct6 * param0)
+void ov12_022238E0(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
-    UnkStruct_02014014 * v1;
+    UnkStruct_ov12_0221FCDC *v0;
+    UnkStruct_02014014 *v1;
     int v2, v3, v4;
     VecFx32 v5, v6, v7;
 
@@ -102,31 +101,31 @@ void ov12_022238E0 (UnkSPLStruct6 * param0)
     ov12_02235760(v2, &v7);
 
     {
-        UnkStruct_ov115_0226527C v11;
-        UnkStruct_020203AC * v12;
+        CameraAngle v11;
+        Camera *camera;
 
-        v12 = sub_02014784(v1);
+        camera = sub_02014784(v1);
 
         switch (v2) {
         case 2:
         default:
-            v11 = sub_02020A94(v12);
-            sub_020209D4(&v11, v12);
+            v11 = Camera_GetAngle(camera);
+            Camera_SetAngleAroundTarget(&v11, camera);
             break;
         case 3:
-            v11 = sub_02020A94(v12);
-            v11.unk_00 += 65536 / 2;
-            v11.unk_02 += 65536 / 2;
-            sub_020209D4(&v11, v12);
+            v11 = Camera_GetAngle(camera);
+            v11.x += 65536 / 2;
+            v11.y += 65536 / 2;
+            Camera_SetAngleAroundTarget(&v11, camera);
             break;
         }
     }
 }
 
-void ov12_02223998 (UnkSPLStruct6 * param0)
+void ov12_02223998(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
-    UnkStruct_02014014 * v1;
+    UnkStruct_ov12_0221FCDC *v0;
+    UnkStruct_02014014 *v1;
     int v2;
     VecFx32 v3, v4;
 
@@ -144,9 +143,9 @@ void ov12_02223998 (UnkSPLStruct6 * param0)
     sub_02014744(v1, &v4);
 }
 
-void ov12_022239F4 (UnkSPLStruct6 * param0)
+void ov12_022239F4(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
+    UnkStruct_ov12_0221FCDC *v0;
     int v1;
     VecFx32 v2;
 
@@ -160,9 +159,9 @@ void ov12_022239F4 (UnkSPLStruct6 * param0)
     SPL_UnkInline4(param0, v2.z);
 }
 
-void ov12_02223A38 (UnkSPLStruct6 * param0)
+void ov12_02223A38(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
+    UnkStruct_ov12_0221FCDC *v0;
     int v1;
     VecFx32 v2;
 
@@ -176,9 +175,9 @@ void ov12_02223A38 (UnkSPLStruct6 * param0)
     SPL_UnkInline4(param0, v2.z);
 }
 
-void ov12_02223A7C (UnkSPLStruct6 * param0)
+void ov12_02223A7C(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
+    UnkStruct_ov12_0221FCDC *v0;
     int v1;
     int v2;
     VecFx32 v3;
@@ -194,11 +193,11 @@ void ov12_02223A7C (UnkSPLStruct6 * param0)
     SPL_UnkInline4(param0, v3.z);
 }
 
-void ov12_02223AC8 (UnkSPLStruct6 * param0)
+void ov12_02223AC8(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
+    UnkStruct_ov12_0221FCDC *v0;
     VecFx32 v1;
-    UnkStruct_02014014 * v2;
+    UnkStruct_02014014 *v2;
     int v3;
     int v4;
     int v5;
@@ -223,11 +222,11 @@ void ov12_02223AC8 (UnkSPLStruct6 * param0)
     SPL_UnkInline4(param0, v1.z);
 }
 
-void ov12_02223B30 (UnkSPLStruct6 * param0)
+void ov12_02223B30(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
+    UnkStruct_ov12_0221FCDC *v0;
     VecFx32 v1;
-    UnkStruct_02014014 * v2;
+    UnkStruct_02014014 *v2;
     int v3;
     int v4;
     int v5;
@@ -253,9 +252,9 @@ void ov12_02223B30 (UnkSPLStruct6 * param0)
     SPL_UnkInline4(param0, v1.z);
 }
 
-void ov12_02223B98 (UnkSPLStruct6 * param0)
+void ov12_02223B98(UnkSPLStruct6 *param0)
 {
-    UnkStruct_ov12_0221FCDC * v0;
+    UnkStruct_ov12_0221FCDC *v0;
     int v1;
     int v2;
     int v3;
@@ -263,22 +262,22 @@ void ov12_02223B98 (UnkSPLStruct6 * param0)
     int v5;
     int v6;
     VecFx32 v7;
-    s16 v8[6] = {0x0, 0x0, 0x0, 0x0, 0, 0};
+    s16 v8[6] = { 0x0, 0x0, 0x0, 0x0, 0, 0 };
     s16 v9[][6] = {
-        {0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF},
-        {0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF},
-        {0xFF, 0xFF, 0xFF, -16, 0xFF, -16},
-        {0xFF, 0xFF, 0x20, 0xFF, 0x20, 0xFF},
-        {0xFF, 0xFF, 0xFF, 0x10, 0xFF, 0x4},
-        {0xFF, 0xFF, -16, 0xFF, 0x0, 0xFF}
+        { 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF },
+        { 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF },
+        { 0xFF, 0xFF, 0xFF, -16, 0xFF, -16 },
+        { 0xFF, 0xFF, 0x20, 0xFF, 0x20, 0xFF },
+        { 0xFF, 0xFF, 0xFF, 0x10, 0xFF, 0x4 },
+        { 0xFF, 0xFF, -16, 0xFF, 0x0, 0xFF }
     };
     s16 v10[][6] = {
-        {0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF},
-        {0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF},
-        {0xFF, 0xFF, 0xFF, 0x10, 0xFF, 0x10},
-        {0xFF, 0xFF, 0x0, 0xFF, 0x0, 0xFF},
-        {0xFF, 0xFF, 0xFF, 0x0, 0xFF, 0x0},
-        {0xFF, 0xFF, 0x18, 0xFF, 0x18, 0xFF}
+        { 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF },
+        { 0x0, 0x0, 0xFF, 0xFF, 0xFF, 0xFF },
+        { 0xFF, 0xFF, 0xFF, 0x10, 0xFF, 0x10 },
+        { 0xFF, 0xFF, 0x0, 0xFF, 0x0, 0xFF },
+        { 0xFF, 0xFF, 0xFF, 0x0, 0xFF, 0x0 },
+        { 0xFF, 0xFF, 0x18, 0xFF, 0x18, 0xFF }
     };
 
     v0 = sub_02014764();
@@ -296,11 +295,11 @@ void ov12_02223B98 (UnkSPLStruct6 * param0)
     SPL_UnkInline4(param0, v7.z);
 }
 
-static void ov12_02223C40 (int param0, s8 param1, VecFx32 * param2)
+static void ov12_02223C40(int param0, s8 param1, VecFx32 *param2)
 {
-    fx32 * v0 = &(param2->x);
-    fx32 * v1 = &(param2->y);
-    fx32 * v2 = &(param2->z);
+    fx32 *v0 = &(param2->x);
+    fx32 *v1 = &(param2->y);
+    fx32 *v2 = &(param2->z);
 
     switch (param0) {
     case 0:
@@ -334,9 +333,9 @@ static void ov12_02223C40 (int param0, s8 param1, VecFx32 * param2)
     }
 }
 
-static void ov12_02223CD4 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * param1, int param2, int param3, int param4, s8 param5, VecFx32 * param6)
+static void ov12_02223CD4(UnkStruct_ov12_0221FCDC *param0, UnkSPLStruct6 *param1, int param2, int param3, int param4, s8 param5, VecFx32 *param6)
 {
-    VecFx32 v0 = {0, 0, 0};
+    VecFx32 v0 = { 0, 0, 0 };
 
     switch (param4) {
     case 0:
@@ -358,15 +357,13 @@ static void ov12_02223CD4 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * par
     case 4:
         ov12_02235508(param0, param2, &v0);
         break;
-    case 5:
-    {
-        int v1[4] = {0, 0, 0, 0};
+    case 5: {
+        int v1[4] = { 0, 0, 0, 0 };
 
         ov12_0222325C(param0, v1, 4);
         VEC_Set(&v0, v1[0], v1[1], v1[2]);
         ov12_02223C40(v1[3], param5, &v0);
-    }
-    break;
+    } break;
     }
 
     v0.x -= param6->x;
@@ -376,9 +373,9 @@ static void ov12_02223CD4 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * par
     sub_02014970(param1, &v0);
 }
 
-static void ov12_02223DA4 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * param1, int param2, int param3, int param4, s8 param5, VecFx32 * param6)
+static void ov12_02223DA4(UnkStruct_ov12_0221FCDC *param0, UnkSPLStruct6 *param1, int param2, int param3, int param4, s8 param5, VecFx32 *param6)
 {
-    VecFx32 v0 = {0, 0, 0};
+    VecFx32 v0 = { 0, 0, 0 };
 
     switch (param4) {
     case 0:
@@ -400,15 +397,13 @@ static void ov12_02223DA4 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * par
     case 4:
         ov12_02235508(param0, param2, &v0);
         break;
-    case 5:
-    {
-        int v1[4] = {0, 0, 0, 0};
+    case 5: {
+        int v1[4] = { 0, 0, 0, 0 };
 
         ov12_0222325C(param0, v1, 4);
         VEC_Set(&v0, v1[0], v1[1], v1[2]);
         ov12_02223C40(v1[3], param5, &v0);
-    }
-    break;
+    } break;
     }
 
     v0.x -= param6->x;
@@ -418,9 +413,9 @@ static void ov12_02223DA4 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * par
     sub_02014890(param1, &v0);
 }
 
-static void ov12_02223E74 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * param1, int param2, int param3, int param4, int param5)
+static void ov12_02223E74(UnkStruct_ov12_0221FCDC *param0, UnkSPLStruct6 *param1, int param2, int param3, int param4, int param5)
 {
-    UnkStruct_02014014 * v0;
+    UnkStruct_02014014 *v0;
     VecFx32 v1;
     int v2, v3;
     VecFx16 v4;
@@ -496,7 +491,7 @@ static void ov12_02223E74 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * par
     v5 = ov12_0222389C(param0, param2, param3);
 
     {
-        int v13[3] = {0, 0, 0};
+        int v13[3] = { 0, 0, 0 };
         VecFx32 v14;
 
         ov12_0222325C(param0, v13, 3);
@@ -541,10 +536,10 @@ static void ov12_02223E74 (UnkStruct_ov12_0221FCDC * param0, UnkSPLStruct6 * par
     SPL_UnkInline5(param1, &v4);
 }
 
-static void ov12_02224138 (UnkSPLStruct6 * param0, int param1, int param2)
+static void ov12_02224138(UnkSPLStruct6 *param0, int param1, int param2)
 {
     int v0, v1;
-    UnkStruct_ov12_0221FCDC * v2;
+    UnkStruct_ov12_0221FCDC *v2;
 
     v2 = sub_02014764();
     v0 = ov12_02220240(v2);
@@ -553,65 +548,65 @@ static void ov12_02224138 (UnkSPLStruct6 * param0, int param1, int param2)
     ov12_02223E74(v2, param0, v0, v1, param1, param2);
 }
 
-void ov12_02224168 (UnkSPLStruct6 * param0)
+void ov12_02224168(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 0, 0);
 }
 
-void ov12_02224174 (UnkSPLStruct6 * param0)
+void ov12_02224174(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 1, 1);
 }
 
-void ov12_02224180 (UnkSPLStruct6 * param0)
+void ov12_02224180(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 1, 2);
 }
 
-void ov12_0222418C (UnkSPLStruct6 * param0)
+void ov12_0222418C(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 1, 3);
 }
 
-void ov12_02224198 (UnkSPLStruct6 * param0)
+void ov12_02224198(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 1, 4);
 }
 
-void ov12_022241A4 (UnkSPLStruct6 * param0)
+void ov12_022241A4(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 1, 5);
 }
 
-void ov12_022241B0 (UnkSPLStruct6 * param0)
+void ov12_022241B0(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 2, 1);
 }
 
-void ov12_022241BC (UnkSPLStruct6 * param0)
+void ov12_022241BC(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 2, 2);
 }
 
-void ov12_022241C8 (UnkSPLStruct6 * param0)
+void ov12_022241C8(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 2, 3);
 }
 
-void ov12_022241D4 (UnkSPLStruct6 * param0)
+void ov12_022241D4(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 2, 4);
 }
 
-void ov12_022241E0 (UnkSPLStruct6 * param0)
+void ov12_022241E0(UnkSPLStruct6 *param0)
 {
     ov12_02224138(param0, 2, 5);
 }
 
-void ov12_022241EC (UnkSPLStruct6 * param0)
+void ov12_022241EC(UnkSPLStruct6 *param0)
 {
     int v0, v1;
-    UnkStruct_ov12_0221FCDC * v2;
+    UnkStruct_ov12_0221FCDC *v2;
 
     v2 = sub_02014764();
     v0 = ov12_02220240(v2);
