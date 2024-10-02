@@ -59,7 +59,7 @@ static u32 ov119_021D13B4(u32 param0, BOOL param1);
 static u32 ov119_021D13D0(u32 param0, BOOL param1);
 static UnkStruct_02014014 *ov119_021D13EC(int param0);
 static UnkStruct_02014014 *ov119_021D1434(int param0, int param1, int param2);
-static void ov119_021D1474(UnkSPLStruct6 *param0);
+static void ov119_021D1474(SPLEmitter *param0);
 
 void ov119_021D0D80(void)
 {
@@ -474,11 +474,11 @@ void ov119_021D145C(UnkStruct_02014014 *param0)
     Heap_FreeToHeap(v0);
 }
 
-static void ov119_021D1474(UnkSPLStruct6 *param0)
+static void ov119_021D1474(SPLEmitter *param0)
 {
     VecFx32 v0 = { 0, 0, 0 };
 
-    SPL_UnkInline1(param0, &v0);
+    SPLEmitter_SetPos(param0, &v0);
 }
 
 UnkStruct_ov119_021D14DC *ov119_021D14AC(UnkStruct_ov119_021D1930 *param0)

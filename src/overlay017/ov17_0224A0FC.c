@@ -105,7 +105,7 @@ static void ov17_0224AE84(SysTask *param0, void *param1);
 static void ov17_0224C718(SysTask *param0, void *param1);
 void ov17_0224C89C(UnkStruct_ov17_0224DF54 *param0, const UnkStruct_ov17_0224EDE0 *param1);
 static void ov17_0224CA28(SysTask *param0, void *param1);
-static void ov17_0224CAC0(UnkSPLStruct6 *param0);
+static void ov17_0224CAC0(SPLEmitter *param0);
 static void ov17_0224CB00(UnkStruct_ov17_0224DF54 *param0, int param1, int param2);
 static void ov17_0224CB80(UnkStruct_ov17_0224DF54 *param0, int param1);
 void ov17_0224CD84(UnkStruct_ov17_0224DF54 *param0, u32 param1, u32 param2, int param3, int param4, u16 param5);
@@ -2391,7 +2391,7 @@ void ov17_0224CA90(UnkStruct_ov17_0224DF54 *param0, u32 param1, s32 param2, s32 
     sub_020146F4(param0->unk_0C, param1, ov17_0224CAC0, param0);
 }
 
-static void ov17_0224CAC0(UnkSPLStruct6 *param0)
+static void ov17_0224CAC0(SPLEmitter *param0)
 {
     UnkStruct_ov17_0224DF54 *v0;
     UnkStruct_ov17_0224CAC0 *v1;
@@ -2399,9 +2399,9 @@ static void ov17_0224CAC0(UnkSPLStruct6 *param0)
     v0 = sub_02014764();
     v1 = &v0->unk_1064;
 
-    SPL_UnkInline2(param0, v1->unk_00);
-    SPL_UnkInline3(param0, v1->unk_04);
-    SPL_UnkInline4(param0, v1->unk_08);
+    SPLEmitter_SetPosX(param0, v1->unk_00);
+    SPLEmitter_SetPosY(param0, v1->unk_04);
+    SPLEmitter_SetPosZ(param0, v1->unk_08);
 
     sub_020147B0(param0, v1->unk_0C);
 }

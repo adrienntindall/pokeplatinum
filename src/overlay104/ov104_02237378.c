@@ -72,7 +72,7 @@ BOOL ov104_022360A8(UnkStruct_ov104_0222E930 *param0);
 BOOL ov104_022360C0(UnkStruct_ov104_0222E930 *param0);
 BOOL ov104_02237D84(UnkStruct_ov104_0222E930 *param0);
 BOOL ov104_02237D98(UnkStruct_ov104_0222E930 *param0);
-static void ov104_02237C30(UnkSPLStruct6 *param0);
+static void ov104_02237C30(SPLEmitter *param0);
 static void ov104_02237C0C(UnkStruct_ov104_0222E930 *param0, UnkStruct_ov104_0223BFFC *param1, u16 param2);
 static void ov104_0223770C(void *param0);
 
@@ -157,7 +157,7 @@ BOOL ov104_02237460(UnkStruct_ov104_0222E930 *param0)
     v10 = v9->unk_0C;
 
     v9->unk_1D = ov104_02238538(v9, v10->parties[0], v10->parties[2], v10->unk_18C);
-    v9->unk_28 = sub_02052868(v10->unk_14);
+    v9->unk_28 = BattleParams_PlayerWon(v10->unk_14);
 
     if (v9->unk_13 == 27) {
         v2 = 1;
@@ -580,7 +580,7 @@ static void ov104_02237C0C(UnkStruct_ov104_0222E930 *param0, UnkStruct_ov104_022
     return;
 }
 
-static void ov104_02237C30(UnkSPLStruct6 *param0)
+static void ov104_02237C30(SPLEmitter *param0)
 {
     VecFx32 v0;
     VecFx16 v1;
@@ -591,8 +591,8 @@ static void ov104_02237C30(UnkSPLStruct6 *param0)
         sub_02014798(param0, &v1);
         v1.x *= -1;
 
-        SPL_UnkInline5(param0, &v1);
-        SPL_UnkInline1(param0, v3);
+        SPLEmitter_SetAxis(param0, &v1);
+        SPLEmitter_SetPos(param0, v3);
     }
 
     return;

@@ -3,12 +3,12 @@
 
 #include <nitro/fx/fx.h>
 
-typedef struct UnkSPLStruct8_t UnkSPLStruct8;
-struct UnkSPLStruct6_t;
+struct SPLParticle;
+struct SPLEmitter;
 
-typedef struct {
-    void (*unk_00)(const void *, UnkSPLStruct8 *, VecFx32 *, struct UnkSPLStruct6_t *);
-    const void *unk_04;
-} UnkStruct_020147B8;
+typedef struct SPLBehavior {
+    void (*applyFunc)(const void *, struct SPLParticle *, VecFx32 *, struct SPLEmitter *);
+    const void *object;
+} SPLBehavior;
 
 #endif // POKEPLATINUM_STRUCT_020147B8_H

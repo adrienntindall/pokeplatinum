@@ -1,20 +1,36 @@
-libspl_srcs = files(
-    'asm/unk_0209C400.s',
-    'asm/unk_0209CF00.s',
-    'asm/unk_0209DD54.s',
-    'asm/unk_020A05BC.s',
-    'asm/unk_020A19F0.s',
-    'asm/unk_020A1E30.s',
-    'asm/unk_020A2238.s',
-    'asm/unk_020A2354.s'
-)
+
+libspl_c_args = [
+    '-nothumb',
+    '-wrap:ver', '1.2/base_b73',
+    '-wrap:noipa'
+]
+
+libspl_link_args = [
+    '-library',
+    '-nothumb',
+    '-main', '""',
+    '-nostdlib',
+]
 
 libspl_public_includes = include_directories('include')
 
+libspl_srcs = files(
+    'src/spl_manager.c',
+    'src/spl_emitter.c',
+    'src/spl_draw.c',
+    'src/spl_emit.c',
+    'src/spl_anim.c',
+    'src/spl_behavior.c',
+    'src/spl_list.c',
+    'src/spl_random.c'
+)
+
 libspl = static_library('spl',
     sources: libspl_srcs,
-    c_args: c_args,
     nasm_args: asm_args,
+    c_args: libspl_c_args,
+    link_args: libspl_link_args,
     include_directories: [public_includes, libspl_public_includes],
+    dependencies: [ nitrosdk_dep, nitrosystem_dep ],
     pic: false
 )

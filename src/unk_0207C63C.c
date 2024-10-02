@@ -30,7 +30,7 @@ static u32 sub_0207C7B0(u32 param0, BOOL param1);
 static UnkStruct_02014014 *sub_0207C7CC(int param0);
 static UnkStruct_02014014 *sub_0207C814(int param0, int param1, int param2);
 static void sub_0207C83C(UnkStruct_02014014 *param0);
-static void sub_0207C854(UnkSPLStruct6 *param0);
+static void sub_0207C854(SPLEmitter *param0);
 
 void sub_0207C63C(void)
 {
@@ -170,12 +170,12 @@ void sub_0207C83C(UnkStruct_02014014 *param0)
     Heap_FreeToHeap(v0);
 }
 
-static void sub_0207C854(UnkSPLStruct6 *param0)
+static void sub_0207C854(SPLEmitter *param0)
 {
     VecFx32 v0 = { 0, 0, 0 };
 
     VEC_Set(&v0, 0, (8 * 172), 0);
-    SPL_UnkInline1(param0, &v0);
+    SPLEmitter_SetPos(param0, &v0);
 }
 
 UnkStruct_0207C8C4 *sub_0207C894(UnkStruct_0207C894 *param0)
