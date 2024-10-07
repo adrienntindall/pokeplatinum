@@ -3,10 +3,6 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "debug.h"
-
-#include "struct_decls/sys_task.h"
-#include "trainer_info.h"
 #include "constants/heap.h"
 
 #include "struct_decls/struct_02029894_decl.h"
@@ -22,6 +18,7 @@
 #include "comm_player_manager.h"
 #include "communication_information.h"
 #include "communication_system.h"
+#include "debug.h"
 #include "field_system.h"
 #include "heap.h"
 #include "party.h"

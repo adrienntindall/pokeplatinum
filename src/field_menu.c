@@ -3,8 +3,7 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "debug.h"
-
+#include "constants/communication/comm_type.h"
 #include "constants/field/map_load.h"
 
 #include "struct_decls/pokedexdata_decl.h"
@@ -35,11 +34,13 @@
 #include "overlay005/ov5_021D0D80.h"
 #include "overlay005/ov5_021D2F14.h"
 #include "overlay005/ov5_021E1D20.h"
+#include "overlay007/communication_club.h"
 #include "overlay021/struct_ov21_021D0D80.h"
 #include "overlay104/struct_ov104_02241308.h"
 
 #include "bag.h"
 #include "cell_actor.h"
+#include "debug.h"
 #include "field_overworld_state.h"
 #include "field_system.h"
 #include "game_records.h"
@@ -76,6 +77,7 @@
 #include "unk_02028124.h"
 #include "unk_0202D778.h"
 #include "unk_02033200.h"
+#include "unk_020363E8.h"
 #include "unk_020366A0.h"
 #include "unk_0203D1B8.h"
 #include "unk_020508D4.h"
@@ -99,15 +101,6 @@
 #include "unk_0209747C.h"
 #include "unk_02097624.h"
 #include "unk_020989DC.h"
-#include "overlay005/ov5_021D0D80.h"
-#include "overlay005/ov5_021D2F14.h"
-#include "overlay005/ov5_021E1D20.h"
-#include "overlay007/communication_club.h"
-
-#include "constants/communication/comm_type.h"
-#include "unk_020363E8.h"
-#include "gmm/pl_msg_0367.h"
-#include "gmm/pl_msg_0353.h"
 
 Debug gDebug;
 
