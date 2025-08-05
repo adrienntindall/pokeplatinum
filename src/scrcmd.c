@@ -4,6 +4,8 @@
 #include <nitro/code16.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/battle.h"
 #include "constants/daycare.h"
 #include "constants/field/dynamic_map_features.h"
@@ -429,7 +431,6 @@ static BOOL ScrCmd_0E6(ScriptContext *ctx);
 static BOOL ScrCmd_0F2(ScriptContext *ctx);
 static BOOL sub_02042F74(ScriptContext *ctx);
 static BOOL ScrCmd_0F3(ScriptContext *ctx);
-static BOOL sub_0204300C(ScriptContext *ctx);
 static BOOL ScrCmd_0F4(ScriptContext *ctx);
 static BOOL ScrCmd_0F5(ScriptContext *ctx);
 static BOOL ScrCmd_StartLinkBattle(ScriptContext *ctx);
@@ -3360,6 +3361,7 @@ static BOOL ScrCmd_06D(ScriptContext *ctx)
     MapObject *mapObj = MapObjMan_LocalMapObjByIndex(ctx->fieldSystem->mapObjMan, ScriptContext_GetVar(ctx));
     u16 v1 = ScriptContext_ReadHalfWord(ctx);
 
+    EmulatorLog("Setting move code to %d", v1);
     MapObject_SetMoveCode(mapObj, v1);
     return FALSE;
 }
@@ -3816,6 +3818,7 @@ static UnkStruct_02041DC8 *sub_02041DC8(int heapID, FieldSystem *fieldSystem, in
 
 static BOOL ScrCmd_0A2(ScriptContext *ctx)
 {
+    Log("Reached ScrCmd_0A2, starting ov5_021EAF50");
     ov5_021EAF50(ctx->fieldSystem);
     return TRUE;
 }
@@ -4444,6 +4447,7 @@ static BOOL ScrCmd_203(ScriptContext *ctx)
 
 static BOOL ScrCmd_204(ScriptContext *ctx)
 {
+    Log("Reached ScrCmd_204");
     sub_02054864(ctx->fieldSystem->task);
     return TRUE;
 }
@@ -4697,7 +4701,7 @@ static BOOL ScrCmd_0F3(ScriptContext *ctx)
     return TRUE;
 }
 
-static BOOL sub_0204300C(ScriptContext *ctx)
+BOOL sub_0204300C(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 *v2 = FieldSystem_GetVarPointer(fieldSystem, ctx->data[0]);
@@ -5019,6 +5023,7 @@ static BOOL ScrCmd_CheckPoketchAppRegistered(ScriptContext *ctx)
 
 static BOOL ScrCmd_135(ScriptContext *ctx)
 {
+    Log("Reached ScrCmd_135");
     u16 v0 = ScriptContext_GetVar(ctx);
 
     ctx->data[0] = v0;
@@ -5382,12 +5387,12 @@ static BOOL sub_02043C70(ScriptContext *ctx)
             return TRUE;
         }
     }
-
     return FALSE;
 }
 
 static BOOL ScrCmd_2BB(ScriptContext *ctx)
 {
+    Log("Reached ScrCmd_2BB");
     sub_020598A0();
     ScriptContext_Pause(ctx, sub_02043C70);
     return TRUE;

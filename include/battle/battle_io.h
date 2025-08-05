@@ -8,7 +8,7 @@
 #include "battle/struct_ov16_0224DDA8.h"
 #include "battle/struct_ov16_02265BBC.h"
 
-void ov16_02264988(BattleSystem *battleSys, int param1);
+void BattleIO_RecvData(BattleSystem *battleSys, int param1);
 void BattleIO_SetupBattleUI(BattleSystem *battleSys, int param1);
 void BattleIO_SetEncounter(BattleSystem *battleSys, int param1);
 void BattleIO_ShowEncounter(BattleSystem *battleSys, int param1);

@@ -23,6 +23,8 @@
 #include "text.h"
 #include "unk_020366A0.h"
 
+#include "debug.h"
+
 static const UnkStruct_02099F80 sErrorMessageBanksConfig = {
     GX_VRAM_BG_256_AB,
     GX_VRAM_BGEXTPLTT_NONE,
@@ -148,6 +150,7 @@ void ErrorMessageReset_PrintErrorAndReset(void)
     Window_FillRectWithColor(&window, 15, 0, 0, 26 * 8, 18 * 8);
     Window_DrawStandardFrame(&window, 0, (512 - 9), 2);
     MessageLoader_GetStrbuf(errorMsgData, v4, errorString);
+	EmulatorLog("ErrorMessageReset_PrintErrorAndReset. NetId %d", CommSys_CurNetId());
     Text_AddPrinterWithParams(&window, FONT_SYSTEM, errorString, 0, 0, TEXT_SPEED_INSTANT, NULL);
     Strbuf_Free(errorString);
 

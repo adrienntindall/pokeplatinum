@@ -15,6 +15,8 @@
 #include "sys_task.h"
 #include "sys_task_manager.h"
 
+#include "debug.h"
+
 typedef struct {
     BattleSystem *unk_00;
     s16 unk_04;
@@ -52,6 +54,9 @@ static void ov16_0226E188(SysTask *param0, void *param1)
 
     switch (v0->unk_04) {
     case 0:
+		if (v1 == NULL) {
+			EmulatorLog("ov16_0226E188: Error - v1 is NULL. NetId %d", CommSys_CurNetId());
+		}
         GF_ASSERT(v1 != NULL);
 
         {

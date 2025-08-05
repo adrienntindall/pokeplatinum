@@ -59,6 +59,8 @@
 #include "unk_02012744.h"
 #include "unk_0208C098.h"
 
+#include "debug.h"
+
 typedef struct {
     UnkStruct_ov16_02268A14 *unk_00;
     SysTask *unk_04;
@@ -1067,6 +1069,7 @@ void *ov16_022687C8(NARC *param0, NARC *param1, BattleSystem *battleSys, int par
 
     if (v2 >= NELEMS(Unk_ov16_022704E4)) {
         v2 = 0;
+		EmulatorLog("ov16_022687C8: Error. NetId %d", CommSys_CurNetId());
         GF_ASSERT(0);
     }
 
@@ -1326,6 +1329,13 @@ void ov16_02268D40(NARC *param0, UnkStruct_ov16_02268A14 *param1)
     SpriteSystem *v1;
     SpriteManager *v2;
 
+	if (param1->unk_5BC[0] != NULL) {
+		EmulatorLog("ov16_02268D40: Error - unk_5BC[0] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+	if (param1->unk_5D4[0] != NULL) {
+		EmulatorLog("ov16_02268D40: Error - unk_5D4[0] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+
     GF_ASSERT(param1->unk_5BC[0] == NULL && param1->unk_5D4[0] == NULL);
 
     v1 = BattleSystem_GetSpriteSystem(param1->battleSys);
@@ -1350,6 +1360,10 @@ void ov16_02268D40(NARC *param0, UnkStruct_ov16_02268A14 *param1)
 
     ov16_02269218(param1);
 
+	if (param1->unk_08 != NULL) {
+		EmulatorLog("ov16_02268D40: Error -unk_08 is not NULL. NetId %d", CommSys_CurNetId());
+	}
+
     GF_ASSERT(param1->unk_08 == NULL);
     param1->unk_08 = SysTask_Start(ov16_02268FCC, param1, 1300);
 
@@ -1367,6 +1381,13 @@ static void ov16_02268F00(UnkStruct_ov16_02268A14 *param0)
     int i;
     SpriteSystem *v1;
     SpriteManager *v2;
+
+	if (param0->unk_5BC[0] == NULL) {
+		EmulatorLog("ov16_02268F00: Error - unk_5BC[0] is NULL. NetId %d", CommSys_CurNetId());
+	}
+	if (param0->unk_5D4[0] == NULL) {
+		EmulatorLog("ov16_02268F00: Error - unk_5D4[0] is NULL. NetId %d", CommSys_CurNetId());
+	}
 
     GF_ASSERT(param0->unk_5BC[0] != NULL && param0->unk_5D4[0] != NULL);
 
@@ -1512,6 +1533,13 @@ void ov16_022691BC(UnkStruct_ov16_02268A14 *param0)
 {
     int i;
 
+	if (param0->unk_5BC[0] == NULL) {
+		EmulatorLog("ov16_022691BC: Error - unk_5BC[0] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+	if (param0->unk_5D4[0] == NULL) {
+		EmulatorLog("ov16_022691BC: Error - unk_5D4[0] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+
     GF_ASSERT(param0->unk_5BC[0] != NULL && param0->unk_5D4[0] != NULL);
 
     for (i = 0; i < 6; i++) {
@@ -1529,6 +1557,13 @@ void ov16_02269218(UnkStruct_ov16_02268A14 *param0)
 {
     int i;
 
+	if (param0->unk_5BC[0] == NULL) {
+		EmulatorLog("ov16_02269218: Error - unk_5BC[0] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+	if (param0->unk_5D4[0] == NULL) {
+		EmulatorLog("ov16_02269218: Error - unk_5D4[0] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+
     GF_ASSERT(param0->unk_5BC[0] != NULL && param0->unk_5D4[0] != NULL);
 
     for (i = 0; i < 6; i++) {
@@ -1543,6 +1578,10 @@ int ov16_0226925C(UnkStruct_ov16_02268A14 *param0)
     const UnkStruct_ov16_02270670 *v4;
     int v5 = 0;
 
+	if (param0->unk_66B == -1) {
+		EmulatorLog("ov16_0226925C: Error - param0->unk_66B is -1. NetId %d", CommSys_CurNetId());
+	}
+
     GF_ASSERT(param0->unk_66B != -1);
 
     v4 = &Unk_ov16_02270670[param0->unk_66B];
@@ -1550,6 +1589,10 @@ int ov16_0226925C(UnkStruct_ov16_02268A14 *param0)
     if ((v4->unk_14 == NULL) || (param0->unk_66E == 1)) {
         return 0xffffffff;
     }
+
+	if (v4->unk_18 == NULL) {
+		EmulatorLog("ov16_0226925C: Error - v4->unk_18 is NULL. NetId %d", CommSys_CurNetId());
+	}
 
     GF_ASSERT(v4->unk_18 != NULL);
 
@@ -1628,6 +1671,7 @@ int ov16_02269368(int param0, int param1)
     case 0x400:
         return 11;
     default:
+		EmulatorLog("ov16_02269368: Error - param0 not specified. NetID %d", CommSys_CurNetId());
         GF_ASSERT(0);
         return 0;
     }
@@ -1715,6 +1759,10 @@ static void ov16_02269550(UnkStruct_ov16_02268A14 *param0, int param1)
     SysTask_Start(ov16_0226B988, v1, 1210);
 
     v0 = SetHBlankCallback(ov16_0226BB94, v1);
+	
+	if (v0 != 1) {
+		EmulatorLog("ov16_02269550: Error - v0 is not 1. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(v0 == 1);
 
     v1->unk_04 = SysTask_ExecuteOnVBlank(ov16_0226BA88, v1, 10);
@@ -1860,6 +1908,9 @@ static void ov16_022699AC(UnkStruct_ov16_02268A14 *param0, int param1, int param
     TextColor textColor;
 
     v0 = &param0->unk_1A.val2;
+	if (v0 == NULL) {
+		EmulatorLog("ov16_022699AC: Error - v0 is NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(v0 != NULL);
 
     param0->unk_66A = v0->unk_10;
@@ -2459,6 +2510,13 @@ static ManagedSprite *ov16_0226A7A4(UnkStruct_ov16_02268A14 *param0, Pokemon *pa
         v5 = param2;
     }
 
+	if (param0->unk_60C[v5] != NULL) {
+		EmulatorLog("ov16_0226A7A4: Error - param0->unk_60C[v5] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+	if (param0->unk_61C[v5] != NULL) {
+		EmulatorLog("ov16_0226A7A4: Error - param0->unk_61C[v5] is not NULL. NetId %d", CommSys_CurNetId());
+	}
+
     GF_ASSERT(param0->unk_60C[v5] == NULL);
     GF_ASSERT(param0->unk_61C[v5] == NULL);
 
@@ -2475,6 +2533,8 @@ static ManagedSprite *ov16_0226A7A4(UnkStruct_ov16_02268A14 *param0, Pokemon *pa
         v2 = 20038;
         break;
     default:
+		EmulatorLog("ov16_0226A7A4: Error - param2 behavior not defined. NetId %d", CommSys_CurNetId());
+	
         GF_ASSERT(0);
         return NULL;
     }
@@ -2581,6 +2641,9 @@ static void ov16_0226A98C(UnkStruct_ov16_02268A14 *param0, UnkStruct_ov16_0226A9
     SpriteManager *v6;
     int v7, v8;
 
+	if (param1->unk_00 != NULL) {
+		EmulatorLog("ov16_0226A98C: Error - param1->unk_00 not NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param1->unk_00 == NULL);
 
     v6 = BattleSystem_GetSpriteManager(param0->battleSys);
@@ -3006,6 +3069,9 @@ static void ov16_0226B264(UnkStruct_ov16_02268A14 *param0, int param1, u8 *param
 
 static void ov16_0226B2BC(SysTaskFunc param0, UnkStruct_ov16_02268A14 *param1)
 {
+	if (param1->unk_0C != NULL) {
+		EmulatorLog("ov16_0226B2BC: Error - param1->unk_0C not NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param1->unk_0C == NULL);
 
     MI_CpuClear8(&param1->unk_67C, sizeof(UnkStruct_ov16_02268A14_sub3));
@@ -3023,6 +3089,9 @@ static void ov16_0226B2F0(UnkStruct_ov16_02268A14 *param0)
 
 static void inline_ov16_0226B314(SysTaskFunc param0, UnkStruct_ov16_02268A14 *param1)
 {
+	if (param1->unk_10 != NULL) {
+		EmulatorLog("inline_ov16_0226B314: Error - param1->unk_10 not NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param1->unk_10 == NULL);
 
     MI_CpuClear8(&param1->unk_6A0, sizeof(UnkStruct_ov16_02268A14_sub4));
@@ -4565,6 +4634,7 @@ void ov16_0226CEB0(UnkStruct_ov16_02268A14 *param0, int param1)
 
         for (i = 0; i < 2; i++) {
             if (param0->unk_4CC[1 + i].unk_00 != NULL) {
+				EmulatorLog("ov16_0226CEB0: Error - param0->unk_4CC[1 + i].unk_00 != NULL not NULL. NetId %d", CommSys_CurNetId());
                 GF_ASSERT(0);
                 return;
             }

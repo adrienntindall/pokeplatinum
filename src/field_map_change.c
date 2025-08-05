@@ -25,6 +25,7 @@
 #include "bg_window.h"
 #include "brightness_controller.h"
 #include "communication_system.h"
+#include "comm_player_manager.h"
 #include "field_message.h"
 #include "field_overworld_state.h"
 #include "field_overworld_weather.h"
@@ -218,6 +219,8 @@ static void FieldMapChange_SetNewLocation(FieldSystem *fieldSystem, const Locati
         fieldSystem->location->x = warpEvent->x;
         fieldSystem->location->z = warpEvent->z;
 
+        CommPlayerMan_ForceSetLocationSelf(warpEvent->x, warpEvent->z);
+
         if (warpEvent->destWarpID == 0x100) {
             Location *v3, *entrance;
 
@@ -341,6 +344,8 @@ static void FieldMapChange_CreateObjects(FieldSystem *fieldSystem)
 
     fieldSystem->playerAvatar = PlayerAvatar_Init(fieldSystem->mapObjMan, fieldSystem->location->x, fieldSystem->location->z, fieldSystem->location->faceDirection, playerData->form, gender, 0, playerData);
 
+    CommPlayer_BroadcastEnterMap(CommSys_CurNetId());
+
     sub_0203A418(fieldSystem);
     MapObjectMan_StopAllMovement(fieldSystem->mapObjMan);
 }
@@ -348,6 +353,12 @@ static void FieldMapChange_CreateObjects(FieldSystem *fieldSystem)
 static void FieldMapChange_DeleteObjects(FieldSystem *fieldSystem)
 {
     Player_Delete(fieldSystem->playerAvatar);
+    for (int netId = 0; netId <= 1; netId++) {
+        if (netId != CommSys_CurNetId()) {
+            CommPlayer_Destroy(netId, FALSE, FALSE);
+        }
+        
+    }
     MapObjectMan_DeleteAll(fieldSystem->mapObjMan);
     MapObjectMan_Delete(fieldSystem->mapObjMan);
 }

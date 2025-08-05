@@ -4,6 +4,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "struct_defs/struct_0202610C.h"
 
 #include "overlay004/ov4_021D0D80.h"
@@ -775,7 +777,7 @@ static void sub_02037040(void)
 static void sub_02037094(void)
 {
     CommSys_SetAlone(0);
-    sub_02033EA8(1);
+    CommSC_SetErrorNoChild(1);
     CommSys_EnableSendMovementData();
     sub_02036C94(sub_020370B4, 0);
 }
@@ -2355,7 +2357,7 @@ void CommMan_SetErrorHandling(BOOL param0, BOOL param1)
         }
     }
 
-    sub_02033EA8(param0);
+    CommSC_SetErrorNoChild(param0);
     sub_02033ED4(param0);
 }
 
@@ -2462,7 +2464,19 @@ void sub_02038A20(int param0)
                     Sound_StopWaveOutAndSequences();
                     SaveData_SaveStateCancel(Unk_021C07D4->saveData);
                     gSystem.touchAutoSampling = TRUE;
-
+                    
+                    EmulatorLog("Player %d: Reached sub_02038A20, possible error", CommSys_CurNetId());
+                    EmulatorLog("Error checks:\n\
+                                -CommSys_CheckError(): %d\n\
+                                -sub_020383E8(): %d\n\
+                                -sub_020385D0(): %d\n\
+                                -Unk_021C07D4->unk_59: %d\n\
+                                -sub_0203881C(): %d",
+                                CommSys_CheckError(),
+                                sub_020383E8(),
+                                sub_020385D0(),
+                                Unk_021C07D4->unk_59,
+                                sub_0203881C());
                     if (Unk_021C07D4->unk_59 == 3) {
                         sub_020389C4(3);
                     } else if ((Unk_021C07D4->unk_4A == 25) || (Unk_021C07D4->unk_4A == 15) || (Unk_021C07D4->unk_4A == 36)) {

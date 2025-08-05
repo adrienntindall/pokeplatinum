@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/map_object.h"
 #include "generated/movement_actions.h"
 
@@ -123,6 +125,7 @@ BOOL LocalMapObj_IsAnimationSet(const MapObject *mapObj)
     }
 
     if (MapObject_CheckStatusFlag(mapObj, MAP_OBJ_STATUS_4) == TRUE && !MapObject_CheckStatusFlag(mapObj, MAP_OBJ_STATUS_5)) {
+        //Log("Returning FALSE with status 4 and NOT status 5");
         return FALSE;
     }
 
@@ -135,12 +138,14 @@ void LocalMapObj_SetAnimationCode(MapObject *mapObj, enum MovementAction movemen
 
     MapObject_SetMovementAction(mapObj, movementAction);
     MapObject_SetMovementStep(mapObj, 0);
+    //Log("LocalMapObj_SetAnimationCode: Status 4 ON Status 5 OFF"); 
     MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_4);
     MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_5);
 }
 
 void sub_02065668(MapObject *mapObj, enum MovementAction movementAction)
 {
+    //Log("sub_02065668: flag 5 off");
     MapObject_SetMovementAction(mapObj, movementAction);
     MapObject_SetMovementStep(mapObj, 0);
     MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_5);
@@ -162,13 +167,16 @@ BOOL LocalMapObj_CheckAnimationFinished(const MapObject *mapObj)
 BOOL sub_020656AC(MapObject *mapObj)
 {
     if (!MapObject_CheckStatusFlag(mapObj, MAP_OBJ_STATUS_4)) {
+        //Log("sub_020656AC: flag 4 is off, returning");
         return TRUE;
     }
 
     if (!MapObject_CheckStatusFlag(mapObj, MAP_OBJ_STATUS_5)) {
+        //Log("sub_020656AC: flag 5 is off, returning");
         return FALSE;
     }
 
+    //Log("sub_020656AC: turning flags 4 and 5 off");
     MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_4 | MAP_OBJ_STATUS_5);
 
     return TRUE;
@@ -176,6 +184,7 @@ BOOL sub_020656AC(MapObject *mapObj)
 
 void sub_020656DC(MapObject *mapObj)
 {
+    //Log("sub_020656DC: turning flag 4 off and flag 5 on");
     MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_4);
     MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_5);
     MapObject_SetMovementAction(mapObj, MOVEMENT_ACTION_NONE);
@@ -265,6 +274,7 @@ static BOOL MovementAnimation_CheckSet(MoveAnimData *data)
 
 static BOOL MovementAnimation_Set(MoveAnimData *data)
 {
+    //Log("Calling LocalMapObj_SetAnimationCode from MovementAnimation_Set");
     LocalMapObj_SetAnimationCode(data->mapObj, data->animCmd->movementAction);
 
     data->state = MOVEMENT_ANIM_STATE_CHECK_FINISHED;
@@ -366,7 +376,7 @@ void MapObject_DoMovementAction(MapObject *mapObj)
         if (movementAction == MOVEMENT_ACTION_NONE) {
             break;
         }
-
+        
         movementStep = MapObject_GetMovementStep(mapObj);
     } while (MapObject_DoMovementActionStep(mapObj, movementAction, movementStep));
 }
@@ -379,6 +389,7 @@ BOOL sub_020658DC(MapObject *mapObj)
         return FALSE;
     }
 
+    //Log("sub_020658DC: flag 5 OFF");
     MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_5);
     MapObject_SetMovementAction(mapObj, MOVEMENT_ACTION_NONE);
     MapObject_SetMovementStep(mapObj, 0);
@@ -394,6 +405,7 @@ static BOOL MapObject_DoMovementActionStep(MapObject *mapObj, enum MovementActio
 static BOOL MovementAction_End(MapObject *mapObj)
 {
     MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_5);
+    //Log("MovementAction_End: flag 5 ON");
     return FALSE;
 }
 

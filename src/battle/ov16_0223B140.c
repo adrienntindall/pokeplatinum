@@ -5,6 +5,8 @@
 #include <nitro/sinit.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/battle.h"
 #include "constants/heap.h"
 #include "generated/game_records.h"
@@ -166,13 +168,13 @@ const SpriteResourceCapacities Unk_ov16_0226E2B0 = {
 BOOL Battle_Main(ApplicationManager *appMan, int *param1)
 {
     FieldBattleDTO *v0 = ApplicationManager_Args(appMan);
-
+	//EmulatorLog("Reaching Battle_Main state %d", *param1);
     switch (*param1) {
     case 0:
         Heap_Create(HEAP_ID_APPLICATION, HEAP_ID_BATTLE, 0xb0000);
 
         if ((v0->battleType & BATTLE_TYPE_LINK) && ((v0->battleStatusMask & BATTLE_STATUS_RECORDING) == 0)) {
-            *param1 = 1;
+			*param1 = 1;
         } else {
             *param1 = 3;
         }
@@ -475,6 +477,9 @@ void ov16_0223B578(BattleSystem *battleSys)
 
 void BattleSystem_LoadFightOverlay(BattleSystem *battleSys, int flags)
 {
+	if (battleSys->overlayFlags == flags) {
+		EmulatorLog("BattleSystem_LoadFightOverlay: Error - overlayFlags == flags. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(battleSys->overlayFlags != flags);
 
     battleSys->overlayFlags = flags;
@@ -672,38 +677,42 @@ static int ov16_0223BBD0(ApplicationManager *appMan)
     } else {
         if (battleSys->unk_23F8) {
             battleSys->unk_23FA = BattleController_Main(battleSys, battleSys->battleCtx);
-            ov16_02264988(battleSys, 1);
+            BattleIO_RecvData(battleSys, 1);
         }
 
         for (v1 = 0; v1 < battleSys->maxBattlers; v1++) {
             ov16_0225C0DC(battleSys, battleSys->battlers[v1]);
-            ov16_02264988(battleSys, 0);
+            BattleIO_RecvData(battleSys, 0);
         }
+
 
         if (battleSys->unk_23FA == 0) {
             if (battleSys->unk_23F8) {
                 battleSys->unk_23FA = BattleController_Main(battleSys, battleSys->battleCtx);
-                ov16_02264988(battleSys, 1);
+                BattleIO_RecvData(battleSys, 1);
             }
 
             for (v1 = 0; v1 < battleSys->maxBattlers; v1++) {
                 ov16_0225C0DC(battleSys, battleSys->battlers[v1]);
-                ov16_02264988(battleSys, 0);
+                BattleIO_RecvData(battleSys, 0);
             }
         }
     }
-
     return battleSys->unk_23FA;
 }
 
 static void ov16_0223BCB4(ApplicationManager *appMan)
 {
+	Log("ov16_0223BCB4 point 0");
+	
     BattleSystem *battleSystem = ApplicationManager_Data(appMan);
     FieldBattleDTO *v1 = ApplicationManager_Args(appMan);
     int battlerId;
 
     v1->seed = battleSystem->unk_2448;
     v1->battleStatusMask = battleSystem->battleStatusMask;
+
+	Log("ov16_0223BCB4 point 1");
 
     if ((battleSystem->battleStatusMask & 0x10) == 0) {
         sub_0202F8AC(v1);
@@ -716,6 +725,8 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
     SetScreenColorBrightness(DS_SCREEN_MAIN, FADE_TO_BLACK);
     SetScreenColorBrightness(DS_SCREEN_SUB, FADE_TO_BLACK);
     BattleSystem_SetBurmyForm(battleSystem);
+	
+	Log("ov16_0223BCB4 point 2");
 
     if (battleSystem->resultMask != 0x4) {
         ov16_0223EF68(battleSystem, Party_GetPokemonBySlotIndex(battleSystem->parties[1], 0));
@@ -727,6 +738,8 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
         TrainerInfo_Copy(battleSystem->trainerInfo[battlerId], v1->trainerInfo[battlerId]);
         Heap_FreeToHeap(battleSystem->trainerInfo[battlerId]);
     }
+	
+	Log("ov16_0223BCB4 point 3");
 
     sub_02015760(battleSystem->unk_1AC);
     Bag_Copy(battleSystem->bag, v1->bag);
@@ -748,6 +761,9 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
     v1->totalTurnsElapsed = BattleContext_Get(battleSystem, battleSystem->battleCtx, 3, NULL);
     v1->unk_19C = battleSystem->recordingStopped;
 
+	Log("ov16_0223BCB4 point 4");
+	
+
     for (battlerId = 0; battlerId < 4; battlerId++) {
         Heap_FreeToHeap(battleSystem->unk_1CC[battlerId].unk_00);
     }
@@ -764,6 +780,9 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
     sub_02015FB8(battleSystem->pokemonAnimationSys);
     ParticleSystem_FreeAll();
 
+	Log("ov16_0223BCB4 point 5");
+
+
     ov12_0221FDF4(battleSystem->unk_8C);
     BattleContext_Free(battleSystem->battleCtx);
 
@@ -772,6 +791,9 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
     }
 
     PokemonSpriteManager_Free(battleSystem->unk_88);
+
+	Log("ov16_0223BCB4 point 6");
+
 
     if (battleSystem->unk_23F9 != 2) {
         ov16_0223B3E4(battleSystem);
@@ -789,6 +811,9 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
     SysTask_Done(battleSystem->unk_1C);
     SysTask_Done(battleSystem->unk_20);
     DisableTouchPad();
+
+	Log("ov16_0223BCB4 point 7");
+
 
     ov16_0223CE20(battleSystem->unk_00);
 
@@ -808,6 +833,9 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
         ov16_0226E174(battleSystem->playbackStopButton);
     }
 
+	Log("ov16_0223BCB4 point 8");
+
+
     Heap_FreeToHeap(battleSystem);
     Overlay_UnloadByID(FS_OVERLAY_ID(overlay11));
     Overlay_UnloadByID(FS_OVERLAY_ID(overlay12));
@@ -815,6 +843,9 @@ static void ov16_0223BCB4(ApplicationManager *appMan)
     if (!sub_020389B8()) {
         Overlay_UnloadByID(FS_OVERLAY_ID(pokedex));
     }
+	
+	Log("ov16_0223BCB4 point 9 (returning)");
+	
 }
 
 static void ov16_0223C004(BattleSystem *battleSys, BgConfig *param1)
@@ -1105,6 +1136,9 @@ static void ov16_0223C2C0(BattleSystem *battleSys, FieldBattleDTO *dto)
     battleSys->fieldWeather = dto->fieldWeather;
     battleSys->records = dto->records;
 
+	if (dto->records == NULL) {
+		EmulatorLog("ov16_0223C2C0: Error - dto->records == NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(dto->records != NULL);
 
     for (i = 0; i < 4; i++) {
@@ -1456,6 +1490,13 @@ static void ov16_0223CE28(void)
 
     v0 = NNS_GfdAllocTexVram(0x2000 * 4, 0, 0);
     v1 = NNS_GfdAllocPlttVram(0x20 * (4 + 2), 0, 0);
+
+	if (v0 == NNS_GFD_ALLOC_ERROR_TEXKEY) {
+		EmulatorLog("ov16_0223CE28: Error - v0 is NNS_GFD_ALLOC_ERROR_TEXKEY. NetId %d", CommSys_CurNetId());
+	}
+	if (v1 == NNS_GFD_ALLOC_ERROR_PLTTKEY) {
+		EmulatorLog("ov16_0223CE28: Error - v0 is NNS_GFD_ALLOC_ERROR_PLTTKEY. NetId %d", CommSys_CurNetId());
+	}
 
     GF_ASSERT(v0 != NNS_GFD_ALLOC_ERROR_TEXKEY);
     GF_ASSERT(v1 != NNS_GFD_ALLOC_ERROR_PLTTKEY);

@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/field/map.h"
 #include "constants/quadrant.h"
 
@@ -152,6 +154,7 @@ static const fx32 GetSimpleHeight(const FieldSystem *fieldSystem, const fx32 obj
     int tileX = objectX / MAP_OBJECT_TILE_SIZE;
     int tileZ = objectZ / MAP_OBJECT_TILE_SIZE;
 
+    //Log("Calling LandDataManager_GetRelativeLoadedMapsQuadrantOfTile from GetSimpleHeight");
     BOOL loadedMapIndexValid = LandDataManager_GetRelativeLoadedMapsQuadrantOfTile(fieldSystem->landDataMan, tileX, tileZ, NULL);
     u8 newObjectHeightSource;
 
@@ -177,6 +180,8 @@ static BOOL GetTileAttributes(const FieldSystem *fieldSystem, const int tileX, c
     fixedTileZ = tileZ - LandDataManager_GetOffsetTileZ(landDataMan);
 
     u8 loadedMapIndex;
+    //Log("Calling LandDataManager_GetRelativeLoadedMapsQuadrantOfTile from GetTileAttributes");
+    
     BOOL loadedMapIndexValid = LandDataManager_GetRelativeLoadedMapsQuadrantOfTile(landDataMan, tileX, tileZ, &loadedMapIndex);
 
     if (loadedMapIndexValid == FALSE) {

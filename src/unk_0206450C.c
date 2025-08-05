@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "generated/movement_actions.h"
 
 #include "struct_decls/struct_0205E884_decl.h"
@@ -294,7 +296,8 @@ void sub_02064690(MapObject *mapObj)
 
         v0 = MapObject_GetFacingDir(mapObj);
         v0 = MovementAction_TurnActionTowardsDir(v0, MOVEMENT_ACTION_FACE_NORTH);
-
+        
+        //Log("Calling sub_02065668 from sub_02064690 case 0");
         sub_02065668(mapObj, v0);
 
         v1->unk_00++;
@@ -342,6 +345,7 @@ void sub_02064690(MapObject *mapObj)
         }
 
         v0 = MovementAction_TurnActionTowardsDir(v0, v1->unk_08);
+        //Log("Calling sub_02065668 from sub_02064690 case 3");
 
         sub_02065668(mapObj, v0);
         sub_02062D04(mapObj);
@@ -524,6 +528,7 @@ static int sub_020649CC(MapObject *mapObj, UnkStruct_0206496C *param1)
     }
 
     v0 = MovementAction_TurnActionTowardsDir(v0, MOVEMENT_ACTION_FACE_NORTH);
+    Log("Calling sub_02065668 from sub_020649CC");
     sub_02065668(mapObj, v0);
     param1->unk_02 = 1;
 

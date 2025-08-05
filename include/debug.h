@@ -7,11 +7,17 @@
 #include "charcode.h"
 #include "strbuf.h"
 
+#include "communication_system.h"
+
 // Prints to the emulator's standard output, with printf formatting
 __attribute__((format(printf, 1, 2))) void EmulatorPrintf(const char *text, ...);
 
 // Prints to the emulator's standard output, with printf formatting, but adds a marker prefix and a newline at the end
 __attribute__((format(printf, 1, 2))) void EmulatorLog(const char *text, ...);
+
+static inline Log(const char *string) {
+    EmulatorLog("%s", string);
+};
 
 #else
 

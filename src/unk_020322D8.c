@@ -18,7 +18,7 @@ static UnkStruct_020322D8 *sub_020322D8(CommQueueMan *param0)
     int v1;
 
     for (v1 = 0; v1 < param0->unk_1C; v1++) {
-        if (v0->unk_0E == 0) {
+        if (v0->cmd == 0) {
             return v0;
         }
 
@@ -34,7 +34,7 @@ BOOL CommQueue_IsEmpty(CommQueueMan *param0)
     int v1;
 
     for (v1 = 0; v1 < param0->unk_1C; v1++) {
-        if (v0->unk_0E != 0) {
+        if (v0->cmd != 0) {
             return 0;
         }
 
@@ -76,7 +76,7 @@ static BOOL sub_0203233C(UnkStruct_0203233C *param0, u8 param1)
 
 static BOOL sub_02032358(UnkStruct_020322D8 *param0, UnkStruct_0203233C *param1)
 {
-    int v0 = CommCmd_PacketSizeOf(param0->unk_0E);
+    int v0 = CommCmd_PacketSizeOf(param0->cmd);
 
     if (v0 == 0xffff) {
         if (param1->unk_04 < 3) {
@@ -90,7 +90,7 @@ static BOOL sub_02032358(UnkStruct_020322D8 *param0, UnkStruct_0203233C *param1)
         }
     }
 
-    sub_0203233C(param1, param0->unk_0E);
+    sub_0203233C(param1, param0->cmd);
 
     if (v0 == 0xffff) {
         sub_0203233C(param1, (param0->unk_0C >> 8) & 0xff);
@@ -107,7 +107,7 @@ static BOOL sub_020323D0(UnkStruct_020322D8 *param0, UnkStruct_0203233C *param1,
 {
     int v0;
     int v1;
-    int v2 = CommCmd_PacketSizeOf(param0->unk_0E);
+    int v2 = CommCmd_PacketSizeOf(param0->cmd);
 
     if (v2 == 0xffff) {
         v1 = 3;
@@ -187,7 +187,7 @@ BOOL CommQueue_Write(CommQueueMan *param0, int cmd, u8 *param2, int param3, BOOL
     }
 
     v1->unk_0C = v3;
-    v1->unk_0E = cmd;
+    v1->cmd = cmd;
     v1->unk_00 = param2;
 
     if (param4 == 1) {
@@ -310,7 +310,7 @@ BOOL CommQueue_CompareCmd(CommQueueMan *param0, int param1)
     UnkStruct_020322D8 *v1 = param0->unk_18;
 
     for (v0 = 0; v0 < param0->unk_1C; v0++) {
-        if (v1->unk_0E == param1) {
+        if (v1->cmd == param1) {
             return 1;
         }
 

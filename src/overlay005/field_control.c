@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/field/dynamic_map_features.h"
 #include "constants/field_poison.h"
 #include "constants/player_avatar.h"
@@ -156,7 +158,10 @@ void FieldInput_Update(FieldInput *input, FieldSystem *fieldSystem, u16 pressedK
     }
 
     if (moveState == PLAYER_MOVE_STATE_END) {
+        //Log("FieldInput_Update: moveState end");
         input->endMovement = TRUE;
+    } else {
+        //EmulatorLog("FieldInput_Update: moveState %d", moveState);
     }
 
     if (playerDir == DIR_NORTH && heldKeys & PAD_KEY_UP
@@ -175,6 +180,7 @@ void FieldInput_Update(FieldInput *input, FieldSystem *fieldSystem, u16 pressedK
 BOOL FieldInput_Process(const FieldInput *input, FieldSystem *fieldSystem)
 {
     if (input->dummy5 == FALSE && sub_0203F5C0(fieldSystem, 1) == TRUE) {
+        Log("Processing field input: sub_0203F5C0");
         return TRUE;
     }
 
@@ -192,6 +198,8 @@ BOOL FieldInput_Process(const FieldInput *input, FieldSystem *fieldSystem)
 
             sub_0205F56C(fieldSystem->playerAvatar);
             MapObjectMan_PauseAllMovement(fieldSystem->mapObjMan);
+            Log("Processing field input: sub_02067A84");
+            
             return TRUE;
         }
     }
@@ -200,6 +208,8 @@ BOOL FieldInput_Process(const FieldInput *input, FieldSystem *fieldSystem)
         SystemFlag_ClearStep(SaveData_GetVarsFlags(fieldSystem->saveData));
 
         if (Field_ProcessStep(fieldSystem) == TRUE) {
+            Log("Processing field input: Field_ProcessStep");
+            
             return TRUE;
         }
     }
@@ -221,11 +231,14 @@ BOOL FieldInput_Process(const FieldInput *input, FieldSystem *fieldSystem)
         }
 
         if (ov5_021DFDE0(fieldSystem, fieldSystem->playerAvatar, direction, playerEvent) == TRUE) {
+            Log("Processing field input: ov5_021DFDE0");
+            
             return TRUE;
         }
     }
 
     if (input->endMovement) {
+        //Log("Checking end movement");
         if (Field_CheckWildEncounter(fieldSystem)) {
             return TRUE;
         }
@@ -265,7 +278,7 @@ BOOL FieldInput_Process(const FieldInput *input, FieldSystem *fieldSystem)
 
         if (validInteraction == TRUE) {
             if (sub_0205F588(fieldSystem->playerAvatar) == TRUE) {
-                sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+                PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
             }
 
             if (MapObject_GetTrainerType(object) != 0x9) {
@@ -405,7 +418,7 @@ BOOL FieldInput_Process_Colosseum(FieldInput *input, FieldSystem *fieldSystem)
 
         if (sub_0203CA40(fieldSystem, &object) == TRUE && MapObject_GetMovementType(object) != 0x1) {
             if (sub_0205F588(fieldSystem->playerAvatar) == TRUE) {
-                sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+                PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
             }
 
             ScriptManager_Set(fieldSystem, MapObject_GetScript(object), object);
@@ -460,7 +473,7 @@ BOOL FieldInput_Process_UnionRoom(const FieldInput *input, FieldSystem *fieldSys
 
         if (sub_0203CA40(fieldSystem, &object) == TRUE) {
             if (sub_0205F588(fieldSystem->playerAvatar) == TRUE) {
-                sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+                PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
             }
 
             sub_02036B84();
@@ -497,7 +510,7 @@ int FieldInput_Process_BattleTower(const FieldInput *input, FieldSystem *fieldSy
 
         if (sub_0203CA40(fieldSystem, &object) == TRUE) {
             if (sub_0205F588(fieldSystem->playerAvatar) == TRUE) {
-                sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+                PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
             }
 
             if (MapObject_GetTrainerType(object) != 0x9) {
@@ -546,6 +559,8 @@ static BOOL Field_CheckWildEncounter(FieldSystem *fieldSystem)
     int playerX, playerZ;
 
     Field_GetPlayerPos(fieldSystem, &playerX, &playerZ);
+
+    //Log("Checking for wild encounter");
 
     if (SystemFlag_CheckInPalPark(SaveData_GetVarsFlags(fieldSystem->saveData)) == TRUE) {
         if (CatchingShow_CheckWildEncounter(fieldSystem, playerX, playerZ) == TRUE) {

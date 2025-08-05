@@ -26,9 +26,15 @@
 #include "unk_0205A0D8.h"
 #include "unk_0205B33C.h"
 
+#include "constants/communication/comm_packets.h"
+
 static int CommPacketSizeOf_TrainerCard(void);
 static int sub_02099548(void);
 static int sub_0209954C(void);
+
+static int CommPacketSizeOf_MapChange(void) {
+	return COMM_PACKET_SIZE_MAP_CHANGE;
+}
 
 static int sub_02099500(void)
 {
@@ -158,7 +164,8 @@ static const CommCmdTable Unk_020F68A4[] = {
     { sub_02099510, sub_02099508, NULL },
     { sub_0204FA34, sub_02032944, NULL },
     { sub_0205001C, sub_02032944, NULL },
-    { sub_02050548, sub_02032944, NULL }
+    { sub_02050548, sub_02032944, NULL },
+    { CommPlayer_RecvMapChange, CommPacketSizeOf_MapChange, NULL }
 };
 
 void sub_02099510(int param0, int param1, void *param2, void *param3)

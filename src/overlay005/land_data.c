@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/battle.h"
 #include "constants/field/map.h"
 #include "constants/heap.h"
@@ -683,6 +685,8 @@ void LandDataManager_Tick(FieldSystem *fieldSystem, LandDataManager *landDataMan
 
                 if (trackedTarget->prevPosition.z % (MAP_OBJECT_TILE_SIZE / 2) != 0) {
                     if (Link_SetErrorState(LINK_BATTLE_RESET_SAVEPOINT)) {
+                        Log("Comm error reset to savepoint: LandDataManager_Tick tracked object error 1");
+
                         return;
                     }
                 }
@@ -714,6 +718,8 @@ void LandDataManager_Tick(FieldSystem *fieldSystem, LandDataManager *landDataMan
 
                     if (trackedTarget->prevPosition.x % (MAP_OBJECT_TILE_SIZE / 2) != 0) {
                         if (Link_SetErrorState(LINK_BATTLE_RESET_SAVEPOINT)) {
+                            Log("Comm error reset to savepoint: LandDataManager_Tick tracked object error, x");
+                            
                             return;
                         }
                     }
@@ -732,6 +738,8 @@ void LandDataManager_Tick(FieldSystem *fieldSystem, LandDataManager *landDataMan
 
                     if (trackedTarget->prevPosition.z % (MAP_OBJECT_TILE_SIZE / 2) != 0) {
                         if (Link_SetErrorState(LINK_BATTLE_RESET_SAVEPOINT)) {
+                            Log("Comm error reset to savepoint: LandDataManager_Tick tracked object error, z");
+                            
                             return;
                         }
                     }
@@ -1820,9 +1828,11 @@ BOOL LandDataManager_GetRelativeLoadedMapsQuadrantOfTile(const LandDataManager *
     u32 mapMatrixIndex = mapMatrixX + (mapMatrixZ * landDataMan->mapMatrixWidth);
 
     if (mapMatrixIndex >= landDataMan->mapMatrixWidth * landDataMan->mapMatrixHeight) {
-        if (Link_SetErrorState(LINK_BATTLE_RESET_SAVEPOINT)) {
+        //if (FALSE && Link_SetErrorState(LINK_BATTLE_RESET_SAVEPOINT)) {
+            //Log("[IGNORED] Comm error reset to savepoint: LandDataManager_GetRelativeLoadedMapsQuadrantOfTile");
+            
             return FALSE;
-        }
+        //}
     }
 
     GF_ASSERT(mapMatrixIndex < landDataMan->mapMatrixWidth * landDataMan->mapMatrixHeight);

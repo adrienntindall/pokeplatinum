@@ -139,7 +139,7 @@ static void sub_0205E91C(PlayerAvatar *playerAvatar, int param1, int gender, Pla
     PlayerAvatar_SetPlayerData(playerAvatar, player);
 
     sub_0205EB08(playerAvatar, 0);
-    sub_0205EB10(playerAvatar, 0);
+    Player_SetMoveState(playerAvatar, 0);
     PlayerAvatar_SetPlayerState(playerAvatar, param1);
     PlayerAvatar_SetGender(playerAvatar, gender);
     PlayerAvatar_SetRequestStateFlag(playerAvatar, 0);
@@ -259,7 +259,7 @@ int PlayerAvatar_MoveState(const PlayerAvatar *playerAvatar)
     return playerAvatar->unk_14;
 }
 
-void sub_0205EB10(PlayerAvatar *playerAvatar, int param1)
+void Player_SetMoveState(PlayerAvatar *playerAvatar, int param1)
 {
     playerAvatar->unk_18 = param1;
 }
@@ -534,7 +534,7 @@ void sub_0205ECB8(PlayerAvatar *playerAvatar, const VecFx32 *param1, int param2)
 
     MapObject_SetPosDirFromVec(mapObj, param1, param2);
     sub_0205EB08(playerAvatar, 0);
-    sub_0205EB10(playerAvatar, 0);
+    Player_SetMoveState(playerAvatar, 0);
 }
 
 void sub_0205ECE0(PlayerAvatar *playerAvatar, int param1, int param2, int param3)
@@ -543,7 +543,7 @@ void sub_0205ECE0(PlayerAvatar *playerAvatar, int param1, int param2, int param3
 
     MapObject_SetPosDirFromCoords(mapObj, param1, 0, param2, param3);
     sub_0205EB08(playerAvatar, 0);
-    sub_0205EB10(playerAvatar, 0);
+    Player_SetMoveState(playerAvatar, 0);
 }
 
 void Player_SetYPos(PlayerAvatar *playerAvatar, fx32 y)

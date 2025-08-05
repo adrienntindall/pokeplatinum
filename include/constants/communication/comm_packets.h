@@ -2,7 +2,10 @@
 #define POKEPLATINUM_CONSTANTS_COMM_PACKETS_H
 
 // Comm Packet Sizes
-#define COMM_PACKET_SIZE_LOCATION  5
-#define COMM_PACKET_SIZE_POS_NETID 4
+#define COMM_PACKET_SIZE_LOCATION  (5 + 2)
+#define COMM_PACKET_SIZE_POS_NETID (4 + 2)
+
+//Custom Packet Sizes
+#define COMM_PACKET_SIZE_MAP_CHANGE (6)
 
 #endif

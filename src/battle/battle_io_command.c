@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/battle/battle_io.h"
 
 #include "struct_decls/battle_system.h"
@@ -274,6 +276,7 @@ void ov16_0225C0DC(BattleSystem *battleSys, BattlerData *param1)
     if (param1->data[0]) {
         param1->unk_1A4 = 0;
         Unk_ov16_0226F068[param1->data[0]](battleSys, param1);
+		
     }
 }
 

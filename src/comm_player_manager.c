@@ -5,6 +5,8 @@
 #include <nnsys/g3d/glbstate.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/communication/comm_packets.h"
 #include "constants/heap.h"
 #include "generated/movement_actions.h"
@@ -54,13 +56,14 @@ static BOOL CommPlayer_MoveBlow(int netId, int param1);
 static BOOL CommPlayer_BlowAnimation(int netId, int param1, int unused, int animSpeed);
 static void CommPlayer_SendDataTask(void *data);
 static void sub_02057C2C(void *data);
-static void CommPlayer_Add(u8 netId);
 static void CommPlayer_Move(SysTask *unused0, void *unused1);
 static void Task_CommPlayerManagerRun(SysTask *task, void *data);
 static void sub_02057EF8(void *unused);
 static void CommPlayer_MoveClient(int netId);
 static void sub_020591A8(void);
-
+static BOOL CommPlayer_CheckOnSameMatrix(int netId);
+static void CommPlayer_HandleMapChangeObjects(int netId);
+static void CommPlayer_SendEnterMap();
 static CommPlayerManager *sCommPlayerManager = NULL;
 
 CommPlayerManager *CommPlayerMan_Get(void)
@@ -274,9 +277,10 @@ void CommPlayer_CopyPersonal(int netJd)
     sCommPlayerManager->unk_14A[netJd].unk_20 = 0xff;
 }
 
+//Gets sent whenever the player stops moving
 void CommPlayer_SendXZPos(BOOL param0, int x, int z)
 {
-    u8 data[5 + 1];
+    u8 data[COMM_PACKET_SIZE_LOCATION + 1];
     int dir = PlayerAvatar_GetDir(sCommPlayerManager->fieldSystem->playerAvatar);
 
     data[0] = x;
@@ -288,7 +292,13 @@ void CommPlayer_SendXZPos(BOOL param0, int x, int z)
     if (param0) {
         data[4] = data[4] | 0x80;
     }
-
+    
+    if (sCommPlayerManager->mapChangeFlag[CommSys_CurNetId()]) {
+        data[4] |= 0x40;
+    }
+    
+    data[5] = sCommPlayerManager->fieldSystem->mapMatrix->matrixID;
+	
     CommSys_SendDataFixedSize(22, data);
     sCommPlayerManager->sendAllPos = TRUE;
 }
@@ -328,15 +338,28 @@ static void CommPlayer_SendPosNetId(int netId, const CommPlayerLocation *playerL
 
     data[0] = netId & 0xf;
     data[1] = x;
-    data[2] = ((x >> 8) & 0x1) + ((z >> 7) & 0x2);
+    data[2] = (x >> 8);
     data[3] = z;
+    data[4] = (z >> 8);
 
     if (playerLocation->collisionFlag) {
-        data[2] |= 0x80;
+        data[6] |= 0x80;
+    }
+
+    if (sCommPlayerManager->mapChangeFlag[CommSys_CurNetId()]) {
+        data[6] |= 0x40;
+        //Log("CommPlayer_SendPosNetId: Setting map change flag");
+        //CommPlayer_HandleMapChangeObjects(CommSys_CurNetId());
     }
 
     data[0] += ((playerLocation->dir % 4) << 4);
     data[0] += (playerLocation->moveSpeed << 6);
+
+	if (netId == CommSys_CurNetId()) {
+		data[5] = sCommPlayerManager->fieldSystem->mapMatrix->matrixID;
+	} else {
+		data[5] = sCommPlayerManager->curMapMatrix[netId];
+	}
 
     CommSys_SendDataServer(23, data, 0);
 }
@@ -351,7 +374,7 @@ void CommPlayer_SendDataTask(void *data)
             CommPlayer_SendPos(TRUE);
             sCommPlayerManager->unk_2BA = 1;
         }
-    }
+    } 
 
     if ((1 == v0) && (1 == moveState)) {
         sCommPlayerManager->unk_2BA = 0;
@@ -379,9 +402,13 @@ u32 CommPlayer_Size(void)
     return sizeof(CommPlayerManager);
 }
 
-static void CommPlayer_Add(u8 netId)
+void CommPlayer_Add(u8 netId)
 {
     PlayerAvatar *playerAvatar;
+
+    if (sCommPlayerManager == NULL) {
+        return;
+    }
 
     if (sCommPlayerManager->playerAvatar[netId] != NULL) {
         return;
@@ -390,7 +417,11 @@ static void CommPlayer_Add(u8 netId)
     if (sCommPlayerManager->isResetting) {
         return;
     }
-
+    
+    if (!CommPlayer_CheckOnSameMatrix(netId)) {
+        return;
+    }
+    	
     TrainerInfo *trainerInfo = CommInfo_TrainerInfo(netId);
 
     if (trainerInfo) {
@@ -410,7 +441,12 @@ static void CommPlayer_Add(u8 netId)
 
         playerAvatar = PlayerAvatar_Init(sCommPlayerManager->fieldSystem->mapObjMan, sCommPlayerManager->playerLocation[netId].x, sCommPlayerManager->playerLocation[netId].z, sCommPlayerManager->playerLocation[netId].dir, 0x0, TrainerInfo_Gender(trainerInfo), version, NULL);
 
+		if (playerAvatar != NULL) {
+			EmulatorLog("CommPlayer_Add: Error - Player Avatar is already initialized. NetId %d", CommSys_CurNetId());
+		}
+
         GF_ASSERT(playerAvatar != NULL);
+		
         sCommPlayerManager->playerAvatar[netId] = playerAvatar;
 
         MapObject_SetLocalID(Player_MapObject(playerAvatar), 0xff + netId + 1);
@@ -431,7 +467,7 @@ static void CommPlayer_Add(u8 netId)
     }
 }
 
-void CommPlayer_Destroy(u8 netId, BOOL param1, BOOL param2)
+void CommPlayer_Destroy(u8 netId, BOOL dontDeactivate, BOOL deleteAll)
 {
     if (sCommPlayerManager == NULL) {
         return;
@@ -445,23 +481,19 @@ void CommPlayer_Destroy(u8 netId, BOOL param1, BOOL param2)
 
     if (sCommPlayerManager->playerAvatar[netId] != NULL) {
         if (sCommPlayerManager->fieldSystem->playerAvatar != sCommPlayerManager->playerAvatar[netId]) {
-            if (sCommPlayerManager->isUnderground || param2) {
-                Player_DeleteAll(sCommPlayerManager->playerAvatar[netId]);
-            } else {
-                Player_Delete(sCommPlayerManager->playerAvatar[netId]);
-            }
+            Player_DeleteAll(sCommPlayerManager->playerAvatar[netId]);
         }
 
         sCommPlayerManager->playerAvatar[netId] = NULL;
     }
 
-    if ((sCommPlayerManager->isActive[netId]) && (!param1)) {
+    if ((sCommPlayerManager->isActive[netId]) && (!dontDeactivate)) {
         sCommPlayerManager->isActive[netId] = 0;
     }
 
     sCommPlayerManager->movementChanged[netId] = 1;
 
-    if (!param1) {
+    if (!dontDeactivate) {
         sCommPlayerManager->unk_FA[netId] = 0;
 
         if (sCommPlayerManager->isUnderground) {
@@ -575,8 +607,20 @@ void sub_02058018(int netId, int param1, void *param2, void *unused)
     u8 *buffer = (u8 *)param2;
 
     if (sCommPlayerManager) {
+		if (param1 == 0) {
+			EmulatorLog("sub_02058018: Error - param1 is 0. NetId %d", CommSys_CurNetId());
+		}
         GF_ASSERT(param1 == 1);
+		if (netId < MAX_CONNECTED_PLAYERS) {
+			EmulatorLog("sub_02058018: Error - netId is already used. NetId %d", CommSys_CurNetId());
+		}
         GF_ASSERT(netId < MAX_CONNECTED_PLAYERS);
+		if (buffer[0] == 1) {
+			EmulatorLog("sub_02058018: Error - buffer[0] is 1. NetId %d", CommSys_CurNetId());
+		}
+		if (buffer[0] == 0) {
+			EmulatorLog("sub_02058018: Error - buffer[0] is 0. NetId %d", CommSys_CurNetId());
+		}
         GF_ASSERT((buffer[0] == 1) || (buffer[0] == 0));
 
         sub_02059058(netId, buffer[0]);
@@ -686,6 +730,9 @@ static int sub_020581E0(int param0)
 {
     int v0[5] = { 2, 4, 8, 16, 2 };
 
+	if (param0 < 5) {
+		EmulatorLog("sub_020581E0: Error - param0 < 5. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param0 < 5);
     return v0[param0];
 }
@@ -698,7 +745,7 @@ static void CommPlayer_Move(SysTask *unused0, void *unused1)
     UnkStruct_ov23_02249978 *v8 = NULL;
 
     for (netId = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
-        if (sCommPlayerManager->isActive[netId] && sCommPlayerManager->unk_E2[netId] && sCommPlayerManager->unk_EA[netId]) {
+        if (sCommPlayerManager->isActive[netId] && CommPlayer_CheckOnSameMatrix(netId) && sCommPlayerManager->unk_E2[netId] && sCommPlayerManager->unk_EA[netId]) {
             playerLocation = &sCommPlayerManager->playerLocationServer[netId];
 
             if (sCommPlayerManager->unk_04) {
@@ -816,6 +863,7 @@ static void CommPlayer_Move(SysTask *unused0, void *unused1)
 void CommPlayer_RecvLocation(int netId, int unused0, void *src, void *unused1)
 {
     u8 *buffer = (u8 *)src;
+    
     CommPlayerLocation *playerLocation;
 
     if (sCommPlayerManager == NULL) {
@@ -826,14 +874,13 @@ void CommPlayer_RecvLocation(int netId, int unused0, void *src, void *unused1)
 
     if (buffer[4] & 0x80) {
         sCommPlayerManager->sendAllPos = TRUE;
-        return;
     }
 
     if (playerLocation->dir == -1) {
-        int netId;
+        int netJd;
 
-        for (netId = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
-            sCommPlayerManager->movementChanged[netId] = 1;
+        for (netJd = 0; netId < MAX_CONNECTED_PLAYERS; netId++) {
+            sCommPlayerManager->movementChanged[netJd] = 1;
         }
     }
 
@@ -848,8 +895,11 @@ void CommPlayer_RecvLocation(int netId, int unused0, void *src, void *unused1)
     sCommPlayerManager->isActive[netId] = 1;
     sCommPlayerManager->movementChanged[netId] = 1;
 
-    if (TerrainCollisionManager_CheckCollision(sCommPlayerManager->fieldSystem, playerLocation->x, playerLocation->z)) {
-        GF_ASSERT(0);
+    sCommPlayerManager->curMapMatrix[netId] = buffer[5];
+	
+    if (CommPlayer_CheckOnSameMatrix(netId) && TerrainCollisionManager_CheckCollision(sCommPlayerManager->fieldSystem, playerLocation->x, playerLocation->z)) {
+        EmulatorLog("CommPlayer_RecvLocation: Error - Collision. NetId: %d", CommSys_CurNetId());
+		GF_ASSERT(0);
     }
 }
 
@@ -885,7 +935,10 @@ int CommPacketSizeOf_RecvLocation(void)
 
 void CommPlayer_RecvLocationAndInit(int netId, int size, void *src, void *unused)
 {
+    
     u8 *buffer = (u8 *)src;
+    //EmulatorLog("Attempting to receive location (and init) from player %d with map matrix %d (current player map matrix is %d", netId, buffer[5], sCommPlayerManager->fieldSystem->mapMatrix->matrixID);
+    
     CommPlayerLocation *playerLocation;
     int netJd = buffer[0] & 0xf;
 
@@ -899,22 +952,32 @@ void CommPlayer_RecvLocationAndInit(int netId, int size, void *src, void *unused
 
     playerLocation = &sCommPlayerManager->playerLocation[netJd];
 
-    if (buffer[2] & 0x80) {
+    if (buffer[6] & 0x80) {
         playerLocation->collisionFlag = 1;
     } else {
         playerLocation->collisionFlag = 0;
+    }
+    
+    if (buffer[6] & 0x40) {
+        CommPlayer_HandleMapChangeObjects(netJd);
     }
 
     playerLocation->x = 0;
     playerLocation->z = 0;
     playerLocation->x += ((u32)buffer[1]) & 0xff;
-    playerLocation->x += ((u32)buffer[2] << 8) & 0x100;
+    playerLocation->x += ((u32)buffer[2] << 8) & 0xff00;
     playerLocation->z += ((u32)buffer[3]) & 0xff;
-    playerLocation->z += ((u32)buffer[2] << 7) & 0x100;
+    playerLocation->z += ((u32)buffer[4] << 8) & 0xff00;
     playerLocation->dir = ((buffer[0] >> 4) & 0x3);
     playerLocation->moveSpeed = ((buffer[0] >> 6) & 0x3);
 
-    CommPlayer_Add(netJd);
+    sCommPlayerManager->curMapMatrix[netJd] = buffer[5];
+	
+	//EmulatorLog("Player %d initialized with map matrix %d", netJd, buffer[5]);
+
+    if (CommPlayer_CheckOnSameMatrix(netJd)) {
+        CommPlayer_Add(netJd);
+    }
 }
 
 static void sub_02058644(int netId)
@@ -960,6 +1023,8 @@ static BOOL CommPlayer_BlowAnimation(int netId, int param1, int unused, int anim
 
     if (LocalMapObj_IsAnimationSet(obj) == 1) {
         sub_02058644(netId);
+
+        //Log("Calling LocalMapObj_SetAnimationCode in CommPlayer_BlowAnimation");
 
         switch (animSpeed) {
         case 0:
@@ -1007,7 +1072,7 @@ static void CommPlayer_MoveClient(int netId)
 
     playerAvatar = sCommPlayerManager->playerAvatar[netId];
 
-    if (playerAvatar) {
+    if (playerAvatar && netId != CommSys_CurNetId()) {
         int dx = Player_GetXPos(playerAvatar) - playerLocation->x;
         int dy = Player_GetZPos(playerAvatar) - playerLocation->z;
         int dir = PlayerAvatar_GetDir(playerAvatar);
@@ -1091,6 +1156,7 @@ static void CommPlayer_MoveClient(int netId)
         }
 
         if (animCode != 0xff) {
+            //Log("Calling PlayerAvatar_SetAnimationCode from CommPlayer_MoveClient");
             PlayerAvatar_SetAnimationCode(playerAvatar, animCode, 1);
 
             if (pad & ~PAD_BUTTON_B) {
@@ -1465,6 +1531,9 @@ BOOL sub_02059094(int netId)
 
 BOOL sub_020590C4(void)
 {
+    
+    return FALSE;
+    
     UnkStruct_020590C4 batleGrid1v1[] = {
         { 4, 7 },
         { 11, 7 }
@@ -1534,6 +1603,7 @@ static UnkStruct_020590C4 Unk_02100B74[] = {
 
 static void sub_020591A8(void)
 {
+    return;
     int connectedPlayers = CommType_MaxPlayers(sub_0203895C());
     int netJd = 0;
     UnkStruct_020590C4 *v6;
@@ -1614,6 +1684,7 @@ int CommPlayer_GetOppositeDir(int dir)
         return FACE_LEFT;
     }
 
+	EmulatorLog("CommPlayer_GetOppositeDir: Error - dir is not set. NetId %d", CommSys_CurNetId());
     GF_ASSERT(FALSE);
     return FACE_LEFT;
 }
@@ -1711,7 +1782,7 @@ void sub_020594EC(void)
 
 void sub_020594FC(void)
 {
-    FieldSystem_PauseProcessing();
+    //FieldSystem_PauseProcessing();
     sCommPlayerManager->unk_2BC = 0;
 }
 
@@ -1784,4 +1855,140 @@ void CommPlayerMan_ForceDir(void)
 void sub_02059638(BOOL param0)
 {
     sCommPlayerManager->unk_2C3 = param0;
+}
+
+void CommPlayerMan_ForceSetLocationSelf(int x, int z) {
+    CommPlayerMan_ForceSetLocation(x, z, CommSys_CurNetId());
+}
+
+void CommPlayerMan_ForceSetLocation(int x, int z, int netId) {
+    if (sCommPlayerManager) {
+        sCommPlayerManager->playerLocation[netId].x = x;
+        sCommPlayerManager->playerLocation[netId].z = z;
+        sCommPlayerManager->playerLocationServer[netId].x = x;
+        sCommPlayerManager->playerLocationServer[netId].z = z;
+    }
+    
+}
+
+void CommPlayer_BroadcastEnterMap(int netId) {
+    //EmulatorLog("Broadcasting entering map. NetId: %d", netId);
+    if (sCommPlayerManager == NULL) return;
+    sCommPlayerManager->mapChangeFlag[netId] = TRUE;
+    CommPlayer_SendEnterMap();
+}
+
+static void CommPlayer_SendEnterMap() {
+    u8 data[COMM_PACKET_SIZE_MAP_CHANGE + 1];
+    
+	int netId = CommSys_CurNetId();
+	
+	CommPlayerLocation *playerLocation = &sCommPlayerManager->playerLocation[netId];
+	
+	int x = playerLocation->x, z = playerLocation->z;
+
+    if (playerLocation->x < 0) {
+        x = 0;
+    } else if (playerLocation->x >= 0xf000) {
+        x = 0xf000 - 1;
+    }
+
+    if (playerLocation->z < 0) {
+        z = 0;
+    } else if (playerLocation->z >= 0xf000) {
+        z = 0xf000 - 1;
+    }
+	
+    sCommPlayerManager->curMapMatrix[netId] = sCommPlayerManager->fieldSystem->mapMatrix->matrixID;
+    
+	
+	
+    data[0] = sCommPlayerManager->fieldSystem->mapMatrix->matrixID;
+	data[1] = x;
+    data[2] = (x >> 8);
+    data[3] = z;
+    data[4] = (z >> 8);
+	data[5] = sCommPlayerManager->playerLocation[netId].dir;
+	
+    CommPlayer_HandleMapChangeObjects(CommSys_CurNetId());
+    
+    CommSys_SendDataFixedSize(135, data);
+}
+
+static void CommPlayer_HandleMapChangeObjects(int netId) {
+    if (sCommPlayerManager == NULL) return;
+    
+    int curId = CommSys_CurNetId();
+    
+    //EmulatorLog("Handling map change objects with net id %d and current id %d", netId, curId);
+    
+    //Current player changes map, needs to check if other players exist on map and make new objects for them
+    if (curId == netId) {
+        for (int netJd = 0; netJd < 2; netJd++) {
+            if (netJd != netId && CommPlayer_CheckOnSameMatrix(netJd)) {
+                CommPlayer_Add(netJd);
+            }
+        }
+    } 
+    //Another player changes map, need to check if they should be created or destroyed
+    else {
+        if (CommPlayer_CheckOnSameMatrix(netId)) {
+            sCommPlayerManager->playerAvatar[netId] = NULL;
+            CommPlayer_Add(netId);
+        } else {
+            CommPlayer_Destroy(netId, FALSE, FALSE);
+            //EmulatorLog("Destroying player %d", netId);
+        }
+        
+    }
+    
+    
+    sCommPlayerManager->mapChangeFlag[netId] = FALSE;
+}
+
+static BOOL CommPlayer_CheckOnSameMatrix(int netId) {
+    return sCommPlayerManager->fieldSystem->mapMatrix->matrixID == sCommPlayerManager->curMapMatrix[netId];
+}
+
+void CommPlayer_RecvMapChange(int netId, int size, void *src, void *unused) {
+    u8 *data = src;
+    
+	CommPlayerLocation *playerLocation;
+
+    if (sCommPlayerManager == NULL) {
+        return;
+    }
+	
+    playerLocation = &sCommPlayerManager->playerLocation[netId];
+
+    sCommPlayerManager->curMapMatrix[netId] = data[0];
+	
+	playerLocation->x = 0;
+    playerLocation->z = 0;
+    playerLocation->x += ((u32)data[1]) & 0xff;
+    playerLocation->x += ((u32)data[2] << 8) & 0xff00;
+	playerLocation->x += MapObject_GetDxFromDir(data[5]);
+    playerLocation->z += ((u32)data[3]) & 0xff;
+    playerLocation->z += ((u32)data[4] << 8) & 0xff00;
+	playerLocation->z += MapObject_GetDzFromDir(data[5]);
+	playerLocation->dir = data[5];
+    
+	playerLocation = &sCommPlayerManager->playerLocationServer[netId];
+	
+	playerLocation->x = 0;
+    playerLocation->z = 0;
+    playerLocation->x += ((u32)data[1]) & 0xff;
+    playerLocation->x += ((u32)data[2] << 8) & 0xff00;
+	playerLocation->x += MapObject_GetDxFromDir(data[5]);
+    playerLocation->z += ((u32)data[3]) & 0xff;
+    playerLocation->z += ((u32)data[4] << 8) & 0xff00;
+	playerLocation->z += MapObject_GetDzFromDir(data[5]);
+	playerLocation->dir = data[5];
+	
+	for (int i = 0; i < 2; i++) {
+		sCommPlayerManager->movementChanged[i] = 1;
+		
+	}
+    
+    CommPlayer_HandleMapChangeObjects(netId);
 }

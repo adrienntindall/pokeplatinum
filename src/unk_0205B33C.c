@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "struct_decls/struct_02014EC4_decl.h"
 #include "struct_decls/struct_0205B43C_decl.h"
 #include "struct_defs/sentence.h"
@@ -1023,6 +1025,7 @@ int sub_0205BCF4(UnkStruct_0205B43C *param0, int param1, int param2, StringTempl
 
     if (v1 == NULL) {
         CommMan_SetErrorHandling(1, 1);
+        Log("Comm error reset to savepoint: sub_0205BCF4, v1 is NULL");
         Link_SetErrorState(1);
         return 0;
     }

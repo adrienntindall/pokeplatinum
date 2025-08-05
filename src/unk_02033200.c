@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/heap.h"
 
 #include "struct_defs/sentence.h"
@@ -43,9 +45,9 @@ typedef struct {
     u8 unk_1516;
     u8 unk_1517;
     u8 unk_1518;
-    u8 unk_1519_0 : 1;
-    u8 unk_1519_1 : 1;
-    u8 unk_1519_2 : 1;
+    u8 errorAny : 1;
+    u8 errorDisconnect : 1;
+    u8 errorNoChild : 1;
     u8 unk_1519_3 : 1;
     u8 unk_1519_4 : 1;
     u8 unk_1519_5 : 1;
@@ -264,8 +266,8 @@ static void sub_02033550(BOOL param0)
 static void sub_02033578(void)
 {
     sCommServerClient->unk_14F8 = 0;
-    sCommServerClient->unk_1519_0 = 0;
-    sCommServerClient->unk_1519_2 = 0;
+    sCommServerClient->errorAny = 0;
+    sCommServerClient->errorNoChild = 0;
     sCommServerClient->unk_1516 = 0;
     sCommServerClient->unk_1519_4 = 0;
     sCommServerClient->unk_1518 = 0;
@@ -657,8 +659,9 @@ static void sub_02033BDC(u16 param0)
     sub_02033B88();
 
     if ((sub_02031F90() == 0) && (!CommServerClient_IsClientConnecting())) {
-        if (sCommServerClient->unk_1519_2) {
-            sCommServerClient->unk_1519_0 = 1;
+        if (sCommServerClient->errorNoChild) {
+            Log("Error set: sub_02033BDC no child");
+            sCommServerClient->errorAny = 1;
         }
     }
 
@@ -666,13 +669,15 @@ static void sub_02033BDC(u16 param0)
         sCommServerClient->unk_1512 = param0;
     }
 
-    if (sCommServerClient->unk_1519_1) {
+    if (sCommServerClient->errorDisconnect) {
         if (sCommServerClient->unk_1512 > param0) {
-            sCommServerClient->unk_1519_0 = 1;
+            Log("Error set: sub_02033BDC unk_1512 > param0");
+            sCommServerClient->errorAny = 1;
         }
 
         if (v1) {
-            sCommServerClient->unk_1519_0 = 1;
+            Log("Error set: sub_02033BDC v1 is non-zero");
+            sCommServerClient->errorAny = 1;
         }
     }
 
@@ -708,7 +713,8 @@ static void sub_02033BDC(u16 param0)
     case 8:
     case 9:
         if (sCommServerClient) {
-            sCommServerClient->unk_1519_0 = 1;
+            EmulatorLog("Error in sub_02033BDC: v0 case 9 (connection failed?). NetId %d", CommSys_CurNetId());
+            sCommServerClient->errorAny = 1;
         }
         break;
     case 7: {
@@ -815,14 +821,15 @@ BOOL sub_02033E68(void)
     if (CommServerClient_CheckError() && (20 == sub_02031948())) {
         return 1;
     }
-
+    
     return 0;
 }
 
 BOOL CommServerClient_CheckError(void)
 {
     if (sCommServerClient) {
-        if (sCommServerClient->unk_1519_0) {
+        if (sCommServerClient->errorAny) {
+            Log("Error from CommServerClient");
             return 1;
         }
     }
@@ -830,17 +837,17 @@ BOOL CommServerClient_CheckError(void)
     return 0;
 }
 
-void sub_02033EA8(BOOL param0)
+void CommSC_SetErrorNoChild(BOOL param0)
 {
     if (sCommServerClient) {
-        sCommServerClient->unk_1519_2 = param0;
+        sCommServerClient->errorNoChild = param0;
     }
 }
 
 void sub_02033ED4(BOOL param0)
 {
     if (sCommServerClient) {
-        sCommServerClient->unk_1519_1 = param0;
+        sCommServerClient->errorDisconnect = param0;
         sCommServerClient->unk_1512 = 0xffff;
     }
 }

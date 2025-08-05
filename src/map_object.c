@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "generated/movement_types.h"
 
 #include "struct_decls/struct_02061830_sub1_decl.h"
@@ -554,6 +556,7 @@ static void sub_02061FA8(const MapObjectManager *mapObjMan, MapObject *mapObj)
     sub_02062010(mapObj);
     MapObject_SetMapObjectManager(mapObj, mapObjMan);
     sub_0206239C(mapObj);
+    Log("Calling sub_020656DC from sub_02061FA8");
     sub_020656DC(mapObj);
     sub_02062670(mapObj);
     MapObjectMan_AddMoveTask(mapObjMan, mapObj);
@@ -745,6 +748,8 @@ static void sub_0206234C(MapObject *mapObj, const MapObjectManager *mapObjMan)
     MapObject_SetMapObjectManager(mapObj, mapObjMan);
     MapObject_Face(mapObj, MapObject_GetInitialDir(mapObj));
     MapObject_Turn(mapObj, MapObject_GetInitialDir(mapObj));
+    //Log("Calling sub_020656DC from sub_0206234C");
+    
     sub_020656DC(mapObj);
 }
 
@@ -2449,6 +2454,7 @@ void MapObject_SetPosDirFromVec(MapObject *mapObj, const VecFx32 *pos, int dir)
     MapObject_UpdateCoords(mapObj);
 
     MapObject_Face(mapObj, dir);
+    Log("Calling sub_020656DC from MapObject_SetPosDirFromVec");
 
     sub_020656DC(mapObj);
     MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_START_MOVEMENT);
@@ -2475,6 +2481,7 @@ void MapObject_SetPosDirFromCoords(MapObject *mapObj, int x, int y, int z, int d
 
     MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_START_MOVEMENT);
     MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_1 | MAP_OBJ_STATUS_END_MOVEMENT);
+    Log("Calling sub_020656DC from MapObject_SetPosDirFromCoords");
 
     sub_020656DC(mapObj);
 }

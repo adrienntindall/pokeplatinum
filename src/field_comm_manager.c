@@ -6,6 +6,8 @@
 #include "constants/graphics.h"
 #include "constants/heap.h"
 
+#include "debug.h"
+
 #include "struct_decls/struct_02029894_decl.h"
 #include "struct_defs/struct_0205964C.h"
 #include "struct_defs/struct_02072014.h"
@@ -154,8 +156,8 @@ void FieldCommMan_ReconnectBattleClient(void)
 
 void FieldCommMan_EnterBattleRoom(FieldSystem *fieldSystem)
 {
-    SetupScreenFadeRegisters(DS_SCREEN_MAIN, FADE_TO_BLACK);
-    SetupScreenFadeRegisters(DS_SCREEN_SUB, FADE_TO_BLACK);
+    //SetupScreenFadeRegisters(DS_SCREEN_MAIN, FADE_TO_BLACK);
+    //SetupScreenFadeRegisters(DS_SCREEN_SUB, FADE_TO_BLACK);
     CommMan_SetErrorHandling(1, 1);
 
     if (!CommMan_IsInitialized()) {
@@ -291,7 +293,7 @@ static void sub_02059984(void)
         CommPlayerMan_Init(v0, sFieldCommMan->fieldSystem, 0);
         sub_02059524();
         CommSys_DisableSendMovementData();
-        CommTiming_StartSync(92);
+        CommTiming_StartSync(10);
         FieldCommMan_SetTask(sub_020599E4, 0);
         return;
     }
@@ -361,7 +363,7 @@ static void sub_02059AB4(void)
         v0 = Heap_AllocFromHeap(HEAP_ID_COMMUNICATION, CommPlayer_Size());
         CommPlayerMan_Init(v0, sFieldCommMan->fieldSystem, 0);
         sub_02059524();
-        CommTiming_StartSync(92);
+        CommTiming_StartSync(10);
         FieldCommMan_SetTask(sub_02059B10, 0);
         return;
     }
@@ -387,7 +389,8 @@ static void sub_02059B10(void)
         u8 v0 = 1;
         CommSys_SendDataFixedSize(94, &v0);
 
-        StartScreenFade(FADE_BOTH_SCREENS, FADE_TYPE_UNK_1, FADE_TYPE_UNK_1, FADE_TO_BLACK, 6, 1, HEAP_ID_FIELD);
+        Log("Reached sub_02059B10, starting sub_02059CD8");
+        //StartScreenFade(FADE_BOTH_SCREENS, FADE_TYPE_UNK_1, FADE_TYPE_UNK_1, FADE_TO_BLACK, 6, 1, HEAP_ID_FIELD);
         ResetVisibleHardwareWindows(DS_SCREEN_MAIN);
         ResetVisibleHardwareWindows(DS_SCREEN_SUB);
         FieldCommMan_SetTask(sub_02059CD8, 0);
@@ -397,7 +400,7 @@ static void sub_02059B10(void)
 static void sub_02059B74(void)
 {
     int i, j;
-
+    //Log("Reached sub_02059B74 begining");
     for (i = 0; i < CommSys_ConnectedCount(); i++) {
         if (i != CommSys_CurNetId()) {
             if (sub_02036564(i) == 94) {
@@ -408,19 +411,23 @@ static void sub_02059B74(void)
                             sFieldCommMan->trainerCard[j] = NULL;
                         }
                     }
-
+                    Log("Reached sub_02059B74, starting script...");
                     ScriptManager_Set(sFieldCommMan->fieldSystem, 9102, NULL);
                 }
             }
         }
     }
 
+    //func is deadstripped
     sub_02038A1C(4, sFieldCommMan->fieldSystem->bgConfig);
+    //Log("Reached sub_02059B74 end");
+    
 }
 
 static void sub_02059BF4(void)
 {
     if (!sub_020590C4()) {
+        Log("Reached sub_02059BF4 condition");
         sFieldCommMan->unk_43 = 0;
 
         u8 v0 = 1;
@@ -435,16 +442,19 @@ static void sub_02059BF4(void)
 static void sub_02059C2C(BOOL param0, const Party *party)
 {
     if (party) {
+        Log("Reach sub_02059C2C copy party");
         sFieldCommMan->party = Party_New(HEAP_ID_FIELDMAP);
         Party_Copy(party, sFieldCommMan->party);
     }
 
     if (param0) {
+        Log("Reached sub_02059C2C param0 = 1, starting sub_02059E50");
         FieldCommMan_SetTask(sub_02059E50, 3);
     } else {
         u8 v0 = 3;
         CommSys_SendDataFixedSize(94, &v0);
 
+        Log("Reached sub_02059C2C param0 = 0, starting sub_02059BF4");
         FieldCommMan_SetTask(sub_02059BF4, 0);
     }
 }
@@ -457,6 +467,7 @@ static void sub_02059C7C(void)
 static void sub_02059C8C(void)
 {
     if (sub_020363A0() || (0 != CommPlayer_GetMovementTimer(CommSys_CurNetId()))) {
+        Log("Returning from sub_02059C8C, non-timer");
         return;
     }
 
@@ -464,6 +475,8 @@ static void sub_02059C8C(void)
         sFieldCommMan->timer--;
         return;
     }
+
+    Log("Reached sub_02059C8C, starting sub_02059C7C");
 
     sub_020594FC();
     sub_0205AB10(sFieldCommMan->fieldSystem, sub_02059C2C);
@@ -473,6 +486,7 @@ static void sub_02059C8C(void)
 static void sub_02059CD8(void)
 {
     if (sFieldCommMan->unk_43) {
+        Log("Reached sub_02059CD8 unk_43 check, starting sub_02059C8C");
         FieldCommMan_SetTask(sub_02059C8C, 5);
 
         u8 v0 = 0;

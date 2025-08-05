@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/battle.h"
 #include "constants/heap.h"
 #include "constants/narc.h"
@@ -190,16 +192,25 @@ void FieldBattleDTO_Free(FieldBattleDTO *dto)
 {
     int i;
     for (i = 0; i < 4; i++) {
+		if (dto->parties[i] == NULL) {
+			EmulatorLog("FieldBattleDTO_Free: Error - dto->parties[%d] == NULL. NetId %d", i, CommSys_CurNetId()); 
+		}
         GF_ASSERT(dto->parties[i] != NULL);
         Heap_FreeToHeap(dto->parties[i]);
     }
 
     for (i = 0; i < 4; i++) {
+		if (dto->trainerInfo[i] == NULL) {
+			EmulatorLog("FieldBattleDTO_Free: Error - dto->trainerInfo[%d] == NULL. NetId %d", i, CommSys_CurNetId()); 
+		}
         GF_ASSERT(dto->trainerInfo[i] != NULL);
         Heap_FreeToHeap(dto->trainerInfo[i]);
     }
 
     for (i = 0; i < 4; i++) {
+		if (dto->chatotCries[i] == NULL) {
+			EmulatorLog("FieldBattleDTO_Free: Error - dto->chatotCries[%d] == NULL. NetId %d", i, CommSys_CurNetId()); 
+		}
         GF_ASSERT(dto->chatotCries[i] != NULL);
         Heap_FreeToHeap(dto->chatotCries[i]);
     }
@@ -215,6 +226,9 @@ void FieldBattleDTO_AddPokemonToBattler(FieldBattleDTO *dto, Pokemon *src, int b
 {
     GF_ASSERT(battler < MAX_BATTLERS);
     BOOL success = Party_AddPokemon(dto->parties[battler], src);
+	if (!success) {
+		EmulatorLog("FieldBattleDTO_AddPokemonToBattler: Failed. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(success);
 }
 
@@ -492,6 +506,8 @@ static int CalcTerrain(const FieldSystem *fieldSystem, enum BattleBackground bac
     if (background < NELEMS(sTerrainForBackground)) {
         return sTerrainForBackground[background];
     }
+
+	EmulatorLog("CalcTerrain: Failed. NetId %d", CommSys_CurNetId());
 
     GF_ASSERT(FALSE);
     return TERRAIN_MAX;

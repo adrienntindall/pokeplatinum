@@ -31,6 +31,8 @@
 #include "overlay005/ov5_021D2F14.h"
 #include "overlay005/save_info_window.h"
 
+#include "overlay007/communication_club.h"
+
 #include "bag.h"
 #include "bg_window.h"
 #include "catching_show.h"
@@ -98,6 +100,10 @@
 #include "constdata/const_020F1E88.h"
 #include "res/text/bank/start_menu.h"
 
+#include "constants/communication/comm_type.h"
+#include "scrcmd.h"
+
+
 typedef enum StartMenuPos {
     MENU_POS_POKEDEX,
     MENU_POS_POKEMON,
@@ -105,6 +111,8 @@ typedef enum StartMenuPos {
     MENU_POS_TRAINER_CARD,
     MENU_POS_SAVE,
     MENU_POS_OPTIONS,
+	MENU_POS_HOST,
+    MENU_POS_JOIN,
     MENU_POS_EXIT,
     MENU_POS_CHAT,
     MENU_POS_RETIRE
@@ -186,6 +194,13 @@ static void StartMenu_EvolveInit(FieldTask *taskMan);
 static void StartMenu_Evolve(FieldTask *taskMan);
 static BOOL StartMenu_SelectRetire(FieldTask *taskMan);
 
+// Co-op functions
+static BOOL StartMenu_Join (FieldTask * param0);
+static BOOL StartMenu_SelectHost (FieldTask * param0);
+static BOOL StartMenu_Host (FieldTask * param0);
+static BOOL StartMenu_SelectJoin (FieldTask * param0);
+static void StartMenu_Connect(FieldTask *taskMan);
+
 #define START_MENU_NO_ACTION   0xFFFFFFFF
 #define START_MENU_EXIT_ACTION 0xFFFFFFFE
 
@@ -207,6 +222,8 @@ static const StartMenuAction sStartMenuActions[] = {
     [MENU_POS_EXIT]         = { StartMenu_Text_Exit,    (void *)START_MENU_EXIT_ACTION },
     [MENU_POS_CHAT]         = { StartMenu_Text_Chat,    StartMenu_SelectChat           },
     [MENU_POS_RETIRE]       = { StartMenu_Text_Retire,  StartMenu_SelectRetire         },
+	[MENU_POS_HOST]			= { StartMenu_Text_Host,	StartMenu_SelectHost			},
+	[MENU_POS_JOIN]			= { StartMenu_Text_Join,	StartMenu_SelectJoin			},
 };
 // clang-format on
 
@@ -303,7 +320,7 @@ void StartMenu_Init(FieldSystem *fieldSystem)
     menu->unk_228 = 0;
 
     if (sub_0205F588(fieldSystem->playerAvatar) == 1) {
-        sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+        PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
     }
 
     FieldSystem_CreateTask(fieldSystem, sub_0203AC44, menu);
@@ -317,7 +334,7 @@ void sub_0203AA78(FieldSystem *fieldSystem)
     menu->unk_228 = 1;
 
     if (sub_0205F588(fieldSystem->playerAvatar) == 1) {
-        sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+        PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
     }
 
     FieldSystem_CreateTask(fieldSystem, sub_0203AC44, menu);
@@ -331,7 +348,7 @@ void sub_0203AABC(FieldSystem *fieldSystem)
     menu->unk_228 = 0;
 
     if (sub_0205F588(fieldSystem->playerAvatar) == 1) {
-        sub_0205F5E4(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+        PlayerAvatar_ForceMoveStop(fieldSystem->playerAvatar, PlayerAvatar_GetDir(fieldSystem->playerAvatar));
     }
 
     FieldSystem_CreateTask(fieldSystem, sub_0203AC44, menu);
@@ -519,6 +536,12 @@ static BOOL sub_0203AC44(FieldTask *taskMan)
             menu->state = START_MENU_STATE_SELECT;
         }
         break;
+	case START_MENU_STATE_CONNECT:
+        StartMenu_Connect(taskMan);
+        break;
+    case START_MENU_STATE_CONNECT_EXIT:
+        Heap_FreeToHeap(menu);
+        return TRUE;
     }
 
     if (menu->unk_20 != NULL) {
@@ -644,10 +667,24 @@ static u32 StartMenu_MakeList(StartMenu *menu, u8 *ret)
         optionCount++;
     }
 
+    /*
     if ((menu->hideOptionFlags & HIDE_OPTION_EXIT) == FALSE) {
         ret[optionCount] = MENU_POS_EXIT;
         optionCount++;
     }
+	*/
+    
+	if (TRUE) {
+        ret[optionCount] = MENU_POS_HOST;
+        optionCount++;
+    }
+    
+    if (TRUE) {
+        ret[optionCount] = MENU_POS_JOIN;
+        optionCount++;
+    }
+
+
 
     return optionCount;
 }
@@ -795,7 +832,7 @@ static void sub_0203B318(StartMenu *menu, u8 *options, u32 optionCount, u8 gende
     u32 i;
     NARC *v2;
 
-    ov5_021D3190(&menu->unk_38, &v0, (7 + 1), HEAP_ID_FIELDMAP);
+    ov5_021D3190(&menu->unk_38, &v0, (9 + 1), HEAP_ID_FIELDMAP);
 
     v2 = NARC_ctor(NARC_INDEX_GRAPHIC__MENU_GRA, HEAP_ID_FIELDMAP);
 
@@ -1887,4 +1924,71 @@ static void StartMenu_Evolve(FieldTask *taskMan)
 
         sub_0203B674(menu, sub_0203BC5C);
     }
+}
+
+//Co-op functions
+
+static BOOL StartMenu_ConnectExit (FieldTask * param0) {
+    StartMenu * menu;
+
+    menu = FieldTask_GetEnv(param0);
+    
+    
+    return TRUE;
+}
+
+static void StartMenu_Connect(FieldTask *taskMan) {
+    StartMenu * menu;
+
+    menu = FieldTask_GetEnv(taskMan);
+    
+    StartMenu_Close(menu);
+    Window_EraseStandardFrame(&menu->unk_00, 1);
+    Bg_ScheduleTilemapTransfer(menu->unk_00.bgConfig, menu->unk_00.bgLayer);
+    Window_Remove(&menu->unk_00);
+    
+    menu->callback(taskMan);
+    menu->state = START_MENU_STATE_CONNECT_EXIT;
+}
+
+static BOOL StartMenu_SelectHost(FieldTask * param0) {
+    StartMenu * menu;
+
+    menu = FieldTask_GetEnv(param0);
+    
+    menu->callback = StartMenu_Host;
+    menu->state = START_MENU_STATE_CONNECT;
+    
+    return TRUE;
+}
+
+static BOOL StartMenu_Host(FieldTask * param0) {
+    FieldSystem *fieldSystem = FieldTask_GetFieldSystem(param0);
+    StartMenu *menu = FieldTask_GetEnv(param0);
+    
+    ov7_0224B47C(fieldSystem, COMM_TYPE_SINGLE_BATTLE, 0, 0);
+    menu->callback = StartMenu_ConnectExit;
+    
+    return FALSE;
+}
+
+static BOOL StartMenu_SelectJoin(FieldTask * param0) {
+    StartMenu * menu;
+
+    menu = FieldTask_GetEnv(param0);
+    
+    menu->callback = StartMenu_Join;
+    menu->state = START_MENU_STATE_CONNECT;
+    
+    return TRUE;
+}
+
+static BOOL StartMenu_Join (FieldTask * param0) {
+    FieldSystem *fieldSystem = FieldTask_GetFieldSystem(param0);
+    StartMenu *menu = FieldTask_GetEnv(param0);
+    
+    ov7_0224B414(fieldSystem, COMM_TYPE_SINGLE_BATTLE, 0, 0);
+    menu->callback = StartMenu_ConnectExit;
+    
+    return FALSE;
 }

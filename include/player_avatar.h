@@ -37,7 +37,7 @@ void PlayerAvatar_PosVectorOut(PlayerAvatar *const playerAvatar, VecFx32 *param1
 const VecFx32 *PlayerAvatar_PosVector(PlayerAvatar *const playerAvatar);
 void sub_0205EB08(PlayerAvatar *playerAvatar, int param1);
 int PlayerAvatar_MoveState(const PlayerAvatar *playerAvatar);
-void sub_0205EB10(PlayerAvatar *playerAvatar, int param1);
+void Player_SetMoveState(PlayerAvatar *playerAvatar, int param1);
 int Player_MoveState(const PlayerAvatar *playerAvatar);
 void PlayerAvatar_SetHidden(PlayerAvatar *playerAvatar, int param1);
 void PlayerAvatar_SetMapObject(PlayerAvatar *playerAvatar, MapObject *param1);

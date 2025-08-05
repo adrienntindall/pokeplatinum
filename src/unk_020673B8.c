@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "generated/movement_actions.h"
 
 #include "struct_decls/struct_02061AB4_decl.h"
@@ -208,7 +210,7 @@ static int sub_02067540(MapObject *param0)
         };
         int v4 = v3[v0->unk_05][v0->unk_06];
         int v5 = MovementAction_TurnActionTowardsDir(v4, MOVEMENT_ACTION_FACE_NORTH);
-
+        Log("Calling sub_02065668 from sub_02067540");
         sub_02065668(param0, v5);
         v0->unk_01++;
     }
@@ -329,7 +331,7 @@ static int sub_020676D4(MapObject *param0)
     case 1: {
         int v4 = v1[v0->unk_05][v0->unk_06];
         int v5 = MovementAction_TurnActionTowardsDir(v4, MOVEMENT_ACTION_FACE_NORTH);
-
+        Log("Calling sub_02065668 from sub_020676D4");
         sub_02065668(param0, v5);
         v0->unk_01++;
     }

@@ -19,9 +19,9 @@ typedef struct {
     u16 unk_28;
     u16 state;
     u32 unk_2C;
-    u8 options[7];
+    u8 options[9];
     UnkStruct_ov5_021D30A8 unk_38;
-    ManagedSprite *unk_200[8];
+    ManagedSprite *unk_200[10];
     u32 unk_220;
     u32 hideOptionFlags;
     u32 unk_228;
@@ -48,7 +48,9 @@ enum StartMenuState {
     START_MENU_STATE_12,
     START_MENU_STATE_END,
     START_MENU_STATE_14,
-    START_MENU_STATE_15
+    START_MENU_STATE_15,
+    START_MENU_STATE_CONNECT,
+    START_MENU_STATE_CONNECT_EXIT,
 };
 
 #endif // POKEPLATINUM_STRUCT_020708E0_H

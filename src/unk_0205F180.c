@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/field/dynamic_map_features.h"
 #include "generated/game_records.h"
 #include "generated/movement_actions.h"
@@ -149,6 +151,7 @@ void PlayerAvatar_MoveControl(PlayerAvatar *playerAvatar, const LandDataManager 
     PlayerAvatar_TryCyclingGearChange(playerAvatar, keyPad);
 
     if (PlayerAvatar_CheckStartMoveInternal(playerAvatar, dir) == FALSE) {
+        //Log("Returning out of PlayerAvatar_MoveControl, PlayerAvatar_CheckStartMoveInternal is FALSE");
         return;
     }
 
@@ -157,6 +160,7 @@ void PlayerAvatar_MoveControl(PlayerAvatar *playerAvatar, const LandDataManager 
 
     if (sub_0205F62C(playerAvatar, dir) == 1) {
         ov5_021E0EEC(playerAvatar);
+        //Log("Returning out of PlayerAvatar_MoveControl, sub_0205F62C is 1");
         return;
     }
 
@@ -187,8 +191,9 @@ static int PlayerAvatar_CheckStartMoveInternal(PlayerAvatar *playerAvatar, int d
     MapObject *mapObj = Player_MapObject(playerAvatar);
 
     if (LocalMapObj_IsAnimationSet(mapObj) == 1) {
+        //Log("PlayerAvatar_CheckStartMoveInternal: returning TRUE since animation is set");
         return 1;
-    }
+    } 
 
     if (dir == DIR_NONE) {
         return 0;
@@ -228,16 +233,21 @@ static int PlayerAvatar_CheckStartMoveInternal(PlayerAvatar *playerAvatar, int d
         }
 
         if (v2 == 0) {
+            //Log("PlayerAvatar_CheckStartMoveInternal: returning TRUE since v2 is 0");
             return 1;
         }
 
         if ((v2 == (1 << 5)) && (PlayerAvatar_GetPlayerState(playerAvatar) == 0x2)) {
             return 1;
         }
-
+        
+        //Log("PlayerAvatar_CheckStartMoveInternal: no valid conditions, returning FALSE");
+        
         return 0;
     }
 
+    //Log("PlayerAvatar_CheckStartMoveInternal: sub_020613D8 isn't TRUE, returning FALSE");
+    //EmulatorLog("Note: MovementAction is %d", v0);
     return 0;
 }
 
@@ -307,25 +317,26 @@ static void PlayerAvatar_PlayWalkSE(PlayerAvatar *playerAvatar)
 
 void sub_0205F490(PlayerAvatar *playerAvatar)
 {
-    int v0, v1, v2;
+    //Log("Reached sub_0205F490");
+    int playerAvatarState, v1, v2;
     const MapObject *mapObj;
 
-    v0 = PlayerAvatar_MoveState(playerAvatar);
+    playerAvatarState = PlayerAvatar_MoveState(playerAvatar);
     v1 = Player_MoveState(playerAvatar);
     mapObj = Player_MapObject(playerAvatar);
 
-    sub_0205EB10(playerAvatar, 0);
+    Player_SetMoveState(playerAvatar, 0);
 
     u32 v4 = sub_0205F644(playerAvatar, -1);
 
     if ((v4 != 0) && (v4 != 5)) {
-        sub_0205EB10(playerAvatar, 2);
+        Player_SetMoveState(playerAvatar, 2);
         return;
     }
 
     if (LocalMapObj_IsAnimationSet(mapObj) == 0) {
-        switch (v0) {
-        case PLAYER_STATE_WALKING:
+        switch (playerAvatarState) {
+        case PLAYER_STATE_WALKING: //FIXME: Constants are WRONG
             break;
         case PLAYER_STATE_CYCLING:
             v2 = MapObject_GetMovementAction(mapObj);
@@ -335,43 +346,46 @@ void sub_0205F490(PlayerAvatar *playerAvatar)
             }
 
             if ((v1 == 0) || (v1 == 3)) {
-                sub_0205EB10(playerAvatar, 1);
+                Player_SetMoveState(playerAvatar, 1);
             } else {
-                sub_0205EB10(playerAvatar, 2);
+                Player_SetMoveState(playerAvatar, 2);
             }
             break;
         case PLAYER_STATE_SURFING:
-            sub_0205EB10(playerAvatar, 2);
+            Player_SetMoveState(playerAvatar, 2);
             break;
         }
-
+        //Log("Returning from LocalMapObj_IsAnimationSet");
         return;
     }
 
+
     if (LocalMapObj_CheckAnimationFinished(mapObj) == 1) {
-        switch (v0) {
-        case 0:
+        switch (playerAvatarState) {
+        case PLAYER_STATE_WALKING: //STOP
             break;
-        case 1:
+        case PLAYER_STATE_CYCLING: //MOVE
             switch (v1) {
             case 0:
                 break;
             case 3:
-                sub_0205EB10(playerAvatar, 0);
+                Player_SetMoveState(playerAvatar, 0);
                 break;
             default:
-                sub_0205EB10(playerAvatar, 3);
+                //Log("Setting move state to end movement");
+                Player_SetMoveState(playerAvatar, 3);
             }
             break;
-        case 2:
+        case PLAYER_STATE_SURFING: //TURN
             switch (v1) {
             case 0:
                 break;
             case 3:
-                sub_0205EB10(playerAvatar, 0);
+                Player_SetMoveState(playerAvatar, 0);
                 break;
             default:
-                sub_0205EB10(playerAvatar, 3);
+                //Log("Setting move state to end movement");
+                Player_SetMoveState(playerAvatar, 3);
             }
             break;
         }
@@ -383,7 +397,7 @@ void sub_0205F490(PlayerAvatar *playerAvatar)
 void sub_0205F56C(PlayerAvatar *playerAvatar)
 {
     sub_0205EB08(playerAvatar, 0);
-    sub_0205EB10(playerAvatar, 0);
+    Player_SetMoveState(playerAvatar, 0);
     PlayerAvatar_ClearSpeed(playerAvatar);
 }
 
@@ -424,18 +438,19 @@ int sub_0205F588(PlayerAvatar *playerAvatar)
     return 0;
 }
 
-void sub_0205F5E4(PlayerAvatar *playerAvatar, int param1)
+void PlayerAvatar_ForceMoveStop(PlayerAvatar *playerAvatar, int param1)
 {
     MapObject *mapObj;
 
     sub_0205EB08(playerAvatar, 0);
-    sub_0205EB10(playerAvatar, 0);
+    Player_SetMoveState(playerAvatar, 0);
 
     mapObj = Player_MapObject(playerAvatar);
 
     MapObject_TryFace(mapObj, param1);
     sub_02062A0C(mapObj, 0x0);
     MapObject_UpdateCoords(mapObj);
+    Log("Calling sub_020656DC from PlayerAvatar_ForceMoveStop");
     sub_020656DC(mapObj);
     LocalMapObj_SetAnimationCode(mapObj, MovementAction_TurnActionTowardsDir(param1, MOVEMENT_ACTION_FACE_NORTH));
 }
@@ -880,6 +895,7 @@ static int sub_0205FCC0(PlayerAvatar *playerAvatar, int param1)
 static void sub_0205FD20(PlayerAvatar *playerAvatar, MapObject *param1, int param2, u16 param3, u16 param4)
 {
     int v0 = MovementAction_TurnActionTowardsDir(MapObject_GetFacingDir(param1), MOVEMENT_ACTION_FACE_NORTH);
+    //Log("Calling sub_02060B64 from sub_0205FD20");
     sub_02060B64(playerAvatar, param1, v0, 1);
 }
 
@@ -970,6 +986,7 @@ static void sub_0205FDC8(PlayerAvatar *playerAvatar, MapObject *param1, int para
     }
 
     v1 = MovementAction_TurnActionTowardsDir(param2, v1);
+    //Log("Calling sub_02060B64 from sub_0205FDC8");
     sub_02060B64(playerAvatar, param1, v1, v2);
 }
 
@@ -1039,6 +1056,8 @@ static void sub_0205FECC(PlayerAvatar *playerAvatar, MapObject *param1, int para
     }
 
     v1 = MovementAction_TurnActionTowardsDir(param2, v1);
+    Log("Calling sub_02060B64 from sub_0205FECC");
+    
     sub_02060B64(playerAvatar, param1, v1, v2);
 }
 
@@ -1085,6 +1104,7 @@ static void sub_0206000C(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
             MapObject_Turn(mapObj, param9[param2]);
         }
     }
+    Log("Calling sub_02060B64 from sub_0206000C");
 
     sub_02060B64(playerAvatar, mapObj, v1, v2);
 }
@@ -1327,7 +1347,7 @@ static int sub_020604E4(PlayerAvatar *playerAvatar, int param1)
 static void sub_02060548(PlayerAvatar *playerAvatar, MapObject *mapObj, int param2, u16 param3, u16 param4)
 {
     int v0 = MovementAction_TurnActionTowardsDir(MapObject_GetFacingDir(mapObj), MOVEMENT_ACTION_FACE_NORTH);
-
+    Log("Calling sub_02060B64 from sub_02060548");
     sub_02060B64(playerAvatar, mapObj, v0, 1);
     PlayerAvatar_ClearSpeed(playerAvatar);
 }
@@ -1391,6 +1411,8 @@ static void sub_02060570(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
     }
 
     v1 = MovementAction_TurnActionTowardsDir(param2, v1);
+    Log("Calling sub_02060B64 from sub_02060570");
+    
     sub_02060B64(playerAvatar, mapObj, v1, v2);
 }
 
@@ -1400,6 +1422,7 @@ static void sub_02060688(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
 
     if (sub_020615E0(playerAvatar, mapObj, param2) != 1) {
         int v0 = MovementAction_TurnActionTowardsDir(param2, MOVEMENT_ACTION_WALK_ON_SPOT_FASTER_NORTH);
+    Log("Calling sub_02060B64 from sub_02060688");
 
         sub_02060B64(playerAvatar, mapObj, v0, 1);
         MapObject_Turn(mapObj, param2);
@@ -1445,6 +1468,7 @@ static void sub_020606C8(PlayerAvatar *playerAvatar, MapObject *mapObj, int dir,
     if (v3 == 0) {
         sub_0205EF98(playerAvatar, 0);
     }
+    Log("Calling sub_02060B64 from sub_020606C8");
 
     sub_02060B64(playerAvatar, mapObj, v2, v1);
 }
@@ -1530,7 +1554,7 @@ static int sub_02060850(PlayerAvatar *playerAvatar, int param1)
 static void sub_020608BC(PlayerAvatar *playerAvatar, MapObject *mapObj, int param2, u16 param3, u16 param4)
 {
     int v0 = MovementAction_TurnActionTowardsDir(MapObject_GetFacingDir(mapObj), MOVEMENT_ACTION_FACE_NORTH);
-
+    Log("Calling sub_02060B64 from sub_020608BC");
     sub_02060B64(playerAvatar, mapObj, v0, 1);
     PlayerAvatar_ClearSpeed(playerAvatar);
 }
@@ -1605,6 +1629,7 @@ static void sub_020608E4(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
         sub_020615C8(playerAvatar);
         sub_0205F048(playerAvatar);
     }
+    Log("Calling sub_02060B64 from sub_020608E4");
 
     sub_02060B64(playerAvatar, mapObj, v1, v2);
 }
@@ -1617,6 +1642,7 @@ static void sub_02060A60(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
         (void)0;
     } else {
         int v0 = MovementAction_TurnActionTowardsDir(param2, MOVEMENT_ACTION_WALK_ON_SPOT_FASTER_NORTH);
+    Log("Calling sub_02060B64 from sub_02060A60");
 
         sub_02060B64(playerAvatar, mapObj, v0, 1);
         MapObject_Turn(mapObj, param2);
@@ -1662,6 +1688,7 @@ static void sub_02060AA0(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
     if (v3 == 0) {
         sub_0205EF98(playerAvatar, 0);
     }
+    Log("Calling sub_02060B64 from sub_02060AA0");
 
     sub_02060B64(playerAvatar, mapObj, v2, v1);
 }
@@ -1669,6 +1696,7 @@ static void sub_02060AA0(PlayerAvatar *playerAvatar, MapObject *mapObj, int para
 static void sub_02060B64(PlayerAvatar *playerAvatar, MapObject *mapObj, u32 param2, int param3)
 {
     sub_0205EC20(playerAvatar, param2, param3);
+    //Log("Calling LocalMapObj_SetAnimationCode from sub_02060B64");
     LocalMapObj_SetAnimationCode(mapObj, param2);
 }
 
@@ -2128,6 +2156,8 @@ static int sub_02061348(PlayerAvatar *playerAvatar, u16 param1, u16 param2)
     int v0 = sub_02061310(param2);
     int v1 = sub_0206132C(param2);
 
+    //EmulatorLog("Reaching sub_02061348 with v0 = %d and v1 = %d", v0, v1);
+
     if (v0 == -1) {
         return v1;
     }
@@ -2138,6 +2168,8 @@ static int sub_02061348(PlayerAvatar *playerAvatar, u16 param1, u16 param2)
 
     {
         int dir = PlayerAvatar_GetMoveDir(playerAvatar);
+        //EmulatorLog("...and PlayerAvatar_GetMoveDir = %d", dir);
+        
         int v3 = sub_0205EBE0(playerAvatar);
         int v4 = sub_0205EBE8(playerAvatar);
 
@@ -2321,6 +2353,8 @@ int sub_02061544(PlayerAvatar *playerAvatar)
 void PlayerAvatar_SetAnimationCode(PlayerAvatar *playerAvatar, u32 param1, int param2)
 {
     MapObject *v0 = Player_MapObject(playerAvatar);
+    //Log("Calling sub_02060B64 from PlayerAvatar_SetAnimationCode");
+    
     sub_02060B64(playerAvatar, v0, param1, param2);
 }
 

@@ -49,4 +49,12 @@
 		<attribute name="window_context_name">used</attribute>
 		<language name="English">Stock: {STRVAR_1 51, 0, 0}</language>
 	</row>
+	<row id="StartMenu_Text_Host" index="2">
+		<attribute name="window_context_name">used</attribute>
+		<language name="English">HOST</language>
+	</row>
+	<row id="StartMenu_Text_Join" index="2">
+		<attribute name="window_context_name">used</attribute>
+		<language name="English">JOIN</language>
+	</row>
 </body>

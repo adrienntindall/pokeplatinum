@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/field/dynamic_map_features.h"
 #include "generated/movement_actions.h"
 #include "generated/movement_types.h"

@@ -4,6 +4,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/battle.h"
 #include "constants/heap.h"
 #include "constants/items.h"
@@ -3348,6 +3350,9 @@ static void BattleController_UpdateHP(BattleSystem *battleSys, BattleContext *ba
         int itemEffect = Battler_HeldItemEffect(battleCtx, battleCtx->defender);
         int itemPower = Battler_HeldItemPower(battleCtx, battleCtx->defender, 0);
 
+		if (battleCtx->damage >= 0) {
+			EmulatorLog("BattleController_UpdateHP: Error - battleCtx->damage >= 0. NetId %d", CommSys_CurNetId());
+		}
         GF_ASSERT(battleCtx->damage < 0);
 
         if (Battler_Side(battleSys, battleCtx->attacker) == Battler_Side(battleSys, battleCtx->defender)) {

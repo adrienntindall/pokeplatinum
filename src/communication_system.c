@@ -4,6 +4,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/heap.h"
 
 #include "struct_defs/struct_020322D8.h"
@@ -104,7 +106,7 @@ typedef struct {
     u8 unk_6AE;
     u8 wifiConnected;
     u8 unk_6B0;
-    u8 unk_6B1;
+    u8 error;
     u8 shuttingDown;
     u8 unk_6B3;
     u8 unk_6B4;
@@ -1003,6 +1005,7 @@ static void sub_02035394(BOOL param0)
     if (param0) {
         Unk_02100A1D++;
     } else {
+		EmulatorLog("sub_02035394: Error - param0 is 0. NetId: %d", CommSys_CurNetId());
         GF_ASSERT(0);
     }
 }
@@ -1012,6 +1015,7 @@ static void sub_020353B0(BOOL param0)
     if (param0) {
         Unk_02100A1C++;
     } else {
+		EmulatorLog("sub_020353B0: Error - param0 is 0. NetId: %d", CommSys_CurNetId());
         GF_ASSERT(0);
     }
 }
@@ -1310,6 +1314,8 @@ BOOL CommSys_SendDataHuge(int cmd, const void *data, int param2)
     }
 
     if (sub_0203895C() == 10) {
+		EmulatorLog("Error in CommSys_SendDataHuge: sub_0203895C() returns value 10. NetId: %d", CommSys_CurNetId());
+		
         sub_020363BC();
     }
 
@@ -1327,6 +1333,7 @@ BOOL CommSys_SendData(int cmd, const void *data, int param2)
     }
 
     if (sub_0203895C() == 10) {
+		EmulatorLog("Error in CommSys_SendData: sub_0203895C() returns value 10. NetId: %d", CommSys_CurNetId());
         sub_020363BC();
     }
 
@@ -1336,6 +1343,7 @@ BOOL CommSys_SendData(int cmd, const void *data, int param2)
 BOOL sub_02035A3C(int cmd, const void *data, int param2)
 {
     if (CommSys_CurNetId() != 0) {
+		EmulatorLog("sub_02035A3C: Error - current net id isn't host. NetId: %d", CommSys_CurNetId());
         GF_ASSERT(FALSE);
         return FALSE;
     }
@@ -1353,6 +1361,8 @@ BOOL sub_02035A3C(int cmd, const void *data, int param2)
     }
 
     if (sub_0203895C() == 10) {
+		EmulatorLog("Error in sub_02035A3C: sub_0203895C() returns value 10. NetId: %d", CommSys_CurNetId());
+		
         sub_020363BC();
     }
 
@@ -1362,6 +1372,8 @@ BOOL sub_02035A3C(int cmd, const void *data, int param2)
 BOOL CommSys_SendDataServer(int cmd, const void *data, int param2)
 {
     if (CommSys_CurNetId() != 0) {
+		EmulatorLog("Error in CommSys_SendDataServer: Current player is not host. NetId: %d", CommSys_CurNetId());
+		
         sub_020363BC();
 
         return FALSE;
@@ -1380,6 +1392,8 @@ BOOL CommSys_SendDataServer(int cmd, const void *data, int param2)
     }
 
     if (sub_0203895C() == 10) {
+		EmulatorLog("Error in CommSys_SendDataServer: sub_0203895C() returns value 10. NetId: %d", CommSys_CurNetId());
+		
         sub_020363BC();
     }
 
@@ -1409,11 +1423,11 @@ static void CommSys_RecvDataSingle(CommRing *ring, int netId, u8 *buffer, CommRe
 {
     int size;
     u8 cmd;
-    int v2;
+    int startIndex;
     int v3;
 
     while (CommRing_DataSize(ring) != 0) {
-        v2 = ring->startIndex;
+        startIndex = ring->startIndex;
 
         if (param3->unk_0A != 0xee) {
             cmd = param3->unk_0A;
@@ -1425,7 +1439,7 @@ static void CommSys_RecvDataSingle(CommRing *ring, int netId, u8 *buffer, CommRe
             }
         }
 
-        v2 = ring->startIndex;
+        startIndex = ring->startIndex;
         param3->unk_0A = cmd;
 
         if (param3->unk_08 != 0xffff) {
@@ -1433,19 +1447,19 @@ static void CommSys_RecvDataSingle(CommRing *ring, int netId, u8 *buffer, CommRe
         } else {
             size = CommCmd_PacketSizeOf(cmd);
 
-            if (sCommunicationSystem->unk_6B1) {
+            if (sCommunicationSystem->error) {
                 return;
             }
 
             if (0xffff == size) {
                 if (CommRing_DataSize(ring) < 1) {
-                    ring->startIndex = v2;
+                    ring->startIndex = startIndex;
                     break;
                 }
 
                 size = CommRing_ReadByte(ring) * 0x100;
                 size += CommRing_ReadByte(ring);
-                v2 = ring->startIndex;
+                startIndex = ring->startIndex;
             }
 
             param3->unk_08 = size;
@@ -1480,7 +1494,7 @@ static void CommSys_RecvDataSingle(CommRing *ring, int netId, u8 *buffer, CommRe
                     break;
                 }
             } else {
-                ring->startIndex = v2;
+                ring->startIndex = startIndex;
                 break;
             }
         }
@@ -1496,6 +1510,7 @@ static void CommSys_RecvData(void)
     }
 
     if (sCommunicationSystem->unk_6B3) {
+		Log("CommSys_RecvData: unk_6B3 is set, returning");
         return;
     }
 
@@ -1762,8 +1777,9 @@ BOOL CommSys_CheckError(void)
         return FALSE;
     }
 
-    if (sCommunicationSystem && sCommunicationSystem->unk_6B1) {
+    if (sCommunicationSystem && sCommunicationSystem->error) {
         CommMan_SetErrorHandling(1, 1);
+        Log("Error from sCommunicationSystem");
         return TRUE;
     }
 
@@ -1931,7 +1947,7 @@ BOOL sub_020363A0(void)
 
 void sub_020363BC(void)
 {
-    sCommunicationSystem->unk_6B1 = 1;
+    sCommunicationSystem->error = 1;
 }
 
 void CommSys_StartShutdown(void)

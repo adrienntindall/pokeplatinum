@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "struct_defs/struct_02039A58.h"
 
 #include "functypes/funcptr_02032868.h"
@@ -92,6 +94,7 @@ void CommCmd_Callback(int param0, int cmd, int param2, void *param3)
         GF_ASSERT(sCommCmdManager);
 
         if (cmd > (sCommCmdManager->unk_04 + 22)) {
+			EmulatorLog("Error in CommCmd_Callback: Recieve command index is out of bounds. Net id: %d", CommSys_CurNetId());
             sub_020363BC();
             return;
         }
@@ -119,12 +122,16 @@ int CommCmd_PacketSizeOf(int cmd)
         GF_ASSERT(sCommCmdManager);
 
         if (sCommCmdManager == NULL) {
+			EmulatorLog("Error in CommCmd_PacketSizeOf: sCommCmdManager is NULL. Net id: %d", CommSys_CurNetId());
+			
             sub_020363BC();
             return v0;
         }
 
         if (cmd > (sCommCmdManager->unk_04 + 22)) {
             GF_ASSERT(0);
+			EmulatorLog("Error in CommCmd_PacketSizeOf: Recieve command index is out of bounds. Net id: %d", CommSys_CurNetId());
+			
             sub_020363BC();
             return v0;
         }

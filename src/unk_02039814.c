@@ -20,6 +20,8 @@
 #include "system.h"
 #include "text.h"
 
+#include "debug.h"
+
 static const UnkStruct_02099F80 Unk_020E5EFC = {
     GX_VRAM_BG_256_AB,
     GX_VRAM_BGEXTPLTT_NONE,
@@ -156,6 +158,8 @@ void sub_02039834(int heapID, int param1, int param2)
     StringTemplate_SetNumber(v5, 0, param2, 5, 2, 1);
     MessageLoader_GetStrbuf(v2, v6, v4);
     StringTemplate_Format(v5, v3, v4);
+
+	Log("Error: sub_02039834");
 
     Text_AddPrinterWithParams(&v1, FONT_SYSTEM, v3, 0, 0, TEXT_SPEED_INSTANT, NULL);
     Strbuf_Free(v3);

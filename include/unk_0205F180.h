@@ -11,7 +11,7 @@ int PlayerAvatar_CheckStartMove(PlayerAvatar *playerAvatar, int param1);
 void sub_0205F490(PlayerAvatar *playerAvatar);
 void sub_0205F56C(PlayerAvatar *playerAvatar);
 int sub_0205F588(PlayerAvatar *playerAvatar);
-void sub_0205F5E4(PlayerAvatar *playerAvatar, int param1);
+void PlayerAvatar_ForceMoveStop(PlayerAvatar *playerAvatar, int param1);
 u32 sub_02060B7C(PlayerAvatar *playerAvatar, MapObject *param1, int param2);
 u32 sub_020611FC(PlayerAvatar *playerAvatar, MapObject *param1, int param2);
 int sub_02061308(PlayerAvatar *playerAvatar, u16 param1, u16 param2);

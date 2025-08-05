@@ -1413,13 +1413,15 @@ static void ov7_0224B08C(CommClubManager *commClubMan)
 static void ov7_0224B0E8(SysTask *task, void *param1)
 {
     CommClubManager *commClubMan = (CommClubManager *)param1;
-
+    
+    FieldCommMan_EnterBattleRoom(commClubMan->fieldSystem);
+    
     if ((CommSys_CurNetId() == 0) && (CommSys_ConnectedCount() != commClubMan->connectedCnt)) {
         CommClubMan_SetTask(CommClubTask_ExitGuestRoom);
     } else if (ov7_0224B4E4() || CommSys_CheckError()) {
         CommClubMan_SetTask(CommClubTask_ExitGuestRoom);
     } else if (FieldMessage_FinishedPrinting(sCommClubMan->printMsgIndex)) {
-        CommTiming_StartSync(10);
+        //CommTiming_StartSync(10);
         CommClubMan_SetTask(CommClubTask_WaitForGroup);
     }
 }
@@ -1446,6 +1448,7 @@ static void CommClubTask_WaitForGroup(SysTask *task, void *param1)
             }
 
             commClubMan->connectedCnt = CommSys_ConnectedCount();
+            CommTiming_StartSync(92);
             ov7_0224B3A8(commClubMan);
             SysTask_Done(task);
             return;
@@ -1576,7 +1579,7 @@ static void ov7_0224B3A8(CommClubManager *commClubMan)
     sCommClubMan->retCode = 2;
     CommMan_SetErrorHandling(1, 1);
     CommInfo_SendBattleRegulation();
-    sub_02033EA8(1);
+    CommSC_SetErrorNoChild(1);
 }
 
 int CommClubMan_MinPlayers(void)

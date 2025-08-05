@@ -6,6 +6,8 @@
 #include "error_message_reset.h"
 #include "unk_020366A0.h"
 
+#include "debug.h"
+
 void ErrorHandling_AssertFail(void);
 
 void ErrorHandling_AssertFail(void)

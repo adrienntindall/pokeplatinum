@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "error_message_reset.h"
 #include "unk_020366A0.h"
 
@@ -204,6 +206,7 @@ static void *AllocFromHeapInternal(NNSFndHeapHandle heap, u32 size, s32 alignmen
 static void AllocFail(void)
 {
     if (CommMan_IsInitialized()) {
+		Log("AllocFail");
         ErrorMessageReset_PrintErrorAndReset();
     }
 }

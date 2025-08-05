@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/heap.h"
 #include "constants/species.h"
 #include "generated/items.h"
@@ -895,6 +897,9 @@ void ov16_0225DA74(BattleSystem *battleSys, BattlerData *param1, UnkStruct_ov16_
 {
     Healthbar *v0;
 
+	if (param1->healthbar.mainSprite == NULL) {
+		EmulatorLog("ov16_0225DA74: Error - param1->healthbar.mainSprite is NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param1->healthbar.mainSprite != NULL);
 
     v0 = &param1->healthbar;
@@ -921,6 +926,9 @@ void ov16_0225DB00(BattleSystem *battleSys, BattlerData *param1, UnkStruct_ov16_
 {
     Healthbar *v0;
 
+	if (param1->healthbar.mainSprite == NULL) {
+		EmulatorLog("ov16_0225DB00: Error - param1->healthbar.mainSprite is NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param1->healthbar.mainSprite != NULL);
 
     v0 = &param1->healthbar;
@@ -1033,6 +1041,9 @@ void ov16_0225DCB0(BattleSystem *battleSys, BattlerData *param1, UnkStruct_ov16_
 
 void ov16_0225DD44(BattleSystem *battleSys, BattlerData *param1, UnkStruct_ov16_0225C3D0 *param2)
 {
+	if (param1->healthbar.mainSprite == NULL) {
+		EmulatorLog("ov16_0225DD44: Error - param1->healthbar.mainSprite is NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(param1->healthbar.mainSprite != NULL);
 
     param1->healthbar.status = param2->unk_01;
@@ -3041,6 +3052,7 @@ static void ov16_022604C8(SysTask *param0, void *param1)
                 NARC_dtor(v21);
             } break;
             default:
+				EmulatorLog("ov16_022604C8: Error - v0->unk_0C out of bounds. NetId %d", CommSys_CurNetId());
                 GF_ASSERT(0);
                 break;
             }
@@ -3456,6 +3468,9 @@ static void ov16_022610A8(SysTask *param0, void *param1)
     v1 = BattleSystem_Context(v0->unk_00);
     v2 = BattleContext_Get(v0->unk_00, v1, 11, v0->unk_0D) + 1;
 
+	if (v2 >= 5) {
+		EmulatorLog("ov16_022610A8: Error - v2 >= 5. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(v2 < 5);
 
     ov16_022658CC(v0->unk_00, v0->unk_0D, v2);
@@ -4429,6 +4444,8 @@ static void ov16_022623F0(SysTask *param0, void *param1)
                     ov16_02268C04(v9, v10, v2, 17, 0, &v11);
                     break;
                 default:
+					EmulatorLog("ov16_022623F0: Error - v0->unk_0F out of bounds. NetId %d", CommSys_CurNetId());
+				
                     GF_ASSERT(0);
                     break;
                 }
@@ -5357,6 +5374,9 @@ static void ov16_02263688(SysTask *param0, void *param1)
 
     switch (v0->unk_0E) {
     case 0:
+		if (v0->unk_04->unk_88 != NULL) {
+			EmulatorLog("ov16_02263688: Error - v0->unk_04->unk_88 != NULL. NetId %d", CommSys_CurNetId());
+		}
         GF_ASSERT(v0->unk_04->unk_88 == NULL);
         v0->unk_04->unk_88 = ov12_022234F8(v0->unk_00, HEAP_ID_BATTLE, v0->unk_0D);
         v0->unk_0E++;
@@ -5373,6 +5393,9 @@ static void ov16_022636D4(SysTask *param0, void *param1)
 {
     UnkStruct_ov16_0225E300 *v0 = (UnkStruct_ov16_0225E300 *)param1;
 
+	if (v0->unk_04->unk_88 == NULL) {
+			EmulatorLog("ov16_022636D4: Error - v0->unk_04->unk_88 == NULL. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(v0->unk_04->unk_88 != NULL);
 
     if (ov12_022237D8(v0->unk_04->unk_88) == 3) {

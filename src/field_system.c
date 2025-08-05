@@ -235,6 +235,13 @@ static void HandleFieldInput(FieldSystem *fieldSystem)
     BOOL processInput = FALSE;
     if (!fieldSystem->processManager->pause && fieldSystem->runningFieldMap && FieldSystem_IsRunningTask(fieldSystem) == FALSE) {
         processInput = TRUE;
+    } else {
+        /*EmulatorLog("Unable to process field input:\n\
+                    -Pause: %d\n\
+                    runningFieldMap: %d\n\
+                    FieldSystem_IsRunningTask: %d\n", 
+                    fieldSystem->processManager->pause, fieldSystem->runningFieldMap, FieldSystem_IsRunningTask(fieldSystem));
+    */
     }
 
     FieldInput fieldInput;
@@ -247,6 +254,8 @@ static void HandleFieldInput(FieldSystem *fieldSystem)
     if (fieldSystem->location->mapId == MAP_HEADER_BATTLE_TOWER) {
         loadType = MAP_LOAD_TYPE_OVERWORLD;
     }
+
+    //EmulatorLog("Processing field input with map load type %d", loadType);
 
     switch (loadType) {
     case MAP_LOAD_TYPE_UNDERGROUND:
@@ -324,6 +333,7 @@ static void HandleFieldInput(FieldSystem *fieldSystem)
                 PlayerAvatar_MoveControl(fieldSystem->playerAvatar, fieldSystem->landDataMan, -1, fieldInput.pressedKeys, fieldInput.heldKeys, tappedPoketch);
             }
         }
+        sub_0205805C(fieldSystem, processInput);
         break;
     }
 }

@@ -232,6 +232,8 @@ BOOL BattleSystem_PopScript(BattleContext *battleCtx)
 void BattleIO_EnqueueVal(BattleContext *battleCtx, int id, int battler, int val)
 {
     int i;
+	
+	EmulatorLog("Enqueuing val %d, id %d, and battler %d", val, id, battler);
 
     for (i = 0; i < BATTLE_IO_QUEUE_SIZE; i++) {
         if (battleCtx->ioQueue[id][battler][i] == 0) {
@@ -246,6 +248,13 @@ void BattleIO_EnqueueVal(BattleContext *battleCtx, int id, int battler, int val)
 void BattleIO_DequeueVal(BattleContext *battleCtx, int id, int battler, int val)
 {
     int i;
+	
+	EmulatorLog("Dequeing val %d, id %d, and battler %d", val, id, battler);
+
+
+	if (val == 0) {
+		EmulatorLog("BattleIO_DequeueVal: Error - val == 0. NetId %d", CommSys_CurNetId());
+	}
 
     GF_ASSERT(val != 0);
 
@@ -256,6 +265,10 @@ void BattleIO_DequeueVal(BattleContext *battleCtx, int id, int battler, int val)
         }
     }
 
+	if (i >= BATTLE_IO_QUEUE_SIZE) {
+		EmulatorLog("BattleIO_DequeueVal: Error - i >= BATTLE_IO_QUEUE_SIZE. NetId %d", CommSys_CurNetId());
+		
+	}
     GF_ASSERT(i < BATTLE_IO_QUEUE_SIZE);
 }
 

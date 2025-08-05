@@ -57,6 +57,9 @@ typedef struct CommPlayerManager {
     u8 unk_2C1;
     u8 unk_2C2;
     u8 unk_2C3;
+    //Added for co-op
+    u8 curMapMatrix[MAX_CONNECTED_PLAYERS];
+    u8 mapChangeFlag[MAX_CONNECTED_PLAYERS];
 } CommPlayerManager;
 
 CommPlayerManager *CommPlayerMan_Get(void);
@@ -133,5 +136,13 @@ void sub_02059570(void);
 void CommPlayerMan_ForcePos(void);
 void CommPlayerMan_ForceDir(void);
 void sub_02059638(BOOL param0);
+
+void CommPlayerMan_ForceSetLocationSelf(int x, int z);
+void CommPlayerMan_ForceSetLocation(int x, int z, int netId);
+
+//Added or modified for coop mod
+void CommPlayer_Add(u8 netId);
+void CommPlayer_BroadcastEnterMap(int netId);
+void CommPlayer_RecvMapChange(int netId, int size, void *src, void *unused);
 
 #endif // POKEPLATINUM_COMM_PLAYER_MANAGER_H

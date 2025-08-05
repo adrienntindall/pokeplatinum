@@ -231,18 +231,18 @@ void sub_0207A81C(BattleSystem *battleSys, int param1, int param2, void *param3,
     int v0;
     UnkStruct_0207A81C *v1;
     u8 *v2;
-    u8 *v3;
-    u16 *v4;
+    u8 *sendBuffer;
+    u16 *writeBuffer;
     u16 *v5;
 
     v1 = (UnkStruct_0207A81C *)Heap_AllocFromHeap(HEAP_ID_BATTLE, sizeof(UnkStruct_0207A81C));
-    v3 = ov16_0223E06C(battleSys);
-    v4 = ov16_0223E08C(battleSys);
+    sendBuffer = BattleSystem_GetIOSendBuffer(battleSys);
+    writeBuffer = BattleIO_GetSendWriteBuffer(battleSys);
     v5 = ov16_0223E098(battleSys);
 
-    if (v4[0] + sizeof(UnkStruct_0207A81C) + param4 + 1 > 0x1000) {
-        v5[0] = v4[0];
-        v4[0] = 0;
+    if (writeBuffer[0] + sizeof(UnkStruct_0207A81C) + param4 + 1 > 0x1000) {
+        v5[0] = writeBuffer[0];
+        writeBuffer[0] = 0;
     }
 
     v1->unk_00 = param1;
@@ -252,15 +252,15 @@ void sub_0207A81C(BattleSystem *battleSys, int param1, int param2, void *param3,
     v2 = (u8 *)v1;
 
     for (v0 = 0; v0 < sizeof(UnkStruct_0207A81C); v0++) {
-        v3[v4[0]] = v2[v0];
-        v4[0]++;
+        sendBuffer[writeBuffer[0]] = v2[v0];
+        writeBuffer[0]++;
     }
 
     v2 = (u8 *)param3;
 
     for (v0 = 0; v0 < param4; v0++) {
-        v3[v4[0]] = v2[v0];
-        v4[0]++;
+        sendBuffer[writeBuffer[0]] = v2[v0];
+        writeBuffer[0]++;
     }
 
     Heap_FreeToHeap(v1);
@@ -563,15 +563,15 @@ static void sub_0207ACA4(int param0, int param1, void *param2, void *param3)
 void sub_0207ACB4(SysTask *param0, void *param1)
 {
     UnkStruct_0207ACB4 *v0 = (UnkStruct_0207ACB4 *)param1;
-    u8 *v1;
+    u8 *sendBuffer;
     u16 *v2;
     u16 *v3;
     u16 *v4;
     int v5;
 
-    v1 = ov16_0223E06C(v0->unk_00);
+    sendBuffer = BattleSystem_GetIOSendBuffer(v0->unk_00);
     v2 = ov16_0223E080(v0->unk_00);
-    v3 = ov16_0223E08C(v0->unk_00);
+    v3 = BattleIO_GetSendWriteBuffer(v0->unk_00);
     v4 = ov16_0223E098(v0->unk_00);
 
     switch (v0->unk_04) {
@@ -589,9 +589,9 @@ void sub_0207ACB4(SysTask *param0, void *param1)
             v4[0] = 0;
         }
 
-        v5 = sizeof(UnkStruct_0207A81C) + (v1[v2[0] + 2] | (v1[v2[0] + 3] << 8));
+        v5 = sizeof(UnkStruct_0207A81C) + (sendBuffer[v2[0] + 2] | (sendBuffer[v2[0] + 3] << 8));
 
-        if (CommSys_SendData(23, (void *)&v1[v2[0]], v5) == 1) {
+        if (CommSys_SendData(23, (void *)&sendBuffer[v2[0]], v5) == 1) {
             v2[0] += v5;
         }
         break;

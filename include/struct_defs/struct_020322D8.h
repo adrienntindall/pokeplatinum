@@ -8,7 +8,7 @@ typedef struct UnkStruct_020322D8_t {
     struct UnkStruct_020322D8_t *unk_04;
     struct UnkStruct_020322D8_t *unk_08;
     u16 unk_0C;
-    u8 unk_0E;
+    u8 cmd;
     u8 unk_0F_0 : 1;
     u8 unk_0F_1 : 1;
     u8 : 6;

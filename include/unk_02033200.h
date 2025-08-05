@@ -37,7 +37,7 @@ BOOL sub_02033E30(void);
 BOOL CommServerClient_IsClientConnecting(void);
 BOOL sub_02033E68(void);
 BOOL CommServerClient_CheckError(void);
-void sub_02033EA8(BOOL param0);
+void CommSC_SetErrorNoChild(BOOL param0);
 void sub_02033ED4(BOOL param0);
 WMBssDesc *sub_02033F3C(int param0);
 UnkStruct_0203330C *sub_02033F6C(int param0);

@@ -71,6 +71,8 @@
 #include "unk_0202F1D4.h"
 #include "unk_0206CCB0.h"
 
+#include "debug.h"
+
 BgConfig *BattleSystem_BGL(BattleSystem *battleSystem);
 u32 BattleSystem_BattleType(BattleSystem *battleSystem);
 BattleContext *BattleSystem_Context(BattleSystem *battleSystem);
@@ -91,10 +93,10 @@ MessageLoader *BattleSystem_MessageLoader(BattleSystem *battleSystem);
 MessageLoader *ov16_0223E060(BattleSystem *battleSystem);
 PaletteData *BattleSystem_PaletteSys(BattleSystem *battleSystem);
 Pokedex *BattleSystem_GetPokedex(BattleSystem *battleSystem);
-u8 *ov16_0223E06C(BattleSystem *battleSystem);
+u8 *BattleSystem_GetIOSendBuffer(BattleSystem *battleSystem);
 u8 *ov16_0223E074(BattleSystem *battleSystem);
 u16 *ov16_0223E080(BattleSystem *battleSystem);
-u16 *ov16_0223E08C(BattleSystem *battleSystem);
+u16 *BattleIO_GetSendWriteBuffer(BattleSystem *battleSystem);
 u16 *ov16_0223E098(BattleSystem *battleSystem);
 u16 *ov16_0223E0A4(BattleSystem *battleSystem);
 u16 *ov16_0223E0B0(BattleSystem *battleSystem);
@@ -357,7 +359,7 @@ Pokedex *BattleSystem_GetPokedex(BattleSystem *battleSystem)
     return battleSystem->pokedex;
 }
 
-u8 *ov16_0223E06C(BattleSystem *battleSystem)
+u8 *BattleSystem_GetIOSendBuffer(BattleSystem *battleSystem)
 {
     return &battleSystem->unk_224[0];
 }
@@ -372,7 +374,7 @@ u16 *ov16_0223E080(BattleSystem *battleSystem)
     return &battleSystem->unk_23E4;
 }
 
-u16 *ov16_0223E08C(BattleSystem *battleSystem)
+u16 *BattleIO_GetSendWriteBuffer(BattleSystem *battleSystem)
 {
     return &battleSystem->unk_23E6;
 }
@@ -1495,6 +1497,9 @@ u8 ov16_0223F58C(BattleSystem *battleSystem, u8 *param1)
         }
     }
 
+	if (v2 > 28) {
+		EmulatorLog("ov16_0223F58C: Error - v2 > 28. NetId %d", CommSys_CurNetId());
+	}
     GF_ASSERT(v2 <= 28);
     return v2;
 }
@@ -2320,6 +2325,7 @@ static void BattleMessage_FillFormatBuffers(BattleSystem *battleSys, BattleMessa
         break;
 
     default:
+		EmulatorLog("BattleMessage_FillFormatBuffers: Error - no valid battle msg tag. NetId %d", CommSys_CurNetId());
         GF_ASSERT(FALSE);
         break;
     }

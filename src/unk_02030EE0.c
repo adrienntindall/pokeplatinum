@@ -5,6 +5,8 @@
 #include <nitro/wm.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "struct_defs/struct_0203330C.h"
 
 #include "functypes/funcptr_020312B8.h"
@@ -28,7 +30,7 @@ typedef struct {
     s32 unk_137C;
     u16 unk_1380;
     u16 unk_1382;
-    int unk_1384;
+    int systemState;
     int unk_1388;
     UnkFuncPtr_02031E6C unk_138C;
 
@@ -100,14 +102,27 @@ void include_unk_021C07A8(void)
     Unk_021C07A8;
 }
 
+enum CommSystemStates {
+	COMM_STATE_STOP,
+	COMM_STATE_IDLE,
+	COMM_STATE_SCANNING,
+	COMM_STATE_BUSY,
+	COMM_STATE_CONNECTED,
+	COMM_STATE_SHARING_DATA,
+	COMM_STATE_SHARING_KEY,
+	COMM_STATE_MEASURE_CHANNEL,
+	COMM_STAET_CONNECTION_FAILED,
+	COMM_STATE_ERROR
+};
+
 static void sub_02030EE0(int param0)
 {
-    Unk_021C07AC->unk_1384 = param0;
+    Unk_021C07AC->systemState = param0;
 }
 
 static void sub_02030EF4(int param0)
 {
-    if ((Unk_021C07AC->unk_1384 == 9) || (Unk_021C07AC->unk_1384 == 10)) {
+    if ((Unk_021C07AC->systemState == 9) || (Unk_021C07AC->systemState == 10)) {
         return;
     }
 
@@ -152,7 +167,7 @@ static BOOL sub_02030F64(void)
 {
     WMErrCode v0;
 
-    if ((Unk_021C07AC->unk_1384 == 4) || (Unk_021C07AC->unk_1384 == 6) || (Unk_021C07AC->unk_1384 == 5)) {
+    if ((Unk_021C07AC->systemState == 4) || (Unk_021C07AC->systemState == 6) || (Unk_021C07AC->systemState == 5)) {
         return 1;
     }
 
@@ -233,7 +248,7 @@ static BOOL sub_020310DC(void)
 {
     WMErrCode v0;
 
-    if ((Unk_021C07AC->unk_1384 == 4) || (Unk_021C07AC->unk_1384 == 6) || (Unk_021C07AC->unk_1384 == 5)) {
+    if ((Unk_021C07AC->systemState == 4) || (Unk_021C07AC->systemState == 6) || (Unk_021C07AC->systemState == 5)) {
         return 1;
     }
 
@@ -262,9 +277,9 @@ static void sub_0203114C(void *param0)
     switch (v0->state) {
     case WM_STATECODE_MP_START:
         if (Unk_021C07AC->unk_1388 == 2) {
-            if (Unk_021C07AC->unk_1384 == 4) {
+            if (Unk_021C07AC->systemState == 4) {
                 (void)0;
-            } else if (Unk_021C07AC->unk_1384 == 6) {
+            } else if (Unk_021C07AC->systemState == 6) {
                 return;
             }
         } else if (Unk_021C07AC->unk_1388 == 4) {
@@ -396,12 +411,14 @@ static BOOL sub_02031320(void)
 
     if (v1 == 0x8000) {
         sub_02030EF4(WM_ERRCODE_ILLEGAL_STATE);
+        Log("Comm error reset to savepoint: sub_02031320 v1 is 0x8000");
         Link_SetErrorState(1);
         return 0;
     }
 
     if (v1 == 0) {
         sub_02030EF4(22);
+        Log("Comm error reset to savepoint: sub_02031320 v1 is 0");
         Link_SetErrorState(1);
         return 0;
     }
@@ -445,7 +462,7 @@ static void sub_020313E8(void *param0)
         return;
     }
 
-    if (Unk_021C07AC->unk_1384 != 2) {
+    if (Unk_021C07AC->systemState != 2) {
         Unk_021C07AC->unk_1382 = 0;
 
         if (!sub_020314E4()) {
@@ -499,7 +516,7 @@ static void sub_020313E8(void *param0)
 
 BOOL sub_020314C0(void)
 {
-    if (Unk_021C07AC->unk_1384 != 2) {
+    if (Unk_021C07AC->systemState != 2) {
         return 0;
     }
 
@@ -548,7 +565,7 @@ static BOOL sub_02031538(void)
     u8 v0[32];
     WMErrCode v1;
 
-    if ((Unk_021C07AC->unk_1384 == 4) || (Unk_021C07AC->unk_1384 == 6) || (Unk_021C07AC->unk_1384 == 5)) {
+    if ((Unk_021C07AC->systemState == 4) || (Unk_021C07AC->systemState == 6) || (Unk_021C07AC->systemState == 5)) {
         return 1;
     }
 
@@ -663,11 +680,11 @@ static void sub_020316B8(void *param0)
     switch (v0->state) {
     case WM_STATECODE_MP_START:
         if (Unk_021C07AC->unk_1388 == 3) {
-            if (Unk_021C07AC->unk_1384 == 6) {
+            if (Unk_021C07AC->systemState == 6) {
                 return;
             }
 
-            if (Unk_021C07AC->unk_1384 == 4) {
+            if (Unk_021C07AC->systemState == 4) {
                 (void)0;
             }
         } else if (Unk_021C07AC->unk_1388 == 5) {
@@ -874,7 +891,7 @@ static u16 sub_02031900(void)
 
 int sub_02031934(void)
 {
-    return Unk_021C07AC->unk_1384;
+    return Unk_021C07AC->systemState;
 }
 
 int sub_02031948(void)
@@ -901,6 +918,7 @@ BOOL sub_0203195C(void)
     if (v0 == 24) {
         sub_02030EF4(24);
         sub_02030EE0(9);
+        Log("Comm error reset to savepoint: sub_0203195C v0 is 24");
         Link_SetErrorState(1);
         return 0;
     }
@@ -925,6 +943,7 @@ static u16 sub_020319F8(u16 param0)
         sub_02030EF4(WM_ERRCODE_ILLEGAL_STATE);
 
         sub_02030EE0(9);
+        Log("Comm error reset to savepoint: sub_020319F8 v0 is 0x8000");
         Link_SetErrorState(1);
 
         return WM_ERRCODE_ILLEGAL_STATE;
@@ -934,6 +953,8 @@ static u16 sub_020319F8(u16 param0)
         sub_02030EF4(22);
 
         sub_02030EE0(9);
+        Log("Comm error reset to savepoint: sub_020319F8 v0 is 0");
+        
         Link_SetErrorState(1);
 
         return 24;
@@ -966,6 +987,8 @@ static void sub_02031A74(void *param0)
         sub_02030EF4(v2->errcode);
 
         sub_02030EE0(9);
+        EmulatorLog("Comm error reset to savepoint: sub_02031A74 errcode is %d", v2->errcode);
+        
         Link_SetErrorState(1);
 
         return;
@@ -1057,7 +1080,7 @@ BOOL sub_02031BC4(void *param0, BOOL param1)
     Unk_021C07AC->unk_13A0 = 0;
     Unk_021C07AC->unk_13A2 = 1;
     Unk_021C07AC->unk_13A4 = WM_ERRCODE_SUCCESS;
-    Unk_021C07AC->unk_1384 = 0;
+    Unk_021C07AC->systemState = 0;
     Unk_021C07AC->unk_00.userGameInfo = NULL;
     Unk_021C07AC->unk_00.userGameInfoLength = 0;
     Unk_021C07AC->unk_1390 = NULL;
@@ -1117,6 +1140,8 @@ static void sub_02031CBC(void *param0)
         sub_02030EF4(v1->errcode);
 
         sub_02030EE0(10);
+        EmulatorLog("Comm error reset to savepoint: sub_02031CBC errcode is %d", v1->errcode);
+        
         Link_SetErrorState(1);
 
         return;
@@ -1128,6 +1153,8 @@ static void sub_02031CBC(void *param0)
         sub_02030EF4(v0);
 
         sub_02030EE0(10);
+        EmulatorLog("Comm error reset to savepoint: sub_02031CBC v0 is %d", v0);
+        
         Link_SetErrorState(1);
 
         return;
@@ -1245,7 +1272,7 @@ BOOL sub_02031E9C(void *param0, u16 param1, int param2, UnkFuncPtr_02031E9C para
 
 void sub_02031ECC(void)
 {
-    if (2 == Unk_021C07AC->unk_1384) {
+    if (2 == Unk_021C07AC->systemState) {
         while (TRUE) {
             (void)0;
         }
@@ -1258,11 +1285,11 @@ void sub_02031ECC(void)
 
 void sub_02031EF4(void)
 {
-    if (Unk_021C07AC->unk_1384 == 1) {
+    if (Unk_021C07AC->systemState == 1) {
         return;
     }
 
-    if ((Unk_021C07AC->unk_1384 != 6) && (Unk_021C07AC->unk_1384 != 5) && (Unk_021C07AC->unk_1384 != 4)) {
+    if ((Unk_021C07AC->systemState != 6) && (Unk_021C07AC->systemState != 5) && (Unk_021C07AC->systemState != 4)) {
         sub_02030EE0(3);
         sub_02031ECC();
         return;
@@ -1319,23 +1346,23 @@ void sub_02031FA4(int param0)
 
 BOOL sub_02031FBC(void)
 {
-    return Unk_021C07AC->unk_1384 == 1;
+    return Unk_021C07AC->systemState == 1;
 }
 
 BOOL sub_02031FD8(void)
 {
-    return Unk_021C07AC->unk_1384 == 3;
+    return Unk_021C07AC->systemState == 3;
 }
 
 BOOL sub_02031FF4(void)
 {
-    return Unk_021C07AC->unk_1384 == 9;
+    return Unk_021C07AC->systemState == 9;
 }
 
 BOOL sub_02032010(void)
 {
     if (Unk_021C07AC) {
-        return Unk_021C07AC->unk_1384 == 2;
+        return Unk_021C07AC->systemState == 2;
     }
 
     return 0;
@@ -1343,7 +1370,7 @@ BOOL sub_02032010(void)
 
 void sub_02032034(void *param0, int param1, int param2, int param3)
 {
-    if (Unk_021C07AC->unk_1384 == 4) {
+    if (Unk_021C07AC->systemState == 4) {
         WM_SetGameInfo(NULL, param0, param1, param2, param3, WM_ATTR_FLAG_ENTRY);
     } else {
         (void)0;
@@ -1363,7 +1390,7 @@ BOOL sub_0203208C(BOOL param0)
 {
     Unk_021C07AC->unk_13B8 = 0;
 
-    if (Unk_021C07AC->unk_1384 == 4) {
+    if (Unk_021C07AC->systemState == 4) {
         if (WM_ERRCODE_OPERATING == WM_SetEntry(sub_02032070, param0)) {
             return 1;
         }

@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "constants/pokemon.h"
 #include "constants/species.h"
 #include "generated/genders.h"
@@ -77,18 +79,18 @@ static void ov16_0226485C(BattleSystem *battleSys, int param1, int param2, void 
 {
     int v0;
     UnkStruct_0207A81C v1;
-    u8 *v2;
-    u8 *v3;
+    u8 *src;
+    u8 *dest;
     u16 *v4;
     u16 *v5;
 
     if (param1 == 1) {
-        v3 = ov16_0223E074(battleSys);
+        dest = ov16_0223E074(battleSys);
         v4 = ov16_0223E0B0(battleSys);
         v5 = ov16_0223E0BC(battleSys);
     } else {
-        v3 = ov16_0223E06C(battleSys);
-        v4 = ov16_0223E08C(battleSys);
+        dest = BattleSystem_GetIOSendBuffer(battleSys);
+        v4 = BattleIO_GetSendWriteBuffer(battleSys);
         v5 = ov16_0223E098(battleSys);
     }
 
@@ -101,62 +103,62 @@ static void ov16_0226485C(BattleSystem *battleSys, int param1, int param2, void 
     v1.unk_01 = param2;
     v1.unk_02 = param4;
 
-    v2 = (u8 *)&v1;
+    src = (u8 *)&v1;
 
     for (v0 = 0; v0 < sizeof(UnkStruct_0207A81C); v0++) {
-        v3[v4[0]] = v2[v0];
+        dest[v4[0]] = src[v0];
         v4[0]++;
     }
 
-    v2 = (u8 *)param3;
+    src = (u8 *)param3;
 
     for (v0 = 0; v0 < param4; v0++) {
-        v3[v4[0]] = v2[v0];
+        dest[v4[0]] = src[v0];
         v4[0]++;
     }
 }
 
-static BOOL ov16_022648F4(BattleSystem *battleSys, void *param1)
+static BOOL BattleIO_RecvDataInternal(BattleSystem *battleSys, void *data)
 {
-    u8 *v0 = (u8 *)param1;
-    u8 v1;
+    u8 *src = (u8 *)data;
+    u8 type;
     u8 v2;
-    int v3;
+    int size;
     int v4;
     BOOL v5 = 0;
 
-    v1 = v0[0];
-    v2 = v0[1];
-    v3 = v0[2] | (v0[3] << 8);
+    type = src[0];
+    v2 = src[1];
+    size = src[2] | (src[3] << 8);
 
-    v0 += sizeof(UnkStruct_0207A81C);
+    src += sizeof(UnkStruct_0207A81C);
 
-    if (v1 == 0) {
+    if (type == 0) { //Server
         if (battleSys->battleCtx->ioBuffer[v2][0] == 0) {
-            for (v4 = 0; v4 < v3; v4++) {
-                battleSys->battleCtx->ioBuffer[v2][v4] = v0[v4];
+            for (v4 = 0; v4 < size; v4++) {
+                battleSys->battleCtx->ioBuffer[v2][v4] = src[v4];
             }
 
             v5 = 1;
         }
-    } else if (v1 == 1) {
+    } else if (type == 1) { //Client
         if (battleSys->battlers[v2]->data[0] == 0) {
-            for (v4 = 0; v4 < v3; v4++) {
-                battleSys->battlers[v2]->data[v4] = v0[v4];
+            for (v4 = 0; v4 < size; v4++) {
+                battleSys->battlers[v2]->data[v4] = src[v4];
             }
 
             v5 = 1;
         }
-    } else if (v1 == 2) {
+    } else if (type == 2) { //Queue
         {
-            int v6;
-            int v7;
+            int index;
+            int id;
 
-            v6 = v0[0];
-            v7 = v0[1];
+            index = src[0];
+            id = src[1];
 
             if (ov16_0223ED60(battleSys)) {
-                BattleIO_DequeueVal(battleSys->battleCtx, v7, v2, v6);
+                BattleIO_DequeueVal(battleSys->battleCtx, id, v2, index);
             }
         }
         v5 = 1;
@@ -167,38 +169,38 @@ static BOOL ov16_022648F4(BattleSystem *battleSys, void *param1)
     return v5;
 }
 
-void ov16_02264988(BattleSystem *battleSys, int param1)
+void BattleIO_RecvData(BattleSystem *battleSys, int param1)
 {
-    u8 *v0;
-    u16 *v1;
-    u16 *v2;
-    u16 *v3;
-    int v4;
+    u8 *src;
+    u16 *read;
+    u16 *write;
+    u16 *v3; //over..?
+    int size;
 
     if (param1 == 1) {
-        v0 = ov16_0223E074(battleSys);
-        v1 = ov16_0223E0A4(battleSys);
-        v2 = ov16_0223E0B0(battleSys);
+        src = ov16_0223E074(battleSys);
+        read = ov16_0223E0A4(battleSys);
+        write = ov16_0223E0B0(battleSys);
         v3 = ov16_0223E0BC(battleSys);
     } else {
-        v0 = ov16_0223E06C(battleSys);
-        v1 = ov16_0223E080(battleSys);
-        v2 = ov16_0223E08C(battleSys);
+        src = BattleSystem_GetIOSendBuffer(battleSys);
+        read = ov16_0223E080(battleSys);
+        write = BattleIO_GetSendWriteBuffer(battleSys);
         v3 = ov16_0223E098(battleSys);
     }
 
-    if (v1[0] == v2[0]) {
+    if (read[0] == write[0]) {
         return;
     }
 
-    if (v1[0] == v3[0]) {
-        v1[0] = 0;
+    if (read[0] == v3[0]) {
+        read[0] = 0;
         v3[0] = 0;
     }
 
-    if (ov16_022648F4(battleSys, (void *)&v0[v1[0]]) == 1) {
-        v4 = sizeof(UnkStruct_0207A81C) + (v0[v1[0] + 2] | (v0[v1[0] + 3] << 8));
-        v1[0] += v4;
+    if (BattleIO_RecvDataInternal(battleSys, (void *)&src[read[0]]) == 1) {
+        size = sizeof(UnkStruct_0207A81C) + (src[read[0] + 2] | (src[read[0] + 3] << 8));
+        read[0] += size;
     }
 }
 
@@ -207,7 +209,8 @@ static void SendMessage(BattleSystem *battleSys, int recipient, int message, voi
     u8 *data = body;
 
     if ((battleSys->battleType & BATTLE_TYPE_LINK) && (battleSys->battleStatusMask & BATTLE_TYPE_TAG) == FALSE) {
-        if (recipient == 1) {
+        Log("Enqueuing link");
+		if (recipient == 1) {
             for (int i = 0; i < CommSys_ConnectedCount(); i++) {
                 BattleIO_EnqueueVal(battleSys->battleCtx, i, message, *data);
             }
@@ -215,6 +218,7 @@ static void SendMessage(BattleSystem *battleSys, int recipient, int message, voi
 
         sub_0207A81C(battleSys, recipient, message, body, bodySize);
     } else {
+		EmulatorLog("Enqueuing normally. Recipient %d", recipient);
         if (recipient == 1) {
             BattleIO_EnqueueVal(battleSys->battleCtx, 0, message, *data);
         }
@@ -1358,6 +1362,9 @@ void BattleIO_LinkWaitMessage(BattleSystem *battleSys, int battler)
 
     if ((battleType & BATTLE_TYPE_LINK) && (sub_0202F250() == 1) && ((battleSys->battleStatusMask & 0x10) == 0)) {
         v0.unk_02 = ov16_0223F58C(battleSys, &v0.unk_04[0]);
+		if (v0.unk_02 >= 28) {
+			EmulatorLog("BattleIO_LinkWaitMessage: Error - v0.unk_02 >= 28", CommSys_CurNetId());
+		}
         GF_ASSERT(v0.unk_02 < 28);
         SendMessage(battleSys, 1, battler, &v0, sizeof(UnkStruct_ov16_0225C988));
     }
@@ -1423,6 +1430,9 @@ void BattleIO_EscapeMessage(BattleSystem *battleSys, BattleContext *param1)
 
     if ((battleType & BATTLE_TYPE_LINK) && (sub_0202F250() == 1) && ((battleSys->battleStatusMask & 0x10) == 0)) {
         v0.unk_02 = ov16_0223F58C(battleSys, &v0.unk_04[0]);
+		if (v0.unk_02 >= 28) {
+			EmulatorLog("BattleIO_EscapeMessage: Error - v0.unk_02 >= 28", CommSys_CurNetId());
+		}
         GF_ASSERT(v0.unk_02 < 28);
     }
 
@@ -1439,6 +1449,9 @@ void BattleIO_ForfeitMessage(BattleSystem *battleSys)
 
     if ((battleType & BATTLE_TYPE_LINK) && (sub_0202F250() == 1) && ((battleSys->battleStatusMask & 0x10) == 0)) {
         v0.unk_02 = ov16_0223F58C(battleSys, &v0.unk_04[0]);
+		if (v0.unk_02 >= 28) {
+			EmulatorLog("BattleIO_ForfeitMessage: Error - v0.unk_02 >= 28", CommSys_CurNetId());
+		}
         GF_ASSERT(v0.unk_02 < 28);
     }
 
@@ -1507,6 +1520,9 @@ void BattleIO_SubmitResult(BattleSystem *battleSys)
 
     if ((battleType & BATTLE_TYPE_LINK) && (sub_0202F250() == 1) && ((battleSys->battleStatusMask & 0x10) == 0)) {
         v0.unk_02 = ov16_0223F58C(battleSys, &v0.unk_08[0]);
+		if (v0.unk_02 > 28) {
+			EmulatorLog("BattleIO_SubmitResult: Error - v0.unk_02 > 28", CommSys_CurNetId());
+		}
         GF_ASSERT(v0.unk_02 <= 28);
     }
 

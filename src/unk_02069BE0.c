@@ -3,6 +3,8 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "debug.h"
+
 #include "generated/movement_actions.h"
 
 #include "struct_decls/struct_0205E884_decl.h"
@@ -219,6 +221,7 @@ static u32 sub_02069D50(MapObject *mapObj)
     return v0;
 }
 
+//Checks if player animation is set..?
 static int sub_02069D8C(MapObject *mapObj)
 {
     FieldSystem *fieldSystem = MapObject_FieldSystem(mapObj);
@@ -233,6 +236,7 @@ static int sub_02069D8C(MapObject *mapObj)
         int v7 = sub_02064488(v2, v3, v4, v5);
 
         v6 = MovementAction_TurnActionTowardsDir(v7, v6);
+        Log("Calling sub_02065668 from sub_02069D8C");
         sub_02065668(mapObj, v6);
 
         return 1;
@@ -387,6 +391,7 @@ static int sub_02069FE8(MapObject *mapObj, UnkStruct_02069F48 *param1)
     return 0;
 }
 
+//Check parent animation set..?
 static int sub_0206A034(MapObject *mapObj, UnkStruct_02069F48 *param1)
 {
     int v0 = MapObject_GetX(mapObj);
@@ -409,6 +414,7 @@ static int sub_0206A034(MapObject *mapObj, UnkStruct_02069F48 *param1)
         u32 v7 = 0xc;
 
         v7 = MovementAction_TurnActionTowardsDir(v6, v7);
+        Log("Calling sub_02065668 from sub_0206A034");
         sub_02065668(mapObj, v7);
         return 1;
     }
@@ -603,11 +609,13 @@ void sub_0206A2BC(MapObject *mapObj)
     }
 }
 
+//MapObject_CopyMoveAndInit..?
 static int sub_0206A2E0(MapObject *mapObj, UnkStruct_0206A23C *param1)
 {
     int v0 = MapObject_GetFacingDir(mapObj);
 
     v0 = MovementAction_TurnActionTowardsDir(v0, MOVEMENT_ACTION_FACE_NORTH);
+    Log("Calling sub_02065668 from sub_0206A2E0");
 
     sub_02065668(mapObj, v0);
     sub_02062D10(mapObj);
@@ -654,6 +662,7 @@ static u32 sub_0206A354(MapObject *mapObj, int param1)
     return v0;
 }
 
+//MapObject_SetCopyMove..?
 static void sub_0206A37C(MapObject *mapObj, int param1, int param2, u32 param3)
 {
     u32 v0;
@@ -670,6 +679,7 @@ static void sub_0206A37C(MapObject *mapObj, int param1, int param2, u32 param3)
         param2 = MovementAction_TurnActionTowardsDir(param1, param2);
         sub_02062D04(mapObj);
     }
+    Log("Calling sub_02065668 from sub_0206A37C");
 
     sub_02065668(mapObj, param2);
 }
@@ -680,7 +690,8 @@ static int sub_0206A3BC(MapObject *mapObj, UnkStruct_0206A23C *param1)
     FieldSystem *fieldSystem = MapObject_FieldSystem(mapObj);
     int v2 = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
     u32 v3 = sub_0205EC1C(fieldSystem->playerAvatar);
-
+    Log("Calling sub_02065668 from sub_0206A3BC");
+    
     switch (v3) {
     case 0:
     case 1:
@@ -914,11 +925,14 @@ static u32 sub_0206A60C(MapObject *mapObj, int *param1, int param2)
     return 0;
 }
 
+//Move along wall?
 static int sub_0206A630(MapObject *mapObj, UnkStruct_0206A47C *param1, int param2)
 {
     u32 v0;
     int v1 = param1->unk_08;
     int v2 = MapObject_GetFacingDir(mapObj);
+
+    Log("Calling sub_02065668 from sub_0206A630");
 
     v0 = sub_0206A60C(mapObj, &v2, v1);
 
